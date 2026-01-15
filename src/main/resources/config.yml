@@ -52,6 +52,3 @@ storage:
 integrations:
   # PlaceholderAPI integration
   placeholderapi: true
-
-  # Vault economy integration
-  vault: true

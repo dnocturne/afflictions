@@ -18,7 +18,6 @@ A Minecraft Paper plugin for supernatural afflictions - Vampirism, Lycanthropy, 
 ## Optional Dependencies
 
 - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - Placeholder support
-- [Vault](https://www.spigotmc.org/resources/vault.34315/) - Economy integration
 
 ## Commands
 

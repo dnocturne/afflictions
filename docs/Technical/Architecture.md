@@ -179,7 +179,6 @@ Event/Command → AfflictionManager → PlayerManager → Storage
 | Cloud (Incendo) | Command framework |
 | BoostedYAML | Configuration |
 | PlaceholderAPI | Placeholder support (soft) |
-| Vault | Economy integration (soft) |
 
 ---
 

@@ -14,7 +14,6 @@ public class HookManager {
     private final Logger logger;
 
     private boolean placeholderApiEnabled = false;
-    private boolean vaultEnabled = false;
 
     public HookManager(Afflictions plugin) {
         this.plugin = plugin;
@@ -26,7 +25,6 @@ public class HookManager {
      */
     public void init() {
         hookPlaceholderApi();
-        hookVault();
     }
 
     private void hookPlaceholderApi() {
@@ -37,20 +35,8 @@ public class HookManager {
         }
     }
 
-    private void hookVault() {
-        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            vaultEnabled = true;
-            // Setup economy here when implemented
-            logger.info("Hooked into Vault");
-        }
-    }
-
     public boolean isPlaceholderApiEnabled() {
         return placeholderApiEnabled;
-    }
-
-    public boolean isVaultEnabled() {
-        return vaultEnabled;
     }
 
     public Afflictions getPlugin() {
