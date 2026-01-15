@@ -7,7 +7,7 @@ plugins {
 group = 'com.dnocturne'
 version = '1.0.0'
 
-def paperVersion = '1.21.1-R0.1-SNAPSHOT'
+def paperVersion = '1.21.11-R0.1-SNAPSHOT'
 
 // Cloud command framework versions
 def cloudMinecraftVersion = '2.0.0-beta.14'
@@ -35,6 +35,8 @@ repositories {
 dependencies {
     // Paper API
     compileOnly "io.papermc.paper:paper-api:${paperVersion}"
+    testImplementation("io.papermc.paper:paper-api:$paperVersion")
+    testFixturesImplementation("io.papermc.paper:paper-api:$paperVersion")
 
     // Cloud command framework
     implementation "org.incendo:cloud-paper:${cloudMinecraftVersion}"
@@ -64,6 +66,9 @@ dependencies {
     // Mockito
     testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
     testFixturesImplementation "org.mockito:mockito-inline:${mockitoVersion}"
+
+    // SQLite for storage tests
+    testImplementation 'org.xerial:sqlite-jdbc:3.47.2.0'
 }
 
 test {
@@ -86,13 +91,17 @@ shadowJar {
     // Relocate to avoid conflicts with other plugins
     relocate 'org.incendo.cloud', 'com.dnocturne.afflictions.lib.cloud'
     relocate 'dev.dejvokep.boostedyaml', 'com.dnocturne.afflictions.lib.boostedyaml'
+
+    // Depend on tests passing first
+    dependsOn test
 }
 
-// Use shadowJar as the default jar task
+// Keep jar task but give it a different output name so it doesn't conflict
 tasks.named('jar').configure {
-    enabled = false
+    archiveClassifier = 'slim'
 }
 
+// Build should run tests, then shadowJar
 tasks.named('build').configure {
     dependsOn shadowJar
 }
