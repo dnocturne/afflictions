@@ -17,6 +17,10 @@ A Paper plugin for Minecraft that introduces afflictions to gameplay.
 - [[Cure Mechanics]]
 - [[Progression System]]
 
+### 🐺 Supernatural Afflictions
+- [[Werewolf]]
+- [[Vampirism]]
+
 ### 🔧 Technical Design
 - [[Architecture]]
 - [[Commands]]
