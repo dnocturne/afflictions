@@ -1,0 +1,59 @@
+# ==========================================
+# Vampirism Configuration
+# ==========================================
+
+# Configuration file version (do not modify)
+config-version: 1
+
+# Display settings
+display:
+  # Display name shown in messages
+  name: "Vampirism"
+
+  # Formatted name with MiniMessage colors/formatting
+  # Used for %afflictions_name% placeholder
+  formatted-name: "<gradient:dark_red:red>Vampire</gradient>"
+
+  # Description of the affliction
+  description: "A dark curse that burns in sunlight but grants power in darkness."
+
+  # Prefix shown before player name (supports MiniMessage formatting)
+  # Used for %afflictions_prefix% placeholder
+  # Set to empty string "" to disable
+  prefix: "<dark_red>[<red>Vampire</red>]</dark_red> "
+
+# Affliction settings
+settings:
+  # Maximum level (1-10)
+  max-level: 5
+
+  # Can this affliction be cured?
+  curable: true
+
+# Sun damage settings
+sun-damage:
+  # Whether sun damage is enabled
+  enabled: true
+
+  # Base damage per tick (in half-hearts)
+  # At level 1, full damage is dealt
+  # Higher levels reduce damage (level 5 = 60% damage)
+  base-damage: 2.0
+
+  # How often damage is dealt (in affliction ticks)
+  # 1 = every tick, 2 = every other tick, etc.
+  tick-interval: 1
+
+  # Whether weather (rain/storm) protects from sun damage
+  weather-protection: true
+
+  # Damage reduction when wearing a helmet (0.0 - 1.0)
+  # 0.5 = 50% damage reduction
+  helmet-reduction: 0.5
+
+  # Minimum damage dealt (even with all reductions)
+  minimum-damage: 0.5
+
+  # Fire ticks applied when burning (visual effect)
+  # 20 ticks = 1 second
+  fire-ticks: 40

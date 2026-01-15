@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions.affliction.impl;
 
+import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.api.affliction.AbstractAffliction;
 import com.dnocturne.afflictions.api.affliction.AfflictionCategory;
 import com.dnocturne.afflictions.component.effect.SunlightDamageComponent;
@@ -21,8 +22,11 @@ public class Vampirism extends AbstractAffliction {
 
     public static final String ID = "vampirism";
 
-    private Vampirism(Builder builder) {
+    private final VampirismConfig config;
+
+    private Vampirism(Builder builder, VampirismConfig config) {
         super(builder);
+        this.config = config;
     }
 
     /**
@@ -33,16 +37,40 @@ public class Vampirism extends AbstractAffliction {
     }
 
     /**
+     * Create a new Vampirism affliction from configuration.
+     */
+    public static Vampirism create(VampirismConfig config) {
+        return new Builder()
+                .fromConfig(config)
+                .build(config);
+    }
+
+    /**
      * Create a new Vampirism affliction with custom settings.
      */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Get the configuration for this affliction.
+     */
+    public VampirismConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Get the prefix for this affliction (from config).
+     * Returns empty string if no config is set.
+     */
+    public String getPrefix() {
+        return config != null ? config.getPrefix() : "";
+    }
+
     public static class Builder extends AbstractAffliction.Builder {
 
         private double sunDamage = 2.0;
-        private int damageTickInterval = 1; // Every affliction tick
+        private int damageTickInterval = 1;
         private boolean weatherProtection = true;
         private double helmetReduction = 0.5;
 
@@ -53,6 +81,21 @@ public class Vampirism extends AbstractAffliction {
             this.category = AfflictionCategory.SUPERNATURAL;
             this.maxLevel = 5;
             this.curable = true;
+        }
+
+        /**
+         * Load settings from a VampirismConfig.
+         */
+        public Builder fromConfig(VampirismConfig config) {
+            this.displayName = config.getDisplayName();
+            this.description = config.getDescription();
+            this.maxLevel = config.getMaxLevel();
+            this.curable = config.isCurable();
+            this.sunDamage = config.getBaseDamage();
+            this.damageTickInterval = config.getTickInterval();
+            this.weatherProtection = config.isWeatherProtection();
+            this.helmetReduction = config.getHelmetReduction();
+            return this;
         }
 
         public Builder sunDamage(double damage) {
@@ -77,6 +120,10 @@ public class Vampirism extends AbstractAffliction {
 
         @Override
         public Vampirism build() {
+            return build(null);
+        }
+
+        public Vampirism build(VampirismConfig config) {
             // Add sunlight damage component
             this.components.add(new SunlightDamageComponent(
                     "vampirism_sun_damage",
@@ -86,7 +133,7 @@ public class Vampirism extends AbstractAffliction {
                     helmetReduction
             ));
 
-            return new Vampirism(this);
+            return new Vampirism(this, config);
         }
     }
 }

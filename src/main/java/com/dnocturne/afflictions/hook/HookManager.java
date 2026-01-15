@@ -1,6 +1,7 @@
 package com.dnocturne.afflictions.hook;
 
 import com.dnocturne.afflictions.Afflictions;
+import com.dnocturne.afflictions.hook.papi.AfflictionsExpansion;
 import org.bukkit.Bukkit;
 
 import java.util.logging.Logger;
@@ -30,8 +31,8 @@ public class HookManager {
     private void hookPlaceholderApi() {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             placeholderApiEnabled = true;
-            // Register expansion here when implemented
-            logger.info("Hooked into PlaceholderAPI");
+            new AfflictionsExpansion(plugin).register();
+            logger.info("Hooked into PlaceholderAPI - expansion registered");
         }
     }
 

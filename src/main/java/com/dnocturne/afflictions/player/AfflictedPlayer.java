@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions.player;
 
+import com.dnocturne.afflictions.api.affliction.AfflictionCategory;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,9 +8,11 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Represents a player's affliction state.
@@ -114,5 +117,59 @@ public class AfflictedPlayer {
      */
     public void clearAfflictions() {
         activeAfflictions.clear();
+    }
+
+    /**
+     * Get all afflictions of a specific category.
+     *
+     * @param category The category to filter by
+     * @return List of affliction instances in that category
+     */
+    public List<AfflictionInstance> getAfflictionsByCategory(AfflictionCategory category) {
+        return activeAfflictions.values().stream()
+                .filter(instance -> instance.getAffliction().getCategory() == category)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Check if player has any affliction of a specific category.
+     *
+     * @param category The category to check
+     * @return true if player has at least one affliction in that category
+     */
+    public boolean hasAfflictionInCategory(AfflictionCategory category) {
+        return activeAfflictions.values().stream()
+                .anyMatch(instance -> instance.getAffliction().getCategory() == category);
+    }
+
+    /**
+     * Get the player's supernatural affliction (if any).
+     * Since players can normally only have one supernatural affliction,
+     * this returns the first one found.
+     *
+     * @return Optional containing the supernatural affliction instance
+     */
+    public Optional<AfflictionInstance> getSupernaturalAffliction() {
+        return activeAfflictions.values().stream()
+                .filter(instance -> instance.getAffliction().getCategory() == AfflictionCategory.SUPERNATURAL)
+                .findFirst();
+    }
+
+    /**
+     * Get all curses on this player.
+     *
+     * @return List of curse affliction instances
+     */
+    public List<AfflictionInstance> getCurses() {
+        return getAfflictionsByCategory(AfflictionCategory.CURSE);
+    }
+
+    /**
+     * Get the number of curses on this player.
+     */
+    public int getCurseCount() {
+        return (int) activeAfflictions.values().stream()
+                .filter(instance -> instance.getAffliction().getCategory() == AfflictionCategory.CURSE)
+                .count();
     }
 }

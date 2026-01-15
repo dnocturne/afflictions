@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions;
 
+import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.affliction.impl.Vampirism;
 import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.config.ConfigManager;
@@ -25,6 +26,7 @@ public class Afflictions extends JavaPlugin {
     private AfflictionManager afflictionManager;
     private HookManager hookManager;
     private CommandManager commandManager;
+    private VampirismConfig vampirismConfig;
 
     @Override
     public void onEnable() {
@@ -146,7 +148,18 @@ public class Afflictions extends JavaPlugin {
      * Register all built-in afflictions.
      */
     private void registerAfflictions() {
-        afflictionManager.getRegistry().register(Vampirism.create());
+        // Load and register Vampirism
+        vampirismConfig = new VampirismConfig(this);
+        vampirismConfig.load();
+        afflictionManager.getRegistry().register(Vampirism.create(vampirismConfig));
+
         getLogger().info("Registered " + afflictionManager.getRegistry().getAll().size() + " affliction(s)");
+    }
+
+    /**
+     * Get the Vampirism configuration.
+     */
+    public VampirismConfig getVampirismConfig() {
+        return vampirismConfig;
     }
 }
