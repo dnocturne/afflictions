@@ -8,23 +8,73 @@ Technical design of the Afflictions plugin.
 
 ```
 com.dnocturne.afflictions
-├── Afflictions.java          # Main plugin class
-├── affliction/
-│   ├── Affliction.java       # Base affliction interface/class
-│   ├── AfflictionType.java   # Affliction registry
-│   ├── AfflictionManager.java# Handles active afflictions
-│   └── impl/                 # Affliction implementations
-├── player/
-│   ├── AfflictedPlayer.java  # Player affliction data
-│   └── PlayerManager.java    # Player data handling
+├── Afflictions.java              # Main plugin class
+├── api/
+│   ├── affliction/
+│   │   ├── Affliction.java       # Base affliction interface
+│   │   ├── AbstractAffliction.java
+│   │   ├── AfflictionInstance.java
+│   │   └── AfflictionCategory.java
+│   └── component/
+│       ├── AfflictionComponent.java
+│       ├── TickableComponent.java
+│       ├── ConditionalComponent.java
+│       ├── effect/
+│       │   └── Effect.java
+│       └── trigger/
+│           └── Trigger.java
+├── component/
+│   ├── effect/
+│   │   ├── DamageEffect.java
+│   │   ├── PotionEffectComponent.java
+│   │   └── AttributeModifierEffect.java
+│   └── trigger/
+│       ├── TimeTrigger.java
+│       ├── SunlightTrigger.java
+│       └── MoonPhaseTrigger.java
 ├── command/
-│   └── ...                   # Command implementations
+│   ├── CommandManager.java
+│   ├── commands/
+│   │   └── AfflictionsCommand.java
+│   └── subcommand/
+│       ├── SubCommand.java
+│       ├── player/
+│       │   ├── ListCommand.java
+│       │   └── InfoCommand.java
+│       └── admin/
+│           ├── GiveCommand.java
+│           ├── RemoveCommand.java
+│           ├── ClearCommand.java
+│           └── ReloadCommand.java
 ├── config/
-│   └── ...                   # Configuration classes
+│   └── ConfigManager.java
+├── hook/
+│   └── HookManager.java
 ├── listener/
-│   └── ...                   # Event listeners
+│   ├── PlayerListener.java
+│   └── TimeListener.java
+├── locale/
+│   ├── LocalizationManager.java
+│   └── MessageKey.java
+├── manager/
+│   ├── AfflictionManager.java
+│   └── PlayerManager.java
+├── player/
+│   └── AfflictedPlayer.java
+├── registry/
+│   └── AfflictionRegistry.java
+├── storage/
+│   ├── Storage.java
+│   ├── StorageManager.java
+│   ├── data/
+│   │   ├── PlayerAfflictionData.java
+│   │   └── AfflictionData.java
+│   └── impl/
+│       └── SQLiteStorage.java
 └── util/
-    └── ...                   # Utilities
+    ├── TaskUtil.java
+    ├── TimeUtil.java
+    └── MessageUtil.java
 ```
 
 ---
@@ -33,15 +83,51 @@ com.dnocturne.afflictions
 
 ### AfflictionManager
 Central manager for all affliction logic.
-- Register/unregister afflictions
+- Register/unregister afflictions via `AfflictionRegistry`
 - Apply/remove afflictions from players
-- Tick active afflictions
+- Tick active afflictions (configurable rate)
 
 ### PlayerManager
-Handles player-specific data.
-- Load/save player affliction data
-- Track active afflictions per player
-- Handle join/quit events
+Handles in-memory player data.
+- Track active afflictions per player (`AfflictedPlayer`)
+- Get/create/remove player data
+
+### StorageManager
+Handles data persistence.
+- Initializes storage backend (SQLite)
+- Async load/save operations
+- MySQL/MariaDB planned for future
+
+### CommandManager
+Manages Cloud command framework.
+- Modular subcommand architecture
+- Tab completion support
+
+### LocalizationManager
+Multi-language message support.
+- MiniMessage formatting
+- Placeholder support
+- Configurable language files
+
+---
+
+## Component-Based Architecture
+
+Afflictions are built from composable components:
+
+```
+Affliction
+├── Effects (what happens)
+│   ├── DamageEffect
+│   ├── PotionEffectComponent
+│   └── AttributeModifierEffect
+├── Triggers (when it activates)
+│   ├── TimeTrigger
+│   ├── SunlightTrigger
+│   └── MoonPhaseTrigger
+└── Cures (how to remove)
+    └── (planned)
+```
 
 ---
 
@@ -50,13 +136,28 @@ Handles player-specific data.
 ```
 Event/Command → AfflictionManager → PlayerManager → Storage
                      ↓
-              Affliction.tick()
+              Affliction Components
                      ↓
-              Apply Effects
+              TickableComponent.onTick()
+                     ↓
+              Apply Effects to Player
 ```
+
+---
+
+## Dependencies
+
+| Dependency | Purpose |
+|------------|---------|
+| Paper API 1.21.1 | Server API |
+| Cloud (Incendo) | Command framework |
+| BoostedYAML | Configuration |
+| PlaceholderAPI | Placeholder support (soft) |
+| Vault | Economy integration (soft) |
 
 ---
 
 ## See Also
 - [[Data Storage]]
 - [[API Design]]
+- [[Commands]]

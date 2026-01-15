@@ -3,9 +3,11 @@ package com.dnocturne.afflictions;
 import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.config.ConfigManager;
 import com.dnocturne.afflictions.hook.HookManager;
+import com.dnocturne.afflictions.listener.PlayerListener;
 import com.dnocturne.afflictions.listener.TimeListener;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.manager.AfflictionManager;
+import com.dnocturne.afflictions.storage.StorageManager;
 import com.dnocturne.afflictions.util.TaskUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,6 +20,7 @@ public class Afflictions extends JavaPlugin {
 
     private ConfigManager configManager;
     private LocalizationManager localizationManager;
+    private StorageManager storageManager;
     private AfflictionManager afflictionManager;
     private HookManager hookManager;
     private CommandManager commandManager;
@@ -37,6 +40,14 @@ public class Afflictions extends JavaPlugin {
         localizationManager = new LocalizationManager(this);
         localizationManager.load();
 
+        // Initialize storage
+        storageManager = new StorageManager(this);
+        if (!storageManager.init()) {
+            getLogger().severe("Failed to initialize storage! Disabling plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         // Initialize managers
         afflictionManager = new AfflictionManager(this);
         hookManager = new HookManager(this);
@@ -54,6 +65,9 @@ public class Afflictions extends JavaPlugin {
         // Start time listener
         new TimeListener(this).start();
 
+        // Register player listener
+        new PlayerListener(this).register();
+
         // Register commands
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
@@ -68,6 +82,11 @@ public class Afflictions extends JavaPlugin {
         // Stop tick loop
         if (afflictionManager != null) {
             afflictionManager.stop();
+        }
+
+        // Shutdown storage
+        if (storageManager != null) {
+            storageManager.shutdown();
         }
 
         // Save configuration
@@ -112,5 +131,12 @@ public class Afflictions extends JavaPlugin {
      */
     public HookManager getHookManager() {
         return hookManager;
+    }
+
+    /**
+     * Get the storage manager.
+     */
+    public StorageManager getStorageManager() {
+        return storageManager;
     }
 }

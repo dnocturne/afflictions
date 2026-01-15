@@ -27,11 +27,15 @@ public class AfflictionInstance {
     }
 
     public AfflictionInstance(UUID playerUuid, Affliction affliction, int level, long duration) {
+        this(playerUuid, affliction, level, duration, System.currentTimeMillis());
+    }
+
+    public AfflictionInstance(UUID playerUuid, Affliction affliction, int level, long duration, long contractedAt) {
         this.playerUuid = playerUuid;
         this.affliction = affliction;
         this.level = level;
         this.duration = duration;
-        this.contractedAt = System.currentTimeMillis();
+        this.contractedAt = contractedAt;
         this.data = new HashMap<>();
     }
 
