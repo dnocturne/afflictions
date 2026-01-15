@@ -1,0 +1,36 @@
+# ==========================================
+# Afflictions Configuration
+# ==========================================
+# Plugin documentation: https://github.com/dnocturne/afflictions
+# ==========================================
+
+# Configuration file version (do not modify)
+config-version: 1
+
+# General Settings
+general:
+  # Debug mode - enables verbose logging
+  debug: false
+
+  # How often afflictions tick (in server ticks, 20 = 1 second)
+  tick-rate: 20
+
+  # Language (file name in plugins/Afflictions/lang/ without .yml)
+  # Available: en, es, de, fr, pt, zh, ja, ko, ru (or add your own)
+  language: en
+
+# Storage Settings
+storage:
+  # Storage type: yaml, sqlite, mysql
+  type: yaml
+
+  # Auto-save interval in seconds (0 to disable)
+  auto-save-interval: 300
+
+# Integration Settings
+integrations:
+  # PlaceholderAPI integration
+  placeholderapi: true
+
+  # Vault economy integration
+  vault: true
