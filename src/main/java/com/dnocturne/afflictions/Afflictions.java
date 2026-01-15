@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions;
 
+import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.config.ConfigManager;
 import com.dnocturne.afflictions.hook.HookManager;
 import com.dnocturne.afflictions.listener.TimeListener;
@@ -19,6 +20,7 @@ public class Afflictions extends JavaPlugin {
     private LocalizationManager localizationManager;
     private AfflictionManager afflictionManager;
     private HookManager hookManager;
+    private CommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -52,7 +54,10 @@ public class Afflictions extends JavaPlugin {
         // Start time listener
         new TimeListener(this).start();
 
-        // TODO: Register commands
+        // Register commands
+        commandManager = new CommandManager(this);
+        commandManager.registerCommands();
+
         // TODO: Register default afflictions
 
         getLogger().info("Afflictions v" + getPluginMeta().getVersion() + " has been enabled!");
