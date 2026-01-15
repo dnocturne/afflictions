@@ -23,11 +23,15 @@ com.dnocturne.afflictions
 │       │   └── Effect.java
 │       └── trigger/
 │           └── Trigger.java
+├── affliction/
+│   └── impl/
+│       └── Vampirism.java            # Vampirism affliction
 ├── component/
 │   ├── effect/
 │   │   ├── DamageEffect.java
 │   │   ├── PotionEffectComponent.java
-│   │   └── AttributeModifierEffect.java
+│   │   ├── AttributeModifierEffect.java
+│   │   └── SunlightDamageComponent.java
 │   └── trigger/
 │       ├── TimeTrigger.java
 │       ├── SunlightTrigger.java
@@ -120,7 +124,8 @@ Affliction
 ├── Effects (what happens)
 │   ├── DamageEffect
 │   ├── PotionEffectComponent
-│   └── AttributeModifierEffect
+│   ├── AttributeModifierEffect
+│   └── SunlightDamageComponent
 ├── Triggers (when it activates)
 │   ├── TimeTrigger
 │   ├── SunlightTrigger
@@ -128,6 +133,27 @@ Affliction
 └── Cures (how to remove)
     └── (planned)
 ```
+
+---
+
+## Built-in Afflictions
+
+### Vampirism
+**ID:** `vampirism`
+
+A supernatural curse that burns in sunlight but grants power in darkness.
+
+**Components:**
+- `SunlightDamageComponent` - Takes damage when exposed to sunlight
+  - Base damage: 2.0 hearts per tick
+  - Level scaling: Higher levels reduce damage (more control)
+  - Helmet reduces damage by 50%
+  - Rain/storm provides full protection
+  - Sets player on fire visually
+
+**Data keys:**
+- `burning` (boolean) - Currently taking sun damage
+- `has_helmet` (boolean) - Wearing helmet protection
 
 ---
 

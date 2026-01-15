@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions;
 
+import com.dnocturne.afflictions.affliction.impl.Vampirism;
 import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.config.ConfigManager;
 import com.dnocturne.afflictions.hook.HookManager;
@@ -72,7 +73,8 @@ public class Afflictions extends JavaPlugin {
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
 
-        // TODO: Register default afflictions
+        // Register default afflictions
+        registerAfflictions();
 
         getLogger().info("Afflictions v" + getPluginMeta().getVersion() + " has been enabled!");
     }
@@ -138,5 +140,13 @@ public class Afflictions extends JavaPlugin {
      */
     public StorageManager getStorageManager() {
         return storageManager;
+    }
+
+    /**
+     * Register all built-in afflictions.
+     */
+    private void registerAfflictions() {
+        afflictionManager.getRegistry().register(Vampirism.create());
+        getLogger().info("Registered " + afflictionManager.getRegistry().getAll().size() + " affliction(s)");
     }
 }

@@ -55,10 +55,18 @@ All notable changes to Afflictions will be documented here.
 - `config.yml` with storage, language, tick-rate settings
 - MySQL settings placeholder (not yet implemented)
 
+**Afflictions:**
+- Vampirism affliction implementation
+  - `SunlightDamageComponent` - deals damage when exposed to sunlight
+  - Damage scales inversely with level (higher level = more control)
+  - Helmet provides 50% damage reduction
+  - Weather (rain/storm) provides protection
+  - Visual fire effect when burning
+
 ### Planned
 - MySQL/MariaDB storage support
-- Vampirism affliction implementation
 - Werewolf affliction implementation
+- Vampirism additional features (night vision, blood thirst, etc.)
 - PlaceholderAPI placeholders
 - Custom events API
 
