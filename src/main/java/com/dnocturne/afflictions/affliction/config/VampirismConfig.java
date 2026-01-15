@@ -4,6 +4,8 @@ import com.dnocturne.afflictions.Afflictions;
 import dev.dejvokep.boostedyaml.YamlDocument;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -23,6 +25,9 @@ public class VampirismConfig {
     // Affliction settings
     private int maxLevel = 5;
     private boolean curable = true;
+
+    // Level titles (level -> title)
+    private final Map<Integer, String> levelTitles = new HashMap<>();
 
     // Sun damage settings
     private boolean sunDamageEnabled = true;
@@ -78,6 +83,15 @@ public class VampirismConfig {
         // Affliction settings
         maxLevel = config.getInt("settings.max-level", maxLevel);
         curable = config.getBoolean("settings.curable", curable);
+
+        // Level titles
+        levelTitles.clear();
+        for (int level = 1; level <= maxLevel; level++) {
+            String title = config.getString("levels." + level + ".title");
+            if (title != null) {
+                levelTitles.put(level, title);
+            }
+        }
 
         // Sun damage settings
         sunDamageEnabled = config.getBoolean("sun-damage.enabled", sunDamageEnabled);
@@ -153,5 +167,26 @@ public class VampirismConfig {
 
     public int getFireTicks() {
         return fireTicks;
+    }
+
+    /**
+     * Get the title for a specific level.
+     *
+     * @param level The affliction level
+     * @return The title for the level, or null if not configured
+     */
+    public String getLevelTitle(int level) {
+        return levelTitles.get(level);
+    }
+
+    /**
+     * Get the title for a specific level, with fallback.
+     *
+     * @param level    The affliction level
+     * @param fallback The fallback value if no title is configured
+     * @return The title for the level, or the fallback
+     */
+    public String getLevelTitle(int level, String fallback) {
+        return levelTitles.getOrDefault(level, fallback);
     }
 }

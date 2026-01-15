@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
  *   <li>{@code %afflictions_<id>_name%} - What the player "is" (e.g., "Vampire")</li>
  *   <li>{@code %afflictions_<id>_affliction%} - The affliction name (e.g., "Vampirism")</li>
  *   <li>{@code %afflictions_<id>_prefix%} - Short prefix/tag (e.g., "[V]")</li>
+ *   <li>{@code %afflictions_<id>_title%} - Level title (e.g., "Fledgling", "Elder")</li>
  *   <li>{@code %afflictions_<id>_level%} - Level of affliction</li>
  *   <li>{@code %afflictions_<id>_permanent%} - true/false if permanent</li>
  *   <li>{@code %afflictions_<id>_duration%} - Duration in milliseconds (-1 if permanent)</li>
@@ -232,6 +233,17 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
                 return hasAffliction ? MessageUtil.toLegacy(getDisplayPrefix(afflictionId)) : "";
             }
 
+            // %afflictions_<id>_title% - Level title (e.g., "Fledgling", "Elder")
+            if (property.equalsIgnoreCase("title")) {
+                if (!hasAffliction) return "";
+                int level = afflictedOpt
+                        .flatMap(ap -> ap.getAffliction(afflictionId))
+                        .map(AfflictionInstance::getLevel)
+                        .orElse(1);
+                String title = getLevelTitle(afflictionId, level);
+                return title != null ? MessageUtil.toLegacy(title) : "";
+            }
+
             // Other properties require the player to have the affliction
             Optional<AfflictionInstance> instanceOpt = afflictedOpt
                     .flatMap(ap -> ap.getAffliction(afflictionId));
@@ -310,6 +322,23 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
             //         ? plugin.getLycanthropyConfig().getPrefix()
             //         : "";
             default -> "";
+        };
+    }
+
+    /**
+     * Get the level title for an affliction at a specific level.
+     * Example: "Fledgling", "Elder", "Ancient"
+     */
+    private String getLevelTitle(String afflictionId, int level) {
+        return switch (afflictionId.toLowerCase()) {
+            case "vampirism" -> plugin.getVampirismConfig() != null
+                    ? plugin.getVampirismConfig().getLevelTitle(level)
+                    : null;
+            // Future afflictions:
+            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
+            //         ? plugin.getLycanthropyConfig().getLevelTitle(level)
+            //         : null;
+            default -> null;
         };
     }
 

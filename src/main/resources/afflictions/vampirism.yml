@@ -32,6 +32,21 @@ settings:
   # Can this affliction be cured?
   curable: true
 
+# Level titles - translatable names for each level
+# Placeholder: %afflictions_vampirism_title%
+# MiniMessage format - automatically converted to legacy for PlaceholderAPI
+levels:
+  1:
+    title: "<#8b0000>Fledgling"
+  2:
+    title: "<#a00000>Nightstalker"
+  3:
+    title: "<#b50000>Bloodborn"
+  4:
+    title: "<#c93434>Elder"
+  5:
+    title: "<#ff0000>Ancient"
+
 # Sun damage settings
 sun-damage:
   # Whether sun damage is enabled

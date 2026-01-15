@@ -69,6 +69,7 @@ Replace `<id>` with the affliction ID (e.g., `vampirism`).
 | `%afflictions_<id>_name%` | What the player "is" (empty if not afflicted) | `Vampire` |
 | `%afflictions_<id>_affliction%` | The affliction name (empty if not afflicted) | `Vampirism` |
 | `%afflictions_<id>_prefix%` | Short prefix/tag (empty if not afflicted) | `[V]` |
+| `%afflictions_<id>_title%` | Level title (empty if not afflicted) | `Fledgling`, `Elder` |
 | `%afflictions_<id>_permanent%` | Whether affliction is permanent | `true` / `false` |
 | `%afflictions_<id>_duration%` | Duration in ms (-1 if permanent) | `-1` |
 | `%afflictions_<id>_contracted%` | Timestamp when contracted | `1705312800000` |
@@ -124,6 +125,7 @@ Scoreboard showing affliction status:
 ```
 You are: %afflictions_vampirism_name%
 Affliction: %afflictions_vampirism_affliction%
+Rank: %afflictions_vampirism_title%
 Level: %afflictions_level_vampirism%
 ```
 
