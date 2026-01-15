@@ -1,0 +1,5 @@
+name: ${name}
+version: ${version}
+main: com.dnocturne.afflictions.Afflictions
+api-version: '1.21.11'
+description: A Minecraft plugin
