@@ -48,4 +48,4 @@ The plugin JAR will be in `build/libs/Afflictions-<version>.jar`.
 
 ## License
 
-MIT
+Apache License 2.0
