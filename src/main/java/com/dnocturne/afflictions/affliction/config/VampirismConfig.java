@@ -14,10 +14,10 @@ public class VampirismConfig {
     private final Afflictions plugin;
     private YamlDocument config;
 
-    // Display settings
-    private String name = "<gradient:dark_red:red>Vampire</gradient>";
-    private String afflictionName = "<dark_red>Vampirism</dark_red>";
-    private String prefix = "<dark_red>[<red>V</red>]</dark_red> ";
+    // Display settings (MiniMessage format - converted to legacy for PlaceholderAPI)
+    private String name = "<#c93434>Vampire";
+    private String afflictionName = "<#8b0000>Vampirism";
+    private String prefix = "<#8b0000>[<#c93434>V<#8b0000>] ";
     private String description = "A dark curse that burns in sunlight but grants power in darkness.";
 
     // Affliction settings

@@ -129,21 +129,23 @@ public final class TimeUtil {
      * One complete lunar cycle takes 8 in-game days (~2h 40m real time).
      */
     public enum MoonPhase {
-        FULL_MOON(0, "Full Moon"),
-        WANING_GIBBOUS(1, "Waning Gibbous"),
-        THIRD_QUARTER(2, "Third Quarter"),
-        WANING_CRESCENT(3, "Waning Crescent"),
-        NEW_MOON(4, "New Moon"),
-        WAXING_CRESCENT(5, "Waxing Crescent"),
-        FIRST_QUARTER(6, "First Quarter"),
-        WAXING_GIBBOUS(7, "Waxing Gibbous");
+        FULL_MOON(0, "Full Moon", "🌕"),
+        WANING_GIBBOUS(1, "Waning Gibbous", "🌖"),
+        THIRD_QUARTER(2, "Third Quarter", "🌗"),
+        WANING_CRESCENT(3, "Waning Crescent", "🌘"),
+        NEW_MOON(4, "New Moon", "🌑"),
+        WAXING_CRESCENT(5, "Waxing Crescent", "🌒"),
+        FIRST_QUARTER(6, "First Quarter", "🌓"),
+        WAXING_GIBBOUS(7, "Waxing Gibbous", "🌔");
 
         private final int phase;
         private final String displayName;
+        private final String symbol;
 
-        MoonPhase(int phase, String displayName) {
+        MoonPhase(int phase, String displayName, String symbol) {
             this.phase = phase;
             this.displayName = displayName;
+            this.symbol = symbol;
         }
 
         public int getPhase() {
@@ -152,6 +154,10 @@ public final class TimeUtil {
 
         public String getDisplayName() {
             return displayName;
+        }
+
+        public String getSymbol() {
+            return symbol;
         }
 
         /**

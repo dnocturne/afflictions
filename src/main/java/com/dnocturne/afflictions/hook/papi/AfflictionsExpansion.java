@@ -3,8 +3,12 @@ package com.dnocturne.afflictions.hook.papi;
 import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import com.dnocturne.afflictions.player.AfflictedPlayer;
+import com.dnocturne.afflictions.util.MessageUtil;
+import com.dnocturne.afflictions.util.TimeUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +47,14 @@ import java.util.stream.Collectors;
  * <p>Custom data placeholders:</p>
  * <ul>
  *   <li>{@code %afflictions_data_<id>_<key>%} - Custom data value stored on affliction instance</li>
+ * </ul>
+ *
+ * <p>Time placeholders (requires online player):</p>
+ * <ul>
+ *   <li>{@code %afflictions_time%} - Current time of day with symbol (e.g., "☀ Day" or "🌕 Full Moon")</li>
+ *   <li>{@code %afflictions_time_raw%} - Just "day" or "night"</li>
+ *   <li>{@code %afflictions_moon_phase%} - Current moon phase name (e.g., "Full Moon")</li>
+ *   <li>{@code %afflictions_moon_symbol%} - Moon phase symbol (e.g., "🌕")</li>
  * </ul>
  */
 public class AfflictionsExpansion extends PlaceholderExpansion {
@@ -119,6 +131,45 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
                     .orElse("");
         }
 
+        // Time placeholders - require online player for world access
+        if (params.startsWith("time") || params.startsWith("moon")) {
+            if (!player.isOnline()) {
+                return "";
+            }
+            Player onlinePlayer = player.getPlayer();
+            if (onlinePlayer == null) {
+                return "";
+            }
+            World world = onlinePlayer.getWorld();
+
+            // %afflictions_time% - localized day/night with moon phase
+            if (params.equalsIgnoreCase("time")) {
+                if (TimeUtil.isDay(world)) {
+                    return MessageUtil.toLegacy(plugin.getLocalizationManager().getRaw("time.placeholder.day"));
+                } else {
+                    TimeUtil.MoonPhase phase = TimeUtil.getMoonPhaseEnum(world);
+                    String symbol = getMoonSymbol(phase);
+                    String name = getMoonPhaseName(phase);
+                    return MessageUtil.toLegacy(symbol + " " + name);
+                }
+            }
+
+            // %afflictions_time_raw% - just "day" or "night"
+            if (params.equalsIgnoreCase("time_raw")) {
+                return TimeUtil.isDay(world) ? "day" : "night";
+            }
+
+            // %afflictions_moon_phase% - localized moon phase name
+            if (params.equalsIgnoreCase("moon_phase")) {
+                return MessageUtil.toLegacy(getMoonPhaseName(TimeUtil.getMoonPhaseEnum(world)));
+            }
+
+            // %afflictions_moon_symbol% - moon phase symbol from locale
+            if (params.equalsIgnoreCase("moon_symbol")) {
+                return MessageUtil.toLegacy(getMoonSymbol(TimeUtil.getMoonPhaseEnum(world)));
+            }
+        }
+
         // %afflictions_has_<id>%
         if (params.startsWith("has_")) {
             String afflictionId = params.substring(4);
@@ -168,17 +219,17 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
 
             // %afflictions_<id>_name% - What the player "is" (e.g., "Vampire")
             if (property.equalsIgnoreCase("name")) {
-                return hasAffliction ? getDisplayName(afflictionId) : "";
+                return hasAffliction ? MessageUtil.toLegacy(getDisplayName(afflictionId)) : "";
             }
 
             // %afflictions_<id>_affliction% - The affliction name (e.g., "Vampirism")
             if (property.equalsIgnoreCase("affliction")) {
-                return hasAffliction ? getDisplayAfflictionName(afflictionId) : "";
+                return hasAffliction ? MessageUtil.toLegacy(getDisplayAfflictionName(afflictionId)) : "";
             }
 
             // %afflictions_<id>_prefix% - Short prefix/tag (e.g., "[V]")
             if (property.equalsIgnoreCase("prefix")) {
-                return hasAffliction ? getDisplayPrefix(afflictionId) : "";
+                return hasAffliction ? MessageUtil.toLegacy(getDisplayPrefix(afflictionId)) : "";
             }
 
             // Other properties require the player to have the affliction
@@ -260,5 +311,32 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
             //         : "";
             default -> "";
         };
+    }
+
+    /**
+     * Get the localized moon phase name from the locale file.
+     */
+    private String getMoonPhaseName(TimeUtil.MoonPhase phase) {
+        String key = "time.moon." + getMoonPhaseKey(phase) + ".name";
+        String value = plugin.getLocalizationManager().getRaw(key);
+        // Fallback to enum display name if not configured
+        return value.equals(key) ? phase.getDisplayName() : value;
+    }
+
+    /**
+     * Get the moon phase symbol from the locale file.
+     */
+    private String getMoonSymbol(TimeUtil.MoonPhase phase) {
+        String key = "time.moon." + getMoonPhaseKey(phase) + ".symbol";
+        String value = plugin.getLocalizationManager().getRaw(key);
+        // Fallback to enum symbol if not configured
+        return value.equals(key) ? phase.getSymbol() : value;
+    }
+
+    /**
+     * Convert MoonPhase enum to locale key format (e.g., FULL_MOON -> full-moon).
+     */
+    private String getMoonPhaseKey(TimeUtil.MoonPhase phase) {
+        return phase.name().toLowerCase().replace('_', '-');
     }
 }

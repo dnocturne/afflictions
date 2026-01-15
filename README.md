@@ -78,6 +78,33 @@ Replace `<id>` with the affliction ID (e.g., `vampirism`).
 |-------------|-------------|
 | `%afflictions_data_<id>_<key>%` | Custom data value stored on affliction instance |
 
+### Time Placeholders
+
+These placeholders require the player to be online (for world access). The display text is configurable in the locale files (`lang/*.yml`) under the `time` section.
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%afflictions_time%` | Time of day with symbol (configurable) | `☀ Day` / `🌕 ꜰᴜʟʟ ᴍᴏᴏɴ` |
+| `%afflictions_time_raw%` | Simple day/night text | `day` / `night` |
+| `%afflictions_moon_phase%` | Current moon phase name (configurable) | `ꜰᴜʟʟ ᴍᴏᴏɴ`, `ɴᴇᴡ ᴍᴏᴏɴ` |
+| `%afflictions_moon_symbol%` | Moon phase symbol (configurable) | `🌕`, `🌑`, `🌗` |
+
+Configure time/moon display in your locale file:
+```yaml
+time:
+  placeholder:
+    day: "☀ Day"      # Shown during daytime
+    night: "Night"    # Base text for night (symbol added from moon phase)
+  moon:
+    full-moon:
+      name: "Full Moon"
+      symbol: "🌕"
+    new-moon:
+      name: "New Moon"
+      symbol: "🌑"
+    # ... other phases
+```
+
 ### Example Usage
 
 Chat format with vampirism prefix:

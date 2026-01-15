@@ -93,12 +93,36 @@ time:
   nightfall: "\ 🌙 <reset><#6d6d6d><bold>ɴɪɢʜᴛ <reset><#6d6d6d>• <white>ɴɪɢʜᴛ ʜᴀꜱ ꜰᴀʟʟᴇɴ. <#a9c8ff><moon_phase>"
   dawn: "\ ☀ <reset><#d4a017><bold>ᴅᴀᴡɴ <reset><#6d6d6d>• <white>ᴛʜᴇ ꜱᴜɴ ʀɪꜱᴇꜱ. <#d4a017>ᴀ ɴᴇᴡ ᴅᴀʏ ʙᴇɢɪɴꜱ."
 
+  # PlaceholderAPI display text for %afflictions_time%
+  # MiniMessage format - automatically converted to legacy for PlaceholderAPI
+  placeholder:
+    day: "<#ffdd00>☀ <#ff9500>ᴅᴀʏ"
+    night: "<#6d6d6d>ɴɪɢʜᴛ"
+
+  # Moon phase names and symbols for placeholders
+  # MiniMessage format - automatically converted to legacy for PlaceholderAPI
   moon:
-    full-moon: "ꜰᴜʟʟ ᴍᴏᴏɴ"
-    waning-gibbous: "ᴡᴀɴɪɴɢ ɢɪʙʙᴏᴜꜱ"
-    third-quarter: "ᴛʜɪʀᴅ Qᴜᴀʀᴛᴇʀ"
-    waning-crescent: "ᴡᴀɴɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
-    new-moon: "ɴᴇᴡ ᴍᴏᴏɴ"
-    waxing-crescent: "ᴡᴀxɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
-    first-quarter: "ꜰɪʀꜱᴛ Qᴜᴀʀᴛᴇʀ"
-    waxing-gibbous: "ᴡᴀxɪɴɢ ɢɪʙʙᴏᴜꜱ"
+    full-moon:
+      name: "<#ffd700>ꜰᴜʟʟ ᴍᴏᴏɴ"
+      symbol: "<#ffd700>🌕"
+    waning-gibbous:
+      name: "<#d4c4a8>ᴡᴀɴɪɴɢ ɢɪʙʙᴏᴜꜱ"
+      symbol: "<#d4c4a8>🌖"
+    third-quarter:
+      name: "<#a9a9a9>ᴛʜɪʀᴅ Qᴜᴀʀᴛᴇʀ"
+      symbol: "<#a9a9a9>🌗"
+    waning-crescent:
+      name: "<#708090>ᴡᴀɴɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
+      symbol: "<#708090>🌘"
+    new-moon:
+      name: "<#4a4a4a>ɴᴇᴡ ᴍᴏᴏɴ"
+      symbol: "<#4a4a4a>🌑"
+    waxing-crescent:
+      name: "<#708090>ᴡᴀxɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
+      symbol: "<#708090>🌒"
+    first-quarter:
+      name: "<#a9a9a9>ꜰɪʀꜱᴛ Qᴜᴀʀᴛᴇʀ"
+      symbol: "<#a9a9a9>🌓"
+    waxing-gibbous:
+      name: "<#d4c4a8>ᴡᴀxɪɴɢ ɢɪʙʙᴏᴜꜱ"
+      symbol: "<#d4c4a8>🌔"

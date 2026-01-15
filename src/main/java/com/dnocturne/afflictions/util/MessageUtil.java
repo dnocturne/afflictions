@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,6 +16,12 @@ import java.util.Map;
 public final class MessageUtil {
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+
+    // Use hex character (&#RRGGBB format) for PlaceholderAPI compatibility
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
 
     private MessageUtil() {
     }
@@ -91,5 +98,33 @@ public final class MessageUtil {
      */
     public static TagResolver placeholder(String key, Component value) {
         return Placeholder.component(key, value);
+    }
+
+    /**
+     * Convert a MiniMessage string to legacy color codes.
+     * Useful for PlaceholderAPI which doesn't support MiniMessage natively.
+     *
+     * @param miniMessage The MiniMessage formatted string
+     * @return Legacy formatted string with color codes
+     */
+    public static String toLegacy(String miniMessage) {
+        if (miniMessage == null || miniMessage.isEmpty()) {
+            return miniMessage;
+        }
+        Component component = MINI_MESSAGE.deserialize(miniMessage);
+        return LEGACY_SERIALIZER.serialize(component);
+    }
+
+    /**
+     * Convert a Component to legacy color codes.
+     *
+     * @param component The component to convert
+     * @return Legacy formatted string with color codes
+     */
+    public static String toLegacy(Component component) {
+        if (component == null) {
+            return "";
+        }
+        return LEGACY_SERIALIZER.serialize(component);
     }
 }

@@ -5,20 +5,21 @@
 # Configuration file version (do not modify)
 config-version: 1
 
-# Display settings (all support MiniMessage formatting)
+# Display settings for PlaceholderAPI
+# MiniMessage format - automatically converted to legacy for PlaceholderAPI
 display:
   # What the player "is" - used for "You are: {name}"
   # Placeholder: %afflictions_vampirism_name%
-  name: "<gradient:dark_red:red>Vampire</gradient>"
+  name: "<#c93434>Vampire"
 
   # The affliction name - used for "Affliction: {affliction}"
   # Placeholder: %afflictions_vampirism_affliction%
-  affliction: "<dark_red>Vampirism</dark_red>"
+  affliction: "<#8b0000>Vampirism"
 
   # Short prefix/tag - used for chat prefixes, tab, etc.
   # Placeholder: %afflictions_vampirism_prefix%
   # Set to empty string "" to disable
-  prefix: "<dark_red>[<red>V</red>]</dark_red> "
+  prefix: "<#8b0000>[<#c93434>V<#8b0000>] "
 
   # Description of the affliction
   description: "A dark curse that burns in sunlight but grants power in darkness."

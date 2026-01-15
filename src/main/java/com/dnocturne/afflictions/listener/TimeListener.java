@@ -84,6 +84,9 @@ public class TimeListener {
     }
 
     private String getMoonPhaseName(MoonPhase phase) {
-        return lang.getRaw("time.moon." + phase.name().toLowerCase().replace("_", "-"));
+        String key = "time.moon." + phase.name().toLowerCase().replace("_", "-") + ".name";
+        String value = lang.getRaw(key);
+        // Fallback to enum display name if not configured
+        return value.equals(key) ? phase.getDisplayName() : value;
     }
 }
