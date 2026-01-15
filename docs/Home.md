@@ -39,10 +39,17 @@ A Paper plugin for Minecraft that introduces afflictions to gameplay.
 
 | Component | Status |
 |-----------|--------|
-| Core Plugin | 🟡 Setup |
-| Affliction System | ⚪ Not Started |
-| Commands | ⚪ Not Started |
-| Configuration | ⚪ Not Started |
+| Core Plugin | 🟢 Complete |
+| Affliction System | 🟢 Complete |
+| Commands | 🟢 Complete |
+| Configuration | 🟢 Complete |
+| Storage (SQLite) | 🟢 Complete |
+| Localization | 🟢 Complete |
+| PlaceholderAPI | 🟢 Complete |
+| Time/Moon System | 🟢 Complete |
+| Vampirism | 🟢 Implemented |
+| Lycanthropy | ⚪ Not Started |
+| Curses | ⚪ Not Started |
 
 ---
 

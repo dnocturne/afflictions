@@ -4,6 +4,23 @@
 
 ---
 
+## Implementation Status
+
+| Feature | Status |
+|---------|--------|
+| Sun Damage | ✅ Implemented |
+| Level Scaling | ✅ Implemented |
+| Helmet Reduction | ✅ Implemented |
+| Weather Protection | ✅ Implemented |
+| PlaceholderAPI | ✅ Implemented |
+| Night Vision | ⚪ Planned |
+| Blood/Thirst | ⚪ Planned |
+| Abilities | ⚪ Planned |
+| Siring | ⚪ Planned |
+| Cure Mechanic | ⚪ Planned |
+
+---
+
 ## Overview
 
 | Property | Value |

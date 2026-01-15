@@ -1,24 +1,36 @@
 # Roadmap
 
-## Phase 1: Foundation
-- [ ] Core plugin structure
-- [ ] Affliction base system
-- [ ] Basic commands
-- [ ] Configuration system
+## Phase 1: Foundation ✅
+- [x] Core plugin structure
+- [x] Affliction base system (component architecture)
+- [x] Basic commands (Cloud framework)
+- [x] Configuration system (BoostedYAML)
 
-## Phase 2: Core Features
-- [ ] Implement affliction types
+## Phase 2: Core Features ✅
+- [x] Implement affliction types (Vampirism)
 - [ ] Cure mechanics
-- [ ] Player data persistence
+- [x] Player data persistence (SQLite)
 
-## Phase 3: Content
-- [ ] Add afflictions
+## Phase 3: Integrations ✅
+- [x] PlaceholderAPI support
+  - [x] Affliction placeholders (name, prefix, level, etc.)
+  - [x] Time/Moon placeholders
+  - [x] MiniMessage to legacy conversion
+- [x] Localization (MiniMessage)
+- [x] Time/Moon system with 8 phases
+
+## Phase 4: Content 🟡
+- [x] Vampirism affliction (sun damage, helmet reduction)
+- [ ] Lycanthropy affliction
+- [ ] Curses system
+- [ ] Blood/thirst system for vampires
+- [ ] Vampire abilities (night vision, etc.)
 - [ ] Balance tuning
-- [ ] Documentation
 
-## Phase 4: Polish
+## Phase 5: Polish
 - [ ] Performance optimization
-- [ ] API for other plugins
+- [ ] Public API documentation
+- [ ] MySQL/MariaDB storage support
 - [ ] Release preparation
 
 ---

@@ -63,11 +63,23 @@ All notable changes to Afflictions will be documented here.
   - Weather (rain/storm) provides protection
   - Visual fire effect when burning
 
+**PlaceholderAPI Integration:**
+- `AfflictionsExpansion` for PlaceholderAPI
+- General placeholders: `count`, `list`, `has_any`
+- Affliction-specific: `has_<id>`, `level_<id>`, `<id>_name`, `<id>_affliction`, `<id>_prefix`
+- Time placeholders: `time`, `time_raw`, `moon_phase`, `moon_symbol`
+- MiniMessage to legacy conversion for PAPI compatibility
+- Full support for TAB, scoreboards, and chat plugins
+
+**Time & Moon System:**
+- `TimeUtil.MoonPhase` enum with 8 phases and symbols
+- Day/night transition broadcasts via `TimeListener`
+- Configurable moon phase names and symbols in locale files
+
 ### Planned
 - MySQL/MariaDB storage support
 - Werewolf affliction implementation
-- Vampirism additional features (night vision, blood thirst, etc.)
-- PlaceholderAPI placeholders
+- Vampirism additional features (night vision, blood thirst, abilities)
 - Custom events API
 
 ---

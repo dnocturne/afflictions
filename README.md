@@ -1,14 +1,22 @@
 # Afflictions
 
-A Minecraft Paper plugin for supernatural afflictions - Vampirism, Lycanthropy, Curses, and more.
+A Minecraft Paper plugin for supernatural afflictions.
 
 ## Features
 
+### Implemented
 - **Vampirism** - Players take damage in sunlight, reduced by wearing helmets and higher affliction levels
-- **Component-based architecture** - Easily create new afflictions with reusable effect components
+- **Time & Moon System** - Day/night cycle tracking with 8 moon phases
 - **Persistent storage** - SQLite storage with offline player support
 - **Localization** - Full MiniMessage support for customizable messages
-- **API** - Developer-friendly API for creating custom afflictions
+- **PlaceholderAPI Integration** - Extensive placeholder support for scoreboards, TAB, chat plugins
+
+### Planned
+- **Lycanthropy** - Werewolf transformation tied to moon phases
+- **Curses** - Stackable debuff afflictions
+- **Blood/Thirst System** - Resource management for vampires
+- **Vampire Abilities** - Level-locked powers
+- **Siring** - Turn other players into vampires
 
 ## Requirements
 
@@ -35,7 +43,7 @@ A Minecraft Paper plugin for supernatural afflictions - Vampirism, Lycanthropy, 
 Configuration files are located in `plugins/Afflictions/`:
 
 - `config.yml` - Main configuration
-- `messages.yml` - Localized messages
+- `lang/en.yml` - Localized messages (supports multiple languages)
 - `afflictions/vampirism.yml` - Vampirism configuration
 
 ## PlaceholderAPI
@@ -65,7 +73,7 @@ Replace `<id>` with the affliction ID (e.g., `vampirism`).
 | `%afflictions_<id>_duration%` | Duration in ms (-1 if permanent) | `-1` |
 | `%afflictions_<id>_contracted%` | Timestamp when contracted | `1705312800000` |
 
-### Curse Placeholders
+### Curse Placeholders (Planned)
 
 | Placeholder | Description | Example Output |
 |-------------|-------------|----------------|
