@@ -5,22 +5,23 @@
 # Configuration file version (do not modify)
 config-version: 1
 
-# Display settings
+# Display settings (all support MiniMessage formatting)
 display:
-  # Display name shown in messages
-  name: "Vampirism"
+  # What the player "is" - used for "You are: {name}"
+  # Placeholder: %afflictions_vampirism_name%
+  name: "<gradient:dark_red:red>Vampire</gradient>"
 
-  # Formatted name with MiniMessage colors/formatting
-  # Used for %afflictions_name% placeholder
-  formatted-name: "<gradient:dark_red:red>Vampire</gradient>"
+  # The affliction name - used for "Affliction: {affliction}"
+  # Placeholder: %afflictions_vampirism_affliction%
+  affliction: "<dark_red>Vampirism</dark_red>"
+
+  # Short prefix/tag - used for chat prefixes, tab, etc.
+  # Placeholder: %afflictions_vampirism_prefix%
+  # Set to empty string "" to disable
+  prefix: "<dark_red>[<red>V</red>]</dark_red> "
 
   # Description of the affliction
   description: "A dark curse that burns in sunlight but grants power in darkness."
-
-  # Prefix shown before player name (supports MiniMessage formatting)
-  # Used for %afflictions_prefix% placeholder
-  # Set to empty string "" to disable
-  prefix: "<dark_red>[<red>Vampire</red>]</dark_red> "
 
 # Affliction settings
 settings:

@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
  * <ul>
  *   <li>{@code %afflictions_has_<id>%} - true/false if player has specific affliction</li>
  *   <li>{@code %afflictions_level_<id>%} - Level of affliction (0 if not afflicted)</li>
- *   <li>{@code %afflictions_<id>_prefix%} - Configured prefix (empty if not afflicted)</li>
- *   <li>{@code %afflictions_<id>_name%} - Configured formatted name (empty if not afflicted)</li>
+ *   <li>{@code %afflictions_<id>_name%} - What the player "is" (e.g., "Vampire")</li>
+ *   <li>{@code %afflictions_<id>_affliction%} - The affliction name (e.g., "Vampirism")</li>
+ *   <li>{@code %afflictions_<id>_prefix%} - Short prefix/tag (e.g., "[V]")</li>
  *   <li>{@code %afflictions_<id>_level%} - Level of affliction</li>
  *   <li>{@code %afflictions_<id>_permanent%} - true/false if permanent</li>
  *   <li>{@code %afflictions_<id>_duration%} - Duration in milliseconds (-1 if permanent)</li>
@@ -159,26 +160,25 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
             String afflictionId = params.substring(0, underscoreIndex);
             String property = params.substring(underscoreIndex + 1);
 
-            // Handle prefix and name - these return empty string if not afflicted
+            // Handle display properties - these return empty string if not afflicted
             // so admins can use them flexibly in formatting
-            if (property.equalsIgnoreCase("prefix")) {
-                boolean hasAffliction = afflictedOpt
-                        .map(ap -> ap.hasAffliction(afflictionId))
-                        .orElse(false);
-                if (hasAffliction) {
-                    return getAfflictionPrefix(afflictionId);
-                }
-                return "";
+            boolean hasAffliction = afflictedOpt
+                    .map(ap -> ap.hasAffliction(afflictionId))
+                    .orElse(false);
+
+            // %afflictions_<id>_name% - What the player "is" (e.g., "Vampire")
+            if (property.equalsIgnoreCase("name")) {
+                return hasAffliction ? getDisplayName(afflictionId) : "";
             }
 
-            if (property.equalsIgnoreCase("name")) {
-                boolean hasAffliction = afflictedOpt
-                        .map(ap -> ap.hasAffliction(afflictionId))
-                        .orElse(false);
-                if (hasAffliction) {
-                    return getAfflictionFormattedName(afflictionId);
-                }
-                return "";
+            // %afflictions_<id>_affliction% - The affliction name (e.g., "Vampirism")
+            if (property.equalsIgnoreCase("affliction")) {
+                return hasAffliction ? getDisplayAfflictionName(afflictionId) : "";
+            }
+
+            // %afflictions_<id>_prefix% - Short prefix/tag (e.g., "[V]")
+            if (property.equalsIgnoreCase("prefix")) {
+                return hasAffliction ? getDisplayPrefix(afflictionId) : "";
             }
 
             // Other properties require the player to have the affliction
@@ -212,9 +212,44 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     }
 
     /**
-     * Get the prefix for an affliction by ID.
+     * Get the display name (what the player "is") for an affliction.
+     * Example: "Vampire", "Werewolf"
      */
-    private String getAfflictionPrefix(String afflictionId) {
+    private String getDisplayName(String afflictionId) {
+        return switch (afflictionId.toLowerCase()) {
+            case "vampirism" -> plugin.getVampirismConfig() != null
+                    ? plugin.getVampirismConfig().getName()
+                    : "";
+            // Future afflictions:
+            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
+            //         ? plugin.getLycanthropyConfig().getName()
+            //         : "";
+            default -> "";
+        };
+    }
+
+    /**
+     * Get the affliction name for an affliction.
+     * Example: "Vampirism", "Lycanthropy"
+     */
+    private String getDisplayAfflictionName(String afflictionId) {
+        return switch (afflictionId.toLowerCase()) {
+            case "vampirism" -> plugin.getVampirismConfig() != null
+                    ? plugin.getVampirismConfig().getAfflictionName()
+                    : "";
+            // Future afflictions:
+            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
+            //         ? plugin.getLycanthropyConfig().getAfflictionName()
+            //         : "";
+            default -> "";
+        };
+    }
+
+    /**
+     * Get the short prefix/tag for an affliction.
+     * Example: "[V]", "[WW]"
+     */
+    private String getDisplayPrefix(String afflictionId) {
         return switch (afflictionId.toLowerCase()) {
             case "vampirism" -> plugin.getVampirismConfig() != null
                     ? plugin.getVampirismConfig().getPrefix()
@@ -222,22 +257,6 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
             // Future afflictions:
             // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
             //         ? plugin.getLycanthropyConfig().getPrefix()
-            //         : "";
-            default -> "";
-        };
-    }
-
-    /**
-     * Get the formatted name for an affliction by ID.
-     */
-    private String getAfflictionFormattedName(String afflictionId) {
-        return switch (afflictionId.toLowerCase()) {
-            case "vampirism" -> plugin.getVampirismConfig() != null
-                    ? plugin.getVampirismConfig().getFormattedName()
-                    : "";
-            // Future afflictions:
-            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
-            //         ? plugin.getLycanthropyConfig().getFormattedName()
             //         : "";
             default -> "";
         };

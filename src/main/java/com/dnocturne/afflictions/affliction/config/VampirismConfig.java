@@ -15,10 +15,10 @@ public class VampirismConfig {
     private YamlDocument config;
 
     // Display settings
-    private String displayName = "Vampirism";
-    private String formattedName = "<gradient:dark_red:red>Vampire</gradient>";
+    private String name = "<gradient:dark_red:red>Vampire</gradient>";
+    private String afflictionName = "<dark_red>Vampirism</dark_red>";
+    private String prefix = "<dark_red>[<red>V</red>]</dark_red> ";
     private String description = "A dark curse that burns in sunlight but grants power in darkness.";
-    private String prefix = "<dark_red>[<red>Vampire</red>]</dark_red> ";
 
     // Affliction settings
     private int maxLevel = 5;
@@ -70,10 +70,10 @@ public class VampirismConfig {
         if (config == null) return;
 
         // Display settings
-        displayName = config.getString("display.name", displayName);
-        formattedName = config.getString("display.formatted-name", formattedName);
-        description = config.getString("display.description", description);
+        name = config.getString("display.name", name);
+        afflictionName = config.getString("display.affliction", afflictionName);
         prefix = config.getString("display.prefix", prefix);
+        description = config.getString("display.description", description);
 
         // Affliction settings
         maxLevel = config.getInt("settings.max-level", maxLevel);
@@ -91,20 +91,32 @@ public class VampirismConfig {
 
     // Getters
 
-    public String getDisplayName() {
-        return displayName;
+    /**
+     * Get the name of what the player "is" (e.g., "Vampire").
+     * Used for "You are: {name}"
+     */
+    public String getName() {
+        return name;
     }
 
-    public String getFormattedName() {
-        return formattedName;
+    /**
+     * Get the affliction name (e.g., "Vampirism").
+     * Used for "Affliction: {affliction}"
+     */
+    public String getAfflictionName() {
+        return afflictionName;
+    }
+
+    /**
+     * Get the short prefix/tag (e.g., "[V]").
+     * Used for chat prefixes, tab, etc.
+     */
+    public String getPrefix() {
+        return prefix;
     }
 
     public String getDescription() {
         return description;
-    }
-
-    public String getPrefix() {
-        return prefix;
     }
 
     public int getMaxLevel() {

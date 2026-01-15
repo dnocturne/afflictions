@@ -58,8 +58,9 @@ Replace `<id>` with the affliction ID (e.g., `vampirism`).
 |-------------|-------------|----------------|
 | `%afflictions_has_<id>%` | Whether player has this affliction | `true` / `false` |
 | `%afflictions_level_<id>%` | Level of affliction (0 if not afflicted) | `3` |
-| `%afflictions_<id>_prefix%` | Configured prefix (empty if not afflicted) | `[Vampire]` |
-| `%afflictions_<id>_name%` | Configured formatted name (empty if not afflicted) | `Vampire` |
+| `%afflictions_<id>_name%` | What the player "is" (empty if not afflicted) | `Vampire` |
+| `%afflictions_<id>_affliction%` | The affliction name (empty if not afflicted) | `Vampirism` |
+| `%afflictions_<id>_prefix%` | Short prefix/tag (empty if not afflicted) | `[V]` |
 | `%afflictions_<id>_permanent%` | Whether affliction is permanent | `true` / `false` |
 | `%afflictions_<id>_duration%` | Duration in ms (-1 if permanent) | `-1` |
 | `%afflictions_<id>_contracted%` | Timestamp when contracted | `1705312800000` |
@@ -86,7 +87,8 @@ Chat format with vampirism prefix:
 
 Scoreboard showing affliction status:
 ```
-Affliction: %afflictions_vampirism_name%
+You are: %afflictions_vampirism_name%
+Affliction: %afflictions_vampirism_affliction%
 Level: %afflictions_level_vampirism%
 ```
 

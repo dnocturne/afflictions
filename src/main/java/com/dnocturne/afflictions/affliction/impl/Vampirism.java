@@ -87,7 +87,9 @@ public class Vampirism extends AbstractAffliction {
          * Load settings from a VampirismConfig.
          */
         public Builder fromConfig(VampirismConfig config) {
-            this.displayName = config.getDisplayName();
+            // Use plain "Vampirism" for internal display name (commands, etc.)
+            // The formatted names are accessed via config for placeholders
+            this.displayName = "Vampirism";
             this.description = config.getDescription();
             this.maxLevel = config.getMaxLevel();
             this.curable = config.isCurable();
