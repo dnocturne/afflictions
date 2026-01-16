@@ -10,10 +10,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Listens for day/night transitions and broadcasts messages.
@@ -24,7 +24,7 @@ public class TimeListener {
 
     private final Afflictions plugin;
     private final LocalizationManager lang;
-    private final Map<String, Boolean> wasNight = new HashMap<>();
+    private final Map<String, Boolean> wasNight = new ConcurrentHashMap<>();
     private BukkitTask task;
 
     public TimeListener(Afflictions plugin) {
