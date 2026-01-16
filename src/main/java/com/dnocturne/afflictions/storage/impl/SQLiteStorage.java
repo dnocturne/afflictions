@@ -84,13 +84,14 @@ public class SQLiteStorage implements Storage {
                 String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
 
                 connection = DriverManager.getConnection(url);
-                connection.createStatement().execute("PRAGMA foreign_keys = ON");
 
-                // Create tables
-                connection.createStatement().execute(CREATE_PLAYERS_TABLE);
-                connection.createStatement().execute(CREATE_AFFLICTIONS_TABLE);
-                connection.createStatement().execute(CREATE_INDEX);
-                connection.createStatement().execute(CREATE_USERNAME_INDEX);
+                try (var stmt = connection.createStatement()) {
+                    stmt.execute("PRAGMA foreign_keys = ON");
+                    stmt.execute(CREATE_PLAYERS_TABLE);
+                    stmt.execute(CREATE_AFFLICTIONS_TABLE);
+                    stmt.execute(CREATE_INDEX);
+                    stmt.execute(CREATE_USERNAME_INDEX);
+                }
 
                 // Migrate existing database if needed (add username column)
                 migrateDatabase();
@@ -126,9 +127,8 @@ public class SQLiteStorage implements Storage {
                 // Check if player exists and get username
                 String checkSql = "SELECT uuid, username FROM afflicted_players WHERE uuid = ?";
                 String username = null;
-                try (PreparedStatement stmt = connection.prepareStatement(checkSql)) {
-                    stmt.setString(1, uuid.toString());
-                    ResultSet rs = stmt.executeQuery();
+                try (PreparedStatement stmt = connection.prepareStatement(checkSql);
+                     ResultSet rs = executeQuery(stmt, uuid.toString())) {
                     if (!rs.next()) {
                         return Optional.empty();
                     }
@@ -143,9 +143,8 @@ public class SQLiteStorage implements Storage {
                         """;
 
                 List<AfflictionData> afflictions = new ArrayList<>();
-                try (PreparedStatement stmt = connection.prepareStatement(loadSql)) {
-                    stmt.setString(1, uuid.toString());
-                    ResultSet rs = stmt.executeQuery();
+                try (PreparedStatement stmt = connection.prepareStatement(loadSql);
+                     ResultSet rs = executeQuery(stmt, uuid.toString())) {
 
                     while (rs.next()) {
                         String afflictionId = rs.getString("affliction_id");
@@ -258,9 +257,9 @@ public class SQLiteStorage implements Storage {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String sql = "SELECT 1 FROM afflicted_players WHERE uuid = ?";
-                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                    stmt.setString(1, uuid.toString());
-                    return stmt.executeQuery().next();
+                try (PreparedStatement stmt = connection.prepareStatement(sql);
+                     ResultSet rs = executeQuery(stmt, uuid.toString())) {
+                    return rs.next();
                 }
             } catch (SQLException e) {
                 logger.severe("Failed to check player " + uuid + ": " + e.getMessage());
@@ -275,16 +274,21 @@ public class SQLiteStorage implements Storage {
             try {
                 // Find player by username (case-insensitive)
                 String findSql = "SELECT uuid, username FROM afflicted_players WHERE username = ? COLLATE NOCASE";
-                UUID playerUuid = null;
-                String storedUsername = null;
+                UUID playerUuid;
+                String storedUsername;
 
-                try (PreparedStatement stmt = connection.prepareStatement(findSql)) {
-                    stmt.setString(1, username);
-                    ResultSet rs = stmt.executeQuery();
+                try (PreparedStatement stmt = connection.prepareStatement(findSql);
+                     ResultSet rs = executeQuery(stmt, username)) {
                     if (!rs.next()) {
                         return Optional.empty();
                     }
-                    playerUuid = UUID.fromString(rs.getString("uuid"));
+                    String uuidString = rs.getString("uuid");
+                    try {
+                        playerUuid = UUID.fromString(uuidString);
+                    } catch (IllegalArgumentException e) {
+                        logger.severe("Invalid UUID in database: " + uuidString);
+                        return Optional.empty();
+                    }
                     storedUsername = rs.getString("username");
                 }
 
@@ -296,9 +300,8 @@ public class SQLiteStorage implements Storage {
                         """;
 
                 List<AfflictionData> afflictions = new ArrayList<>();
-                try (PreparedStatement stmt = connection.prepareStatement(loadSql)) {
-                    stmt.setString(1, playerUuid.toString());
-                    ResultSet rs = stmt.executeQuery();
+                try (PreparedStatement stmt = connection.prepareStatement(loadSql);
+                     ResultSet rs = executeQuery(stmt, playerUuid.toString())) {
 
                     while (rs.next()) {
                         String afflictionId = rs.getString("affliction_id");
@@ -331,19 +334,26 @@ public class SQLiteStorage implements Storage {
     }
 
     /**
+     * Helper method to set a single string parameter and execute a query.
+     * This allows the ResultSet to be used in try-with-resources.
+     */
+    private ResultSet executeQuery(PreparedStatement stmt, String param) throws SQLException {
+        stmt.setString(1, param);
+        return stmt.executeQuery();
+    }
+
+    /**
      * Migrate database schema for existing databases.
      * Adds username column if it doesn't exist.
      */
     private void migrateDatabase() {
-        try {
-            // Check if username column exists
-            ResultSet columns = connection.getMetaData().getColumns(null, null, "afflicted_players", "username");
+        try (ResultSet columns = connection.getMetaData().getColumns(null, null, "afflicted_players", "username")) {
             if (!columns.next()) {
                 // Column doesn't exist, add it
                 logger.info("Migrating database: adding username column...");
-                connection.createStatement().execute(
-                        "ALTER TABLE afflicted_players ADD COLUMN username TEXT NOT NULL DEFAULT 'unknown'"
-                );
+                try (var stmt = connection.createStatement()) {
+                    stmt.execute("ALTER TABLE afflicted_players ADD COLUMN username TEXT NOT NULL DEFAULT 'unknown'");
+                }
                 logger.info("Database migration complete");
             }
         } catch (SQLException e) {
