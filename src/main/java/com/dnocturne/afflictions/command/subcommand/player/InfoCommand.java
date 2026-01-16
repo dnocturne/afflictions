@@ -7,9 +7,9 @@ import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
 import com.dnocturne.afflictions.player.AfflictedPlayer;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 
 import java.time.Duration;
@@ -30,12 +30,14 @@ public class InfoCommand implements SubCommand {
     }
 
     @Override
-    public void register(LegacyPaperCommandManager<CommandSender> manager) {
+    public void register(PaperCommandManager<CommandSourceStack> manager) {
         manager.command(
                 manager.commandBuilder("afflictions", "aff", "afflict")
                         .literal("info")
                         .required("affliction", stringParser(), (ctx, input) -> {
-                            Player player = (Player) ctx.sender();
+                            if (!(ctx.sender().getSender() instanceof Player player)) {
+                                return CompletableFuture.completedFuture(java.util.Collections.emptyList());
+                            }
                             AfflictionManager afflictionManager = plugin.getAfflictionManager();
                             AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
                                     .get(player.getUniqueId())
@@ -52,11 +54,11 @@ public class InfoCommand implements SubCommand {
                             );
                         })
                         .permission("afflictions.info")
-                        .senderType(Player.class)
                         .handler(ctx -> {
-                            Player player = (Player) ctx.sender();
-                            String afflictionId = ctx.get("affliction");
-                            showInfo(player, afflictionId);
+                            if (ctx.sender().getSender() instanceof Player player) {
+                                String afflictionId = ctx.get("affliction");
+                                showInfo(player, afflictionId);
+                            }
                         })
         );
     }

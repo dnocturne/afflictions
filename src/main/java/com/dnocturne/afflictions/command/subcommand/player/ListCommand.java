@@ -7,9 +7,9 @@ import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
 import com.dnocturne.afflictions.player.AfflictedPlayer;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 import java.util.Collection;
 
@@ -25,15 +25,15 @@ public class ListCommand implements SubCommand {
     }
 
     @Override
-    public void register(LegacyPaperCommandManager<CommandSender> manager) {
+    public void register(PaperCommandManager<CommandSourceStack> manager) {
         manager.command(
                 manager.commandBuilder("afflictions", "aff", "afflict")
                         .literal("list")
                         .permission("afflictions.list")
-                        .senderType(Player.class)
                         .handler(ctx -> {
-                            Player player = (Player) ctx.sender();
-                            showAfflictions(player);
+                            if (ctx.sender().getSender() instanceof Player player) {
+                                showAfflictions(player);
+                            }
                         })
         );
     }

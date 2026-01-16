@@ -1,7 +1,7 @@
 package com.dnocturne.afflictions.command.subcommand;
 
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 /**
  * Interface for modular subcommands.
@@ -13,5 +13,5 @@ public interface SubCommand {
      *
      * @param manager The Cloud command manager
      */
-    void register(LegacyPaperCommandManager<CommandSender> manager);
+    void register(PaperCommandManager<CommandSourceStack> manager);
 }

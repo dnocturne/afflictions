@@ -2,24 +2,24 @@ package com.dnocturne.afflictions.command;
 
 import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.command.commands.AfflictionsCommand;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 /**
  * Manages command registration using Cloud command framework.
+ * Uses the modern Paper command API (1.20.6+).
  */
 public class CommandManager {
 
     private final Afflictions plugin;
-    private final LegacyPaperCommandManager<CommandSender> manager;
+    private final PaperCommandManager<CommandSourceStack> manager;
 
     public CommandManager(Afflictions plugin) {
         this.plugin = plugin;
-        this.manager = LegacyPaperCommandManager.createNative(
-                plugin,
-                ExecutionCoordinator.simpleCoordinator()
-        );
+        this.manager = PaperCommandManager.builder()
+                .executionCoordinator(ExecutionCoordinator.simpleCoordinator())
+                .buildOnEnable(plugin);
     }
 
     /**
@@ -34,7 +34,7 @@ public class CommandManager {
     /**
      * Get the Cloud command manager.
      */
-    public LegacyPaperCommandManager<CommandSender> getManager() {
+    public PaperCommandManager<CommandSourceStack> getManager() {
         return manager;
     }
 }

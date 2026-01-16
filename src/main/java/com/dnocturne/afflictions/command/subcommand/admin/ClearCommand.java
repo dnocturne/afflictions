@@ -5,9 +5,10 @@ import com.dnocturne.afflictions.command.subcommand.SubCommand;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
 
@@ -23,14 +24,14 @@ public class ClearCommand implements SubCommand {
     }
 
     @Override
-    public void register(LegacyPaperCommandManager<CommandSender> manager) {
+    public void register(PaperCommandManager<CommandSourceStack> manager) {
         manager.command(
                 manager.commandBuilder("afflictions", "aff", "afflict")
                         .literal("clear")
                         .required("player", playerParser())
                         .permission("afflictions.admin.clear")
                         .handler(ctx -> {
-                            CommandSender sender = ctx.sender();
+                            CommandSender sender = ctx.sender().getSender();
                             Player target = ctx.get("player");
 
                             clearAfflictions(sender, target);

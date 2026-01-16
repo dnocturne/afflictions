@@ -5,9 +5,10 @@ import com.dnocturne.afflictions.command.subcommand.SubCommand;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +29,7 @@ public class GiveCommand implements SubCommand {
     }
 
     @Override
-    public void register(LegacyPaperCommandManager<CommandSender> manager) {
+    public void register(PaperCommandManager<CommandSourceStack> manager) {
         manager.command(
                 manager.commandBuilder("afflictions", "aff", "afflict")
                         .literal("give")
@@ -43,7 +44,7 @@ public class GiveCommand implements SubCommand {
                         .optional("level", integerParser(1, 100))
                         .permission("afflictions.admin.give")
                         .handler(ctx -> {
-                            CommandSender sender = ctx.sender();
+                            CommandSender sender = ctx.sender().getSender();
                             Player target = ctx.get("player");
                             String afflictionId = ctx.get("affliction");
                             int level = ctx.getOrDefault("level", 1);

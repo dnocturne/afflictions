@@ -4,8 +4,9 @@ import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.command.subcommand.SubCommand;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 /**
  * /afflictions reload - Reload plugin configuration.
@@ -19,13 +20,13 @@ public class ReloadCommand implements SubCommand {
     }
 
     @Override
-    public void register(LegacyPaperCommandManager<CommandSender> manager) {
+    public void register(PaperCommandManager<CommandSourceStack> manager) {
         manager.command(
                 manager.commandBuilder("afflictions", "aff", "afflict")
                         .literal("reload")
                         .permission("afflictions.admin.reload")
                         .handler(ctx -> {
-                            CommandSender sender = ctx.sender();
+                            CommandSender sender = ctx.sender().getSender();
                             reloadConfig(sender);
                         })
         );
