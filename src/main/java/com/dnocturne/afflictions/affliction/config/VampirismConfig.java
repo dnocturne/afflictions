@@ -11,7 +11,9 @@ import java.util.logging.Level;
 /**
  * Configuration holder for Vampirism affliction.
  */
-public class VampirismConfig {
+public class VampirismConfig implements AfflictionDisplayConfig {
+
+    private static final String ID = "vampirism";
 
     private final Afflictions plugin;
     private YamlDocument config;
@@ -105,10 +107,16 @@ public class VampirismConfig {
 
     // Getters
 
+    @Override
+    public String getId() {
+        return ID;
+    }
+
     /**
      * Get the name of what the player "is" (e.g., "Vampire").
      * Used for "You are: {name}"
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -117,6 +125,7 @@ public class VampirismConfig {
      * Get the affliction name (e.g., "Vampirism").
      * Used for "Affliction: {affliction}"
      */
+    @Override
     public String getAfflictionName() {
         return afflictionName;
     }
@@ -125,14 +134,17 @@ public class VampirismConfig {
      * Get the short prefix/tag (e.g., "[V]").
      * Used for chat prefixes, tab, etc.
      */
+    @Override
     public String getPrefix() {
         return prefix;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public int getMaxLevel() {
         return maxLevel;
     }
@@ -175,18 +187,8 @@ public class VampirismConfig {
      * @param level The affliction level
      * @return The title for the level, or null if not configured
      */
+    @Override
     public String getLevelTitle(int level) {
         return levelTitles.get(level);
-    }
-
-    /**
-     * Get the title for a specific level, with fallback.
-     *
-     * @param level    The affliction level
-     * @param fallback The fallback value if no title is configured
-     * @return The title for the level, or the fallback
-     */
-    public String getLevelTitle(int level, String fallback) {
-        return levelTitles.getOrDefault(level, fallback);
     }
 }

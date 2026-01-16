@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions;
 
+import com.dnocturne.afflictions.affliction.config.AfflictionDisplayConfig;
 import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.affliction.impl.Vampirism;
 import com.dnocturne.afflictions.command.CommandManager;
@@ -12,6 +13,10 @@ import com.dnocturne.afflictions.manager.AfflictionManager;
 import com.dnocturne.afflictions.storage.StorageManager;
 import com.dnocturne.afflictions.util.TaskUtil;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main plugin class for Afflictions.
@@ -27,6 +32,9 @@ public class Afflictions extends JavaPlugin {
     private HookManager hookManager;
     private CommandManager commandManager;
     private VampirismConfig vampirismConfig;
+
+    // Registry of affliction display configs by ID
+    private final Map<String, AfflictionDisplayConfig> displayConfigs = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -152,8 +160,20 @@ public class Afflictions extends JavaPlugin {
         vampirismConfig = new VampirismConfig(this);
         vampirismConfig.load();
         afflictionManager.getRegistry().register(Vampirism.create(vampirismConfig));
+        displayConfigs.put(vampirismConfig.getId(), vampirismConfig);
 
         getLogger().info("Registered " + afflictionManager.getRegistry().getAll().size() + " affliction(s)");
+    }
+
+    /**
+     * Get an affliction display config by ID.
+     *
+     * @param afflictionId The affliction ID (e.g., "vampirism")
+     * @return The display config, or null if not found
+     */
+    @Nullable
+    public AfflictionDisplayConfig getDisplayConfig(String afflictionId) {
+        return displayConfigs.get(afflictionId.toLowerCase());
     }
 
     /**

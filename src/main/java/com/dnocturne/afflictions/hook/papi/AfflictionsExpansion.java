@@ -1,6 +1,7 @@
 package com.dnocturne.afflictions.hook.papi;
 
 import com.dnocturne.afflictions.Afflictions;
+import com.dnocturne.afflictions.affliction.config.AfflictionDisplayConfig;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import com.dnocturne.afflictions.player.AfflictedPlayer;
 import com.dnocturne.afflictions.util.MessageUtil;
@@ -275,20 +276,19 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     }
 
     /**
+     * Get the display config for an affliction, or null if not found.
+     */
+    private AfflictionDisplayConfig getConfig(String afflictionId) {
+        return plugin.getDisplayConfig(afflictionId);
+    }
+
+    /**
      * Get the display name (what the player "is") for an affliction.
      * Example: "Vampire", "Werewolf"
      */
     private String getDisplayName(String afflictionId) {
-        return switch (afflictionId.toLowerCase()) {
-            case "vampirism" -> plugin.getVampirismConfig() != null
-                    ? plugin.getVampirismConfig().getName()
-                    : "";
-            // Future afflictions:
-            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
-            //         ? plugin.getLycanthropyConfig().getName()
-            //         : "";
-            default -> "";
-        };
+        AfflictionDisplayConfig config = getConfig(afflictionId);
+        return config != null ? config.getName() : "";
     }
 
     /**
@@ -296,16 +296,8 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Example: "Vampirism", "Lycanthropy"
      */
     private String getDisplayAfflictionName(String afflictionId) {
-        return switch (afflictionId.toLowerCase()) {
-            case "vampirism" -> plugin.getVampirismConfig() != null
-                    ? plugin.getVampirismConfig().getAfflictionName()
-                    : "";
-            // Future afflictions:
-            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
-            //         ? plugin.getLycanthropyConfig().getAfflictionName()
-            //         : "";
-            default -> "";
-        };
+        AfflictionDisplayConfig config = getConfig(afflictionId);
+        return config != null ? config.getAfflictionName() : "";
     }
 
     /**
@@ -313,16 +305,8 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Example: "[V]", "[WW]"
      */
     private String getDisplayPrefix(String afflictionId) {
-        return switch (afflictionId.toLowerCase()) {
-            case "vampirism" -> plugin.getVampirismConfig() != null
-                    ? plugin.getVampirismConfig().getPrefix()
-                    : "";
-            // Future afflictions:
-            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
-            //         ? plugin.getLycanthropyConfig().getPrefix()
-            //         : "";
-            default -> "";
-        };
+        AfflictionDisplayConfig config = getConfig(afflictionId);
+        return config != null ? config.getPrefix() : "";
     }
 
     /**
@@ -330,16 +314,8 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Example: "Fledgling", "Elder", "Ancient"
      */
     private String getLevelTitle(String afflictionId, int level) {
-        return switch (afflictionId.toLowerCase()) {
-            case "vampirism" -> plugin.getVampirismConfig() != null
-                    ? plugin.getVampirismConfig().getLevelTitle(level)
-                    : null;
-            // Future afflictions:
-            // case "lycanthropy" -> plugin.getLycanthropyConfig() != null
-            //         ? plugin.getLycanthropyConfig().getLevelTitle(level)
-            //         : null;
-            default -> null;
-        };
+        AfflictionDisplayConfig config = getConfig(afflictionId);
+        return config != null ? config.getLevelTitle(level) : null;
     }
 
     /**
