@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
@@ -37,15 +36,16 @@ public class RemoveCommand implements SubCommand {
                         .required("affliction", stringParser(), (ctx, input) -> {
                             Player target = ctx.get("player");
                             AfflictionManager afflictionManager = plugin.getAfflictionManager();
-                            Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
-                                    .get(target.getUniqueId());
+                            AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+                                    .get(target.getUniqueId())
+                                    .orElse(null);
 
-                            if (afflictedOpt.isEmpty()) {
+                            if (afflicted == null) {
                                 return CompletableFuture.completedFuture(java.util.Collections.emptyList());
                             }
 
                             return CompletableFuture.completedFuture(
-                                    afflictedOpt.get().getAfflictions().stream()
+                                    afflicted.getAfflictions().stream()
                                             .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
                                             .toList()
                             );

@@ -14,7 +14,6 @@ import org.incendo.cloud.suggestion.Suggestion;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
@@ -38,15 +37,16 @@ public class InfoCommand implements SubCommand {
                         .required("affliction", stringParser(), (ctx, input) -> {
                             Player player = (Player) ctx.sender();
                             AfflictionManager afflictionManager = plugin.getAfflictionManager();
-                            Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
-                                    .get(player.getUniqueId());
+                            AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+                                    .get(player.getUniqueId())
+                                    .orElse(null);
 
-                            if (afflictedOpt.isEmpty()) {
+                            if (afflicted == null) {
                                 return CompletableFuture.completedFuture(java.util.Collections.emptyList());
                             }
 
                             return CompletableFuture.completedFuture(
-                                    afflictedOpt.get().getAfflictions().stream()
+                                    afflicted.getAfflictions().stream()
                                             .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
                                             .toList()
                             );
@@ -65,24 +65,23 @@ public class InfoCommand implements SubCommand {
         LocalizationManager lang = plugin.getLocalizationManager();
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
 
-        Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
-                .get(player.getUniqueId());
+        AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+                .get(player.getUniqueId())
+                .orElse(null);
 
-        if (afflictedOpt.isEmpty()) {
+        if (afflicted == null) {
             lang.send(player, MessageKey.INVALID_AFFLICTION,
                     LocalizationManager.placeholder("affliction", afflictionId));
             return;
         }
 
-        Optional<AfflictionInstance> instanceOpt = afflictedOpt.get().getAffliction(afflictionId);
+        AfflictionInstance instance = afflicted.getAffliction(afflictionId).orElse(null);
 
-        if (instanceOpt.isEmpty()) {
+        if (instance == null) {
             lang.send(player, MessageKey.INVALID_AFFLICTION,
                     LocalizationManager.placeholder("affliction", afflictionId));
             return;
         }
-
-        AfflictionInstance instance = instanceOpt.get();
 
         lang.send(player, MessageKey.AFFLICTION_INFO_HEADER,
                 LocalizationManager.placeholder("affliction", instance.getAffliction().getDisplayName()));
