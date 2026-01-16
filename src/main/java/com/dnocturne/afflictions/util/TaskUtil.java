@@ -20,6 +20,14 @@ public final class TaskUtil {
         plugin = instance;
     }
 
+    /**
+     * Clean up static reference to allow garbage collection.
+     * Should be called in plugin's onDisable().
+     */
+    public static void shutdown() {
+        plugin = null;
+    }
+
     private static @NotNull Afflictions requirePlugin() {
         if (plugin == null) {
             throw new IllegalStateException("TaskUtil has not been initialized. Call init() first.");
