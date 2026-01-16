@@ -2,56 +2,110 @@ package com.dnocturne.afflictions.component.trigger;
 
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import com.dnocturne.afflictions.api.component.trigger.Trigger;
-import com.dnocturne.afflictions.util.TimeUtil;
+import com.dnocturne.afflictions.condition.Condition;
+import com.dnocturne.afflictions.condition.Conditions;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Trigger based on time of day.
  * Can trigger during day, night, or a custom time range.
+ *
+ * <p>Uses the Condition system for reusable time checks.</p>
  */
 public class TimeTrigger implements Trigger {
 
     private final String id;
-    private final TimeCondition condition;
-    private final long customStart;
-    private final long customEnd;
+    private final Condition condition;
+    private final TimeCondition timeCondition;
 
-    public TimeTrigger(String id, TimeCondition condition) {
-        this(id, condition, 0, 0);
-    }
-
-    public TimeTrigger(String id, long customStart, long customEnd) {
-        this(id, TimeCondition.CUSTOM, customStart, customEnd);
-    }
-
-    private TimeTrigger(String id, TimeCondition condition, long customStart, long customEnd) {
+    /**
+     * Create a time trigger for day or night.
+     *
+     * @param id        The trigger ID
+     * @param condition The time condition (DAY, NIGHT, or CUSTOM)
+     */
+    public TimeTrigger(@NotNull String id, @NotNull TimeCondition condition) {
         this.id = id;
+        this.timeCondition = condition;
+        this.condition = switch (condition) {
+            case DAY -> Conditions.isDay();
+            case NIGHT -> Conditions.isNight();
+            case CUSTOM -> throw new IllegalArgumentException(
+                    "CUSTOM requires start and end times. Use TimeTrigger(id, start, end) instead.");
+        };
+    }
+
+    /**
+     * Create a time trigger for a custom time range.
+     *
+     * @param id          The trigger ID
+     * @param customStart The start time (in ticks, 0-24000)
+     * @param customEnd   The end time (in ticks, 0-24000)
+     */
+    public TimeTrigger(@NotNull String id, long customStart, long customEnd) {
+        this.id = id;
+        this.timeCondition = TimeCondition.CUSTOM;
+        this.condition = Conditions.isTimeInRange(customStart, customEnd);
+    }
+
+    /**
+     * Create a time trigger with a custom condition.
+     *
+     * @param id        The trigger ID
+     * @param condition The custom condition
+     */
+    public TimeTrigger(@NotNull String id, @NotNull Condition condition) {
+        this.id = id;
+        this.timeCondition = TimeCondition.CUSTOM;
         this.condition = condition;
-        this.customStart = customStart;
-        this.customEnd = customEnd;
+    }
+
+    /**
+     * Create a day trigger.
+     */
+    public static @NotNull TimeTrigger day(@NotNull String id) {
+        return new TimeTrigger(id, TimeCondition.DAY);
+    }
+
+    /**
+     * Create a night trigger.
+     */
+    public static @NotNull TimeTrigger night(@NotNull String id) {
+        return new TimeTrigger(id, TimeCondition.NIGHT);
     }
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
         return id;
     }
 
     @Override
-    public boolean isActive(Player player, AfflictionInstance instance) {
-        return switch (condition) {
-            case DAY -> TimeUtil.isDay(player.getWorld());
-            case NIGHT -> TimeUtil.isNight(player.getWorld());
-            case CUSTOM -> {
-                long time = player.getWorld().getTime();
-                yield time >= customStart && time <= customEnd;
-            }
-        };
+    public boolean isActive(@NotNull Player player, @NotNull AfflictionInstance instance) {
+        return condition.test(player);
     }
 
-    public TimeCondition getCondition() {
+    /**
+     * Get the time condition type for this trigger.
+     *
+     * @return The time condition type
+     */
+    public @NotNull TimeCondition getTimeCondition() {
+        return timeCondition;
+    }
+
+    /**
+     * Get the condition used for time checks.
+     *
+     * @return The condition
+     */
+    public @NotNull Condition getCondition() {
         return condition;
     }
 
+    /**
+     * Time condition types.
+     */
     public enum TimeCondition {
         DAY,
         NIGHT,
