@@ -400,6 +400,7 @@ class SQLiteStorageTest {
     /**
      * Test-friendly SQLite storage implementation that doesn't require the full plugin.
      * This is a standalone implementation for testing purposes only.
+     * Mirrors the production AbstractSqlStorage/SQLiteStorage implementation.
      */
     private static class TestSQLiteStorage implements Storage {
 
@@ -449,12 +450,14 @@ class SQLiteStorageTest {
                 try {
                     String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
                     connection = DriverManager.getConnection(url);
-                    connection.createStatement().execute("PRAGMA foreign_keys = ON");
 
-                    connection.createStatement().execute(CREATE_PLAYERS_TABLE);
-                    connection.createStatement().execute(CREATE_AFFLICTIONS_TABLE);
-                    connection.createStatement().execute(CREATE_INDEX);
-                    connection.createStatement().execute(CREATE_USERNAME_INDEX);
+                    try (var stmt = connection.createStatement()) {
+                        stmt.execute("PRAGMA foreign_keys = ON");
+                        stmt.execute(CREATE_PLAYERS_TABLE);
+                        stmt.execute(CREATE_AFFLICTIONS_TABLE);
+                        stmt.execute(CREATE_INDEX);
+                        stmt.execute(CREATE_USERNAME_INDEX);
+                    }
 
                     return true;
                 } catch (SQLException e) {
@@ -482,44 +485,16 @@ class SQLiteStorageTest {
             return CompletableFuture.supplyAsync(() -> {
                 try {
                     String checkSql = "SELECT uuid, username FROM afflicted_players WHERE uuid = ?";
-                    String username = null;
-                    try (PreparedStatement stmt = connection.prepareStatement(checkSql)) {
-                        stmt.setString(1, uuid.toString());
-                        ResultSet rs = stmt.executeQuery();
+                    String username;
+                    try (PreparedStatement stmt = connection.prepareStatement(checkSql);
+                         ResultSet rs = executeQuery(stmt, uuid.toString())) {
                         if (!rs.next()) {
                             return Optional.empty();
                         }
                         username = rs.getString("username");
                     }
 
-                    String loadSql = """
-                            SELECT affliction_id, level, duration, contracted_at, data
-                            FROM player_afflictions
-                            WHERE player_uuid = ?
-                            """;
-
-                    List<AfflictionData> afflictions = new ArrayList<>();
-                    try (PreparedStatement stmt = connection.prepareStatement(loadSql)) {
-                        stmt.setString(1, uuid.toString());
-                        ResultSet rs = stmt.executeQuery();
-
-                        while (rs.next()) {
-                            String afflictionId = rs.getString("affliction_id");
-                            int level = rs.getInt("level");
-                            long duration = rs.getLong("duration");
-                            long contractedAt = rs.getLong("contracted_at");
-                            String dataJson = rs.getString("data");
-
-                            Map<String, String> data = new HashMap<>();
-                            if (dataJson != null && !dataJson.isEmpty()) {
-                                Type type = new TypeToken<Map<String, String>>() {}.getType();
-                                data = gson.fromJson(dataJson, type);
-                            }
-
-                            afflictions.add(new AfflictionData(afflictionId, level, duration, contractedAt, data));
-                        }
-                    }
-
+                    List<AfflictionData> afflictions = loadAfflictions(uuid.toString());
                     return Optional.of(new PlayerAfflictionData(uuid, username, afflictions));
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -610,9 +585,9 @@ class SQLiteStorageTest {
             return CompletableFuture.supplyAsync(() -> {
                 try {
                     String sql = "SELECT 1 FROM afflicted_players WHERE uuid = ?";
-                    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                        stmt.setString(1, uuid.toString());
-                        return stmt.executeQuery().next();
+                    try (PreparedStatement stmt = connection.prepareStatement(sql);
+                         ResultSet rs = executeQuery(stmt, uuid.toString())) {
+                        return rs.next();
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -626,47 +601,25 @@ class SQLiteStorageTest {
             return CompletableFuture.supplyAsync(() -> {
                 try {
                     String findSql = "SELECT uuid, username FROM afflicted_players WHERE username = ? COLLATE NOCASE";
-                    UUID playerUuid = null;
-                    String storedUsername = null;
+                    UUID playerUuid;
+                    String storedUsername;
 
-                    try (PreparedStatement stmt = connection.prepareStatement(findSql)) {
-                        stmt.setString(1, username);
-                        ResultSet rs = stmt.executeQuery();
+                    try (PreparedStatement stmt = connection.prepareStatement(findSql);
+                         ResultSet rs = executeQuery(stmt, username)) {
                         if (!rs.next()) {
                             return Optional.empty();
                         }
-                        playerUuid = UUID.fromString(rs.getString("uuid"));
+                        String uuidString = rs.getString("uuid");
+                        try {
+                            playerUuid = UUID.fromString(uuidString);
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                            return Optional.empty();
+                        }
                         storedUsername = rs.getString("username");
                     }
 
-                    String loadSql = """
-                            SELECT affliction_id, level, duration, contracted_at, data
-                            FROM player_afflictions
-                            WHERE player_uuid = ?
-                            """;
-
-                    List<AfflictionData> afflictions = new ArrayList<>();
-                    try (PreparedStatement stmt = connection.prepareStatement(loadSql)) {
-                        stmt.setString(1, playerUuid.toString());
-                        ResultSet rs = stmt.executeQuery();
-
-                        while (rs.next()) {
-                            String afflictionId = rs.getString("affliction_id");
-                            int level = rs.getInt("level");
-                            long duration = rs.getLong("duration");
-                            long contractedAt = rs.getLong("contracted_at");
-                            String dataJson = rs.getString("data");
-
-                            Map<String, String> data = new HashMap<>();
-                            if (dataJson != null && !dataJson.isEmpty()) {
-                                Type type = new TypeToken<Map<String, String>>() {}.getType();
-                                data = gson.fromJson(dataJson, type);
-                            }
-
-                            afflictions.add(new AfflictionData(afflictionId, level, duration, contractedAt, data));
-                        }
-                    }
-
+                    List<AfflictionData> afflictions = loadAfflictions(playerUuid.toString());
                     return Optional.of(new PlayerAfflictionData(playerUuid, storedUsername, afflictions));
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -678,6 +631,43 @@ class SQLiteStorageTest {
         @Override
         public String getType() {
             return "sqlite";
+        }
+
+        // Helper methods matching production code
+
+        private ResultSet executeQuery(PreparedStatement stmt, String param) throws SQLException {
+            stmt.setString(1, param);
+            return stmt.executeQuery();
+        }
+
+        private List<AfflictionData> loadAfflictions(String playerUuid) throws SQLException {
+            String loadSql = """
+                    SELECT affliction_id, level, duration, contracted_at, data
+                    FROM player_afflictions
+                    WHERE player_uuid = ?
+                    """;
+
+            List<AfflictionData> afflictions = new ArrayList<>();
+            try (PreparedStatement stmt = connection.prepareStatement(loadSql);
+                 ResultSet rs = executeQuery(stmt, playerUuid)) {
+
+                while (rs.next()) {
+                    String afflictionId = rs.getString("affliction_id");
+                    int level = rs.getInt("level");
+                    long duration = rs.getLong("duration");
+                    long contractedAt = rs.getLong("contracted_at");
+                    String dataJson = rs.getString("data");
+
+                    Map<String, String> data = new HashMap<>();
+                    if (dataJson != null && !dataJson.isEmpty()) {
+                        Type type = new TypeToken<Map<String, String>>() {}.getType();
+                        data = gson.fromJson(dataJson, type);
+                    }
+
+                    afflictions.add(new AfflictionData(afflictionId, level, duration, contractedAt, data));
+                }
+            }
+            return afflictions;
         }
     }
 }
