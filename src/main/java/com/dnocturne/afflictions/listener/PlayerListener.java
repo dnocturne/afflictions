@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 /**
  * Handles player join/quit for loading and saving affliction data.
@@ -110,7 +111,11 @@ public class PlayerListener implements Listener {
                             + " affliction(s) for " + player.getName());
                 }
             });
-        }));
+        })).exceptionally(ex -> {
+            plugin.getLogger().log(Level.SEVERE,
+                    "Failed to load affliction data for player " + player.getName() + " (" + player.getUniqueId() + ")", ex);
+            return null;
+        });
     }
 
     /**
@@ -197,6 +202,10 @@ public class PlayerListener implements Listener {
         storage.savePlayer(playerData).thenRun(() -> {
             plugin.getLogger().info("Saved " + afflictionDataList.size()
                     + " affliction(s) for " + player.getName());
+        }).exceptionally(ex -> {
+            plugin.getLogger().log(Level.SEVERE,
+                    "Failed to save affliction data for player " + player.getName() + " (" + player.getUniqueId() + ")", ex);
+            return null;
         });
 
         // Clean up in-memory data
