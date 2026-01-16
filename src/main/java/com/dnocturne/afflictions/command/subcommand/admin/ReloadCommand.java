@@ -34,19 +34,11 @@ public class ReloadCommand implements SubCommand {
     private void reloadConfig(CommandSender sender) {
         LocalizationManager lang = plugin.getLocalizationManager();
 
-        try {
-            // Reload configuration
-            plugin.getConfigManager().load();
+        // Reload configuration (methods handle their own exceptions internally)
+        plugin.getConfigManager().load();
+        plugin.getLocalizationManager().load();
 
-            // Reload localization
-            plugin.getLocalizationManager().load();
-
-            lang.send(sender, MessageKey.RELOAD_SUCCESS);
-            plugin.getLogger().info("Configuration reloaded by " + sender.getName());
-        } catch (Exception e) {
-            lang.send(sender, MessageKey.RELOAD_FAILED);
-            plugin.getLogger().severe("Failed to reload configuration: " + e.getMessage());
-            e.printStackTrace();
-        }
+        lang.send(sender, MessageKey.RELOAD_SUCCESS);
+        plugin.getLogger().info("Configuration reloaded by " + sender.getName());
     }
 }
