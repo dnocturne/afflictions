@@ -27,7 +27,7 @@ public class AfflictionManager {
 
     private BukkitTask tickTask;
     private long tickRate = 20L; // Default: 1 second
-    private long tickCount = 0;
+    private volatile long tickCount = 0;
 
     public AfflictionManager(Afflictions plugin) {
         this.plugin = plugin;
