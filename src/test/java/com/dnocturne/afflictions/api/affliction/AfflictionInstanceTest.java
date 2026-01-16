@@ -246,8 +246,8 @@ class AfflictionInstanceTest {
         }
 
         @Test
-        @DisplayName("getAllData returns copy of data map")
-        void getAllData_returnsCopy() {
+        @DisplayName("getAllData returns unmodifiable view of data map")
+        void getAllData_returnsUnmodifiableView() {
             AfflictionInstance instance = new AfflictionInstance(player.getUniqueId(), testAffliction);
             instance.setData("key1", "value1");
             instance.setData("key2", "value2");
@@ -257,9 +257,8 @@ class AfflictionInstanceTest {
             assertEquals("value1", allData.get("key1"));
             assertEquals("value2", allData.get("key2"));
 
-            // Modifying returned map shouldn't affect instance
-            allData.put("key3", "value3");
-            assertFalse(instance.hasData("key3"));
+            // Returned map should be unmodifiable
+            assertThrows(UnsupportedOperationException.class, () -> allData.put("key3", "value3"));
         }
 
         @Test
