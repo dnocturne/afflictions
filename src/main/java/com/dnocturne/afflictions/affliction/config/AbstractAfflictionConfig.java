@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions.affliction.config;
 
+import com.dnocturne.afflictions.api.affliction.Affliction;
 import com.dnocturne.afflictions.util.MessageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,9 +12,21 @@ import java.util.Map;
  * Abstract base class for affliction configurations.
  * Handles caching of legacy-formatted strings for PlaceholderAPI performance.
  *
+ * <p>All affliction configs have an {@code enabled} setting that can be configured
+ * in the YAML file under {@code settings.enabled}.</p>
+ *
+ * <p>Subclasses must implement:</p>
+ * <ul>
+ *   <li>{@link #load()} - Load configuration from file</li>
+ *   <li>{@link #createAffliction()} - Create the affliction instance</li>
+ * </ul>
+ *
  * <p>Subclasses should call {@link #buildLegacyCache()} after loading config values.</p>
  */
 public abstract class AbstractAfflictionConfig implements AfflictionDisplayConfig {
+
+    // Whether this affliction is enabled
+    protected boolean enabled = true;
 
     // Cached legacy-formatted strings for PlaceholderAPI performance
     private String nameLegacy;
@@ -58,4 +71,21 @@ public abstract class AbstractAfflictionConfig implements AfflictionDisplayConfi
     public @Nullable String getLevelTitleLegacy(int level) {
         return levelTitlesLegacy.get(level);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Load configuration from file.
+     */
+    public abstract void load();
+
+    /**
+     * Create the affliction instance from this configuration.
+     *
+     * @return The configured affliction
+     */
+    public abstract @NotNull Affliction createAffliction();
 }

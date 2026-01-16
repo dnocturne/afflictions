@@ -20,6 +20,13 @@ public interface AfflictionDisplayConfig {
     @NotNull String getId();
 
     /**
+     * Check if this affliction is enabled.
+     *
+     * @return true if the affliction is enabled
+     */
+    boolean isEnabled();
+
+    /**
      * Get the name of what the player "is" (e.g., "Vampire", "Werewolf").
      * Used for "You are: {name}"
      *

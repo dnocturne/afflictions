@@ -1,6 +1,8 @@
 package com.dnocturne.afflictions.affliction.config;
 
 import com.dnocturne.afflictions.Afflictions;
+import com.dnocturne.afflictions.affliction.impl.Vampirism;
+import com.dnocturne.afflictions.api.affliction.Affliction;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +28,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private String prefix = "<#8b0000>[<#c93434>V<#8b0000>] ";
     private String description = "A dark curse that burns in sunlight but grants power in darkness.";
 
-    // Affliction settings
+    // Affliction settings (enabled is inherited from AbstractAfflictionConfig)
     private int maxLevel = 5;
     private boolean curable = true;
 
@@ -46,9 +48,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
         this.plugin = plugin;
     }
 
-    /**
-     * Load the configuration from file.
-     */
+    @Override
     public void load() {
         try {
             config = plugin.getConfigManager().loadAfflictionConfig("vampirism");
@@ -85,6 +85,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
         description = config.getString("display.description", description);
 
         // Affliction settings
+        enabled = config.getBoolean("settings.enabled", enabled);
         maxLevel = config.getInt("settings.max-level", maxLevel);
         curable = config.getBoolean("settings.curable", curable);
 
@@ -195,5 +196,10 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     @Override
     public @Nullable String getLevelTitle(int level) {
         return levelTitles.get(level);
+    }
+
+    @Override
+    public @NotNull Affliction createAffliction() {
+        return Vampirism.create(this);
     }
 }

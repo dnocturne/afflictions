@@ -26,6 +26,10 @@ display:
 
 # Affliction settings
 settings:
+  # Enable or disable this affliction entirely
+  # When disabled, the affliction will not be registered
+  enabled: true
+
   # Maximum level (1-10)
   max-level: 5
 

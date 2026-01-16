@@ -1,8 +1,8 @@
 package com.dnocturne.afflictions;
 
+import com.dnocturne.afflictions.affliction.config.AbstractAfflictionConfig;
 import com.dnocturne.afflictions.affliction.config.AfflictionDisplayConfig;
 import com.dnocturne.afflictions.affliction.config.VampirismConfig;
-import com.dnocturne.afflictions.affliction.impl.Vampirism;
 import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.config.ConfigManager;
 import com.dnocturne.afflictions.hook.HookManager;
@@ -16,7 +16,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +35,9 @@ public class Afflictions extends JavaPlugin {
     private @Nullable HookManager hookManager;
     private @Nullable CommandManager commandManager;
     private @Nullable TimeListener timeListener;
-    private @Nullable VampirismConfig vampirismConfig;
+
+    // Affliction configs
+    private final List<AbstractAfflictionConfig> afflictionConfigs = new ArrayList<>();
 
     // Registry of affliction display configs by ID
     private final Map<String, AfflictionDisplayConfig> displayConfigs = new HashMap<>();
@@ -161,16 +165,26 @@ public class Afflictions extends JavaPlugin {
     }
 
     /**
-     * Register all built-in afflictions.
+     * Load and register all built-in afflictions.
      */
     private void registerAfflictions() {
-        // Load and register Vampirism
-        vampirismConfig = new VampirismConfig(this);
-        vampirismConfig.load();
-        afflictionManager.getRegistry().register(Vampirism.create(vampirismConfig));
-        displayConfigs.put(vampirismConfig.getId(), vampirismConfig);
+        // Add all affliction configs here
+        afflictionConfigs.add(new VampirismConfig(this));
 
-        getLogger().info("Registered " + afflictionManager.getRegistry().getAll().size() + " affliction(s)");
+        // Load and register each config generically
+        int registered = 0;
+        for (AbstractAfflictionConfig config : afflictionConfigs) {
+            config.load();
+            if (config.isEnabled()) {
+                afflictionManager.getRegistry().register(config.createAffliction());
+                displayConfigs.put(config.getId(), config);
+                registered++;
+            } else {
+                getLogger().info(config.getId() + " affliction is disabled");
+            }
+        }
+
+        getLogger().info("Registered " + registered + " affliction(s)");
     }
 
     /**
@@ -184,9 +198,18 @@ public class Afflictions extends JavaPlugin {
     }
 
     /**
-     * Get the Vampirism configuration.
+     * Get an affliction config by type.
+     *
+     * @param configClass The config class to look for
+     * @param <T> The config type
+     * @return The config instance, or null if not found
      */
-    public @Nullable VampirismConfig getVampirismConfig() {
-        return vampirismConfig;
+    public <T extends AbstractAfflictionConfig> @Nullable T getAfflictionConfig(@NotNull Class<T> configClass) {
+        for (AbstractAfflictionConfig config : afflictionConfigs) {
+            if (configClass.isInstance(config)) {
+                return configClass.cast(config);
+            }
+        }
+        return null;
     }
 }
