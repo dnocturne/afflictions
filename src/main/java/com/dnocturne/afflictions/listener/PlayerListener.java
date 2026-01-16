@@ -59,20 +59,15 @@ public class PlayerListener implements Listener {
         // Determine lookup method based on config
         CompletableFuture<Optional<PlayerAfflictionData>> loadFuture = getLoadFuture(player, storage);
 
-        loadFuture.thenAccept(dataOpt -> {
-            if (dataOpt.isEmpty()) {
-                return;
-            }
-
-            PlayerAfflictionData data = dataOpt.get();
-
+        loadFuture.thenAccept(dataOpt -> dataOpt.ifPresent(data -> {
             // Run on main thread to interact with Bukkit
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 for (AfflictionData afflictionData : data.getAfflictions()) {
-                    Optional<Affliction> afflictionOpt = afflictionManager.getRegistry()
-                            .get(afflictionData.getAfflictionId());
+                    Affliction affliction = afflictionManager.getRegistry()
+                            .get(afflictionData.getAfflictionId())
+                            .orElse(null);
 
-                    if (afflictionOpt.isEmpty()) {
+                    if (affliction == null) {
                         plugin.getLogger().warning("Unknown affliction '" + afflictionData.getAfflictionId()
                                 + "' for player " + player.getName() + ", skipping");
                         continue;
@@ -81,7 +76,7 @@ public class PlayerListener implements Listener {
                     // Create instance with stored data
                     AfflictionInstance instance = new AfflictionInstance(
                             player.getUniqueId(),
-                            afflictionOpt.get(),
+                            affliction,
                             afflictionData.getLevel(),
                             afflictionData.getDuration(),
                             afflictionData.getContractedAt()
@@ -103,7 +98,7 @@ public class PlayerListener implements Listener {
                             + " affliction(s) for " + player.getName());
                 }
             });
-        });
+        }));
     }
 
     /**
@@ -137,15 +132,14 @@ public class PlayerListener implements Listener {
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
         Storage storage = plugin.getStorageManager().getStorage();
 
-        Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
-                .get(player.getUniqueId());
+        AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+                .get(player.getUniqueId())
+                .orElse(null);
 
-        if (afflictedOpt.isEmpty() || !afflictedOpt.get().hasAnyAffliction()) {
+        if (afflicted == null || !afflicted.hasAnyAffliction()) {
             // No data to save, optionally delete existing
             return;
         }
-
-        AfflictedPlayer afflicted = afflictedOpt.get();
         List<AfflictionData> afflictionDataList = new ArrayList<>();
 
         for (AfflictionInstance instance : afflicted.getAfflictions()) {
