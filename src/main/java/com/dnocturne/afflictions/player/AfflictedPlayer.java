@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Represents a player's affliction state.
@@ -128,7 +127,7 @@ public class AfflictedPlayer {
     public List<AfflictionInstance> getAfflictionsByCategory(AfflictionCategory category) {
         return activeAfflictions.values().stream()
                 .filter(instance -> instance.getAffliction().getCategory() == category)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
