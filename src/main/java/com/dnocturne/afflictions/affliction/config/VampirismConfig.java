@@ -2,6 +2,8 @@ package com.dnocturne.afflictions.affliction.config;
 
 import com.dnocturne.afflictions.Afflictions;
 import dev.dejvokep.boostedyaml.YamlDocument;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +18,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private static final String ID = "vampirism";
 
     private final Afflictions plugin;
-    private YamlDocument config;
+    private @Nullable YamlDocument config;
 
     // Display settings (MiniMessage format - converted to legacy for PlaceholderAPI)
     private String name = "<#c93434>Vampire";
@@ -111,7 +113,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     // Getters
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
         return ID;
     }
 
@@ -120,7 +122,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
      * Used for "You are: {name}"
      */
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
@@ -129,7 +131,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
      * Used for "Affliction: {affliction}"
      */
     @Override
-    public String getAfflictionName() {
+    public @NotNull String getAfflictionName() {
         return afflictionName;
     }
 
@@ -138,12 +140,12 @@ public class VampirismConfig extends AbstractAfflictionConfig {
      * Used for chat prefixes, tab, etc.
      */
     @Override
-    public String getPrefix() {
+    public @NotNull String getPrefix() {
         return prefix;
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return description;
     }
 
@@ -191,7 +193,7 @@ public class VampirismConfig extends AbstractAfflictionConfig {
      * @return The title for the level, or null if not configured
      */
     @Override
-    public String getLevelTitle(int level) {
+    public @Nullable String getLevelTitle(int level) {
         return levelTitles.get(level);
     }
 }

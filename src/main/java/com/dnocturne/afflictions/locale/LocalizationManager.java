@@ -13,6 +13,9 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +38,8 @@ public class LocalizationManager {
     private final Map<String, YamlDocument> loadedLanguages = new HashMap<>();
 
     private String defaultLanguage = "en";
-    private YamlDocument currentLanguage;
-    private String currentLanguageCode;
+    private @Nullable YamlDocument currentLanguage;
+    private @Nullable String currentLanguageCode;
 
     public LocalizationManager(Afflictions plugin) {
         this.plugin = plugin;
@@ -123,7 +126,7 @@ public class LocalizationManager {
     /**
      * Load a language file.
      */
-    private YamlDocument loadLanguage(String languageCode) throws IOException {
+    private @Nullable YamlDocument loadLanguage(@NotNull String languageCode) throws IOException {
         if (loadedLanguages.containsKey(languageCode)) {
             return loadedLanguages.get(languageCode);
         }
@@ -171,7 +174,7 @@ public class LocalizationManager {
      * @param key The message key
      * @return The raw message string, or the key if not found
      */
-    public String getRaw(String key) {
+    public @NotNull String getRaw(@NotNull String key) {
         if (currentLanguage == null) {
             return key;
         }
@@ -184,7 +187,7 @@ public class LocalizationManager {
      * @param key The message key
      * @return The parsed Component
      */
-    public Component get(String key) {
+    public @NotNull Component get(@NotNull String key) {
         return MINI_MESSAGE.deserialize(getRaw(key));
     }
 
@@ -195,7 +198,7 @@ public class LocalizationManager {
      * @param resolvers Placeholder resolvers
      * @return The parsed Component with placeholders replaced
      */
-    public Component get(String key, TagResolver... resolvers) {
+    public @NotNull Component get(@NotNull String key, @NotNull TagResolver... resolvers) {
         return MINI_MESSAGE.deserialize(getRaw(key), resolvers);
     }
 
@@ -206,7 +209,7 @@ public class LocalizationManager {
      * @param placeholders Map of placeholder name to value
      * @return The parsed Component with placeholders replaced
      */
-    public Component get(String key, Map<String, String> placeholders) {
+    public @NotNull Component get(@NotNull String key, @NotNull Map<String, String> placeholders) {
         TagResolver.Builder builder = TagResolver.builder();
         placeholders.forEach((k, v) -> builder.resolver(Placeholder.parsed(k, v)));
         return MINI_MESSAGE.deserialize(getRaw(key), builder.build());
@@ -218,7 +221,7 @@ public class LocalizationManager {
      * @param key The message key
      * @return The message with the plugin prefix prepended
      */
-    public Component getPrefixed(String key) {
+    public @NotNull Component getPrefixed(@NotNull String key) {
         Component prefix = get("prefix");
         Component message = get(key);
         return prefix.append(message);
@@ -231,7 +234,7 @@ public class LocalizationManager {
      * @param resolvers Placeholder resolvers
      * @return The message with prefix and placeholders
      */
-    public Component getPrefixed(String key, TagResolver... resolvers) {
+    public @NotNull Component getPrefixed(@NotNull String key, @NotNull TagResolver... resolvers) {
         Component prefix = get("prefix");
         Component message = get(key, resolvers);
         return prefix.append(message);
@@ -243,7 +246,7 @@ public class LocalizationManager {
      * @param sender The recipient
      * @param key    The message key
      */
-    public void send(CommandSender sender, String key) {
+    public void send(@NotNull CommandSender sender, @NotNull String key) {
         sender.sendMessage(getPrefixed(key));
     }
 
@@ -254,7 +257,7 @@ public class LocalizationManager {
      * @param key       The message key
      * @param resolvers Placeholder resolvers
      */
-    public void send(CommandSender sender, String key, TagResolver... resolvers) {
+    public void send(@NotNull CommandSender sender, @NotNull String key, @NotNull TagResolver... resolvers) {
         sender.sendMessage(getPrefixed(key, resolvers));
     }
 
@@ -264,7 +267,7 @@ public class LocalizationManager {
      * @param sender The recipient
      * @param key    The message key
      */
-    public void sendRaw(CommandSender sender, String key) {
+    public void sendRaw(@NotNull CommandSender sender, @NotNull String key) {
         sender.sendMessage(get(key));
     }
 
@@ -274,7 +277,7 @@ public class LocalizationManager {
      * @param player The player
      * @param key    The message key
      */
-    public void sendActionBar(Player player, String key) {
+    public void sendActionBar(@NotNull Player player, @NotNull String key) {
         player.sendActionBar(get(key));
     }
 
@@ -285,35 +288,35 @@ public class LocalizationManager {
      * @param key       The message key
      * @param resolvers Placeholder resolvers
      */
-    public void sendActionBar(Player player, String key, TagResolver... resolvers) {
+    public void sendActionBar(@NotNull Player player, @NotNull String key, @NotNull TagResolver... resolvers) {
         player.sendActionBar(get(key, resolvers));
     }
 
     /**
      * Create a placeholder resolver.
      */
-    public static TagResolver placeholder(String key, String value) {
+    public static @NotNull TagResolver placeholder(@NotNull String key, @NotNull String value) {
         return Placeholder.parsed(key, value);
     }
 
     /**
      * Create a component placeholder resolver.
      */
-    public static TagResolver placeholder(String key, Component value) {
+    public static @NotNull TagResolver placeholder(@NotNull String key, @NotNull Component value) {
         return Placeholder.component(key, value);
     }
 
     /**
      * Get the current language code.
      */
-    public String getCurrentLanguageCode() {
+    public @Nullable String getCurrentLanguageCode() {
         return currentLanguageCode;
     }
 
     /**
      * Get available language codes.
      */
-    public String[] getAvailableLanguages() {
+    public @NotNull String[] getAvailableLanguages() {
         File[] files = langFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null) return new String[0];
 

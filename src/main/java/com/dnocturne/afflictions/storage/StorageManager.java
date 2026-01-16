@@ -2,6 +2,8 @@ package com.dnocturne.afflictions.storage;
 
 import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.storage.impl.SQLiteStorage;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.logging.Logger;
 
@@ -12,7 +14,7 @@ public class StorageManager {
 
     private final Afflictions plugin;
     private final Logger logger;
-    private Storage storage;
+    private @Nullable Storage storage;
 
     public StorageManager(Afflictions plugin) {
         this.plugin = plugin;
@@ -59,14 +61,14 @@ public class StorageManager {
     /**
      * Get the active storage implementation.
      */
-    public Storage getStorage() {
+    public @Nullable Storage getStorage() {
         return storage;
     }
 
     /**
      * Get the storage type name.
      */
-    public String getType() {
+    public @NotNull String getType() {
         return storage != null ? storage.getType() : "none";
     }
 }

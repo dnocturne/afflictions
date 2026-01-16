@@ -278,7 +278,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     /**
      * Get the display config for an affliction, or null if not found.
      */
-    private AfflictionDisplayConfig getConfig(String afflictionId) {
+    private @Nullable AfflictionDisplayConfig getConfig(@NotNull String afflictionId) {
         return plugin.getDisplayConfig(afflictionId);
     }
 
@@ -286,7 +286,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the cached legacy-formatted display name for an affliction.
      * Example: "Vampire", "Werewolf"
      */
-    private String getDisplayNameLegacy(String afflictionId) {
+    private @NotNull String getDisplayNameLegacy(@NotNull String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
         return config != null ? config.getNameLegacy() : "";
     }
@@ -295,7 +295,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the cached legacy-formatted affliction name.
      * Example: "Vampirism", "Lycanthropy"
      */
-    private String getDisplayAfflictionNameLegacy(String afflictionId) {
+    private @NotNull String getDisplayAfflictionNameLegacy(@NotNull String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
         return config != null ? config.getAfflictionNameLegacy() : "";
     }
@@ -304,7 +304,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the cached legacy-formatted prefix/tag.
      * Example: "[V]", "[WW]"
      */
-    private String getDisplayPrefixLegacy(String afflictionId) {
+    private @NotNull String getDisplayPrefixLegacy(@NotNull String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
         return config != null ? config.getPrefixLegacy() : "";
     }
@@ -313,7 +313,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the cached legacy-formatted level title.
      * Example: "Fledgling", "Elder", "Ancient"
      */
-    private String getLevelTitleLegacy(String afflictionId, int level) {
+    private @Nullable String getLevelTitleLegacy(@NotNull String afflictionId, int level) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
         return config != null ? config.getLevelTitleLegacy(level) : null;
     }
@@ -321,7 +321,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     /**
      * Get the localized moon phase name from the locale file.
      */
-    private String getMoonPhaseName(TimeUtil.MoonPhase phase) {
+    private @NotNull String getMoonPhaseName(@NotNull TimeUtil.MoonPhase phase) {
         String key = "time.moon." + getMoonPhaseKey(phase) + ".name";
         String value = plugin.getLocalizationManager().getRaw(key);
         // Fallback to enum display name if not configured
@@ -331,7 +331,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     /**
      * Get the moon phase symbol from the locale file.
      */
-    private String getMoonSymbol(TimeUtil.MoonPhase phase) {
+    private @NotNull String getMoonSymbol(@NotNull TimeUtil.MoonPhase phase) {
         String key = "time.moon." + getMoonPhaseKey(phase) + ".symbol";
         String value = plugin.getLocalizationManager().getRaw(key);
         // Fallback to enum symbol if not configured
@@ -341,7 +341,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     /**
      * Convert MoonPhase enum to locale key format (e.g., FULL_MOON -> full-moon).
      */
-    private String getMoonPhaseKey(TimeUtil.MoonPhase phase) {
+    private @NotNull String getMoonPhaseKey(@NotNull TimeUtil.MoonPhase phase) {
         return phase.name().toLowerCase().replace('_', '-');
     }
 }

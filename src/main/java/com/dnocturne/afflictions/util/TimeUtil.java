@@ -1,6 +1,7 @@
 package com.dnocturne.afflictions.util;
 
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utilities for time-related calculations.
@@ -27,7 +28,7 @@ public final class TimeUtil {
     /**
      * Check if it's currently night time in the world.
      */
-    public static boolean isNight(World world) {
+    public static boolean isNight(@NotNull World world) {
         long time = world.getTime();
         return time >= NIGHT_START && time <= NIGHT_END;
     }
@@ -35,14 +36,14 @@ public final class TimeUtil {
     /**
      * Check if it's currently day time in the world.
      */
-    public static boolean isDay(World world) {
+    public static boolean isDay(@NotNull World world) {
         return !isNight(world);
     }
 
     /**
      * Get the current day number (0-indexed).
      */
-    public static long getDayNumber(World world) {
+    public static long getDayNumber(@NotNull World world) {
         return world.getFullTime() / TICKS_PER_DAY;
     }
 
@@ -67,28 +68,28 @@ public final class TimeUtil {
      * @return Moon phase (0-7)
      * @see <a href="https://minecraft.wiki/w/Moon">Minecraft Wiki - Moon</a>
      */
-    public static int getMoonPhase(World world) {
+    public static int getMoonPhase(@NotNull World world) {
         return (int) (getDayNumber(world) % 8);
     }
 
     /**
      * Get the moon phase as an enum.
      */
-    public static MoonPhase getMoonPhaseEnum(World world) {
+    public static @NotNull MoonPhase getMoonPhaseEnum(@NotNull World world) {
         return MoonPhase.fromPhase(getMoonPhase(world));
     }
 
     /**
      * Check if it's a full moon (phase 0).
      */
-    public static boolean isFullMoon(World world) {
+    public static boolean isFullMoon(@NotNull World world) {
         return getMoonPhase(world) == MoonPhase.FULL_MOON.getPhase();
     }
 
     /**
      * Check if it's a new moon (phase 4).
      */
-    public static boolean isNewMoon(World world) {
+    public static boolean isNewMoon(@NotNull World world) {
         return getMoonPhase(world) == MoonPhase.NEW_MOON.getPhase();
     }
 
@@ -109,7 +110,7 @@ public final class TimeUtil {
     /**
      * Format ticks as a human-readable duration.
      */
-    public static String formatDuration(long ticks) {
+    public static @NotNull String formatDuration(long ticks) {
         long totalSeconds = ticksToSeconds(ticks);
         long hours = totalSeconds / 3600;
         long minutes = (totalSeconds % 3600) / 60;
@@ -152,11 +153,11 @@ public final class TimeUtil {
             return phase;
         }
 
-        public String getDisplayName() {
+        public @NotNull String getDisplayName() {
             return displayName;
         }
 
-        public String getSymbol() {
+        public @NotNull String getSymbol() {
             return symbol;
         }
 
@@ -181,7 +182,7 @@ public final class TimeUtil {
             return getBrightness() >= 0.5f;
         }
 
-        public static MoonPhase fromPhase(int phase) {
+        public static @NotNull MoonPhase fromPhase(int phase) {
             for (MoonPhase mp : values()) {
                 if (mp.phase == phase) {
                     return mp;

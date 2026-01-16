@@ -1,6 +1,7 @@
 package com.dnocturne.afflictions.affliction.config;
 
 import com.dnocturne.afflictions.util.MessageUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -39,23 +40,22 @@ public abstract class AbstractAfflictionConfig implements AfflictionDisplayConfi
     }
 
     @Override
-    public String getNameLegacy() {
-        return nameLegacy;
+    public @NotNull String getNameLegacy() {
+        return nameLegacy != null ? nameLegacy : "";
     }
 
     @Override
-    public String getAfflictionNameLegacy() {
-        return afflictionNameLegacy;
+    public @NotNull String getAfflictionNameLegacy() {
+        return afflictionNameLegacy != null ? afflictionNameLegacy : "";
     }
 
     @Override
-    public String getPrefixLegacy() {
-        return prefixLegacy;
+    public @NotNull String getPrefixLegacy() {
+        return prefixLegacy != null ? prefixLegacy : "";
     }
 
     @Override
-    @Nullable
-    public String getLevelTitleLegacy(int level) {
+    public @Nullable String getLevelTitleLegacy(int level) {
         return levelTitlesLegacy.get(level);
     }
 }

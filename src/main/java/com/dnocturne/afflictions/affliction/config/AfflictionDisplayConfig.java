@@ -1,5 +1,6 @@
 package com.dnocturne.afflictions.affliction.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,7 +17,7 @@ public interface AfflictionDisplayConfig {
      *
      * @return The unique affliction identifier
      */
-    String getId();
+    @NotNull String getId();
 
     /**
      * Get the name of what the player "is" (e.g., "Vampire", "Werewolf").
@@ -24,7 +25,7 @@ public interface AfflictionDisplayConfig {
      *
      * @return The display name
      */
-    String getName();
+    @NotNull String getName();
 
     /**
      * Get the affliction name (e.g., "Vampirism", "Lycanthropy").
@@ -32,7 +33,7 @@ public interface AfflictionDisplayConfig {
      *
      * @return The affliction display name
      */
-    String getAfflictionName();
+    @NotNull String getAfflictionName();
 
     /**
      * Get the short prefix/tag (e.g., "[V]", "[WW]").
@@ -40,14 +41,14 @@ public interface AfflictionDisplayConfig {
      *
      * @return The prefix string
      */
-    String getPrefix();
+    @NotNull String getPrefix();
 
     /**
      * Get the description of the affliction.
      *
      * @return The description
      */
-    String getDescription();
+    @NotNull String getDescription();
 
     /**
      * Get the maximum level for this affliction.
@@ -72,7 +73,7 @@ public interface AfflictionDisplayConfig {
      * @param fallback The fallback value if no title is configured
      * @return The title for the level, or the fallback
      */
-    default String getLevelTitle(int level, String fallback) {
+    default @NotNull String getLevelTitle(int level, @NotNull String fallback) {
         String title = getLevelTitle(level);
         return title != null ? title : fallback;
     }
@@ -87,21 +88,21 @@ public interface AfflictionDisplayConfig {
      *
      * @return The name converted to legacy color codes
      */
-    String getNameLegacy();
+    @NotNull String getNameLegacy();
 
     /**
      * Get the cached legacy-formatted affliction name.
      *
      * @return The affliction name converted to legacy color codes
      */
-    String getAfflictionNameLegacy();
+    @NotNull String getAfflictionNameLegacy();
 
     /**
      * Get the cached legacy-formatted prefix.
      *
      * @return The prefix converted to legacy color codes
      */
-    String getPrefixLegacy();
+    @NotNull String getPrefixLegacy();
 
     /**
      * Get the cached legacy-formatted level title.
@@ -109,6 +110,5 @@ public interface AfflictionDisplayConfig {
      * @param level The affliction level
      * @return The title converted to legacy color codes, or null if not configured
      */
-    @Nullable
-    String getLevelTitleLegacy(int level);
+    @Nullable String getLevelTitleLegacy(int level);
 }

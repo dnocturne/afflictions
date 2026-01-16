@@ -1,6 +1,8 @@
 package com.dnocturne.afflictions.api.affliction;
 
 import com.dnocturne.afflictions.api.component.AfflictionComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -13,22 +15,22 @@ public interface Affliction {
     /**
      * @return Unique identifier for this affliction (e.g., "vampirism", "werewolf")
      */
-    String getId();
+    @NotNull String getId();
 
     /**
      * @return Display name shown to players
      */
-    String getDisplayName();
+    @NotNull String getDisplayName();
 
     /**
      * @return Description of this affliction
      */
-    String getDescription();
+    @NotNull String getDescription();
 
     /**
      * @return The category of this affliction
      */
-    AfflictionCategory getCategory();
+    @NotNull AfflictionCategory getCategory();
 
     /**
      * @return Maximum level this affliction can reach
@@ -43,7 +45,7 @@ public interface Affliction {
     /**
      * @return All components that make up this affliction's behavior
      */
-    Collection<AfflictionComponent> getComponents();
+    @NotNull Collection<AfflictionComponent> getComponents();
 
     /**
      * Get a specific component by type.
@@ -51,7 +53,7 @@ public interface Affliction {
      * @param componentClass The component class to find
      * @return The component, or null if not present
      */
-    <T extends AfflictionComponent> T getComponent(Class<T> componentClass);
+    <T extends AfflictionComponent> @Nullable T getComponent(@NotNull Class<T> componentClass);
 
     /**
      * Check if this affliction has a specific component type.
@@ -59,5 +61,5 @@ public interface Affliction {
      * @param componentClass The component class to check for
      * @return true if the component is present
      */
-    boolean hasComponent(Class<? extends AfflictionComponent> componentClass);
+    boolean hasComponent(@NotNull Class<? extends AfflictionComponent> componentClass);
 }

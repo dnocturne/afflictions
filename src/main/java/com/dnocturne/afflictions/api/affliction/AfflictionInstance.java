@@ -2,6 +2,8 @@ package com.dnocturne.afflictions.api.affliction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +24,15 @@ public class AfflictionInstance {
     private long duration; // -1 for permanent
     private final Map<String, Object> data;
 
-    public AfflictionInstance(UUID playerUuid, Affliction affliction) {
+    public AfflictionInstance(@NotNull UUID playerUuid, @NotNull Affliction affliction) {
         this(playerUuid, affliction, 1, -1);
     }
 
-    public AfflictionInstance(UUID playerUuid, Affliction affliction, int level, long duration) {
+    public AfflictionInstance(@NotNull UUID playerUuid, @NotNull Affliction affliction, int level, long duration) {
         this(playerUuid, affliction, level, duration, System.currentTimeMillis());
     }
 
-    public AfflictionInstance(UUID playerUuid, Affliction affliction, int level, long duration, long contractedAt) {
+    public AfflictionInstance(@NotNull UUID playerUuid, @NotNull Affliction affliction, int level, long duration, long contractedAt) {
         this.playerUuid = playerUuid;
         this.affliction = affliction;
         this.level = level;
@@ -39,19 +41,19 @@ public class AfflictionInstance {
         this.data = new HashMap<>();
     }
 
-    public UUID getPlayerUuid() {
+    public @NotNull UUID getPlayerUuid() {
         return playerUuid;
     }
 
-    public Optional<Player> getPlayer() {
+    public @NotNull Optional<Player> getPlayer() {
         return Optional.ofNullable(Bukkit.getPlayer(playerUuid));
     }
 
-    public Affliction getAffliction() {
+    public @NotNull Affliction getAffliction() {
         return affliction;
     }
 
-    public String getAfflictionId() {
+    public @NotNull String getAfflictionId() {
         return affliction.getId();
     }
 
@@ -91,7 +93,7 @@ public class AfflictionInstance {
      * Get custom data stored with this instance.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getData(String key) {
+    public <T> @Nullable T getData(@NotNull String key) {
         return (T) data.get(key);
     }
 
@@ -99,26 +101,26 @@ public class AfflictionInstance {
      * Get custom data with a default value.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getData(String key, T defaultValue) {
+    public <T> T getData(@NotNull String key, T defaultValue) {
         return (T) data.getOrDefault(key, defaultValue);
     }
 
     /**
      * Store custom data with this instance.
      */
-    public void setData(String key, Object value) {
+    public void setData(@NotNull String key, @Nullable Object value) {
         data.put(key, value);
     }
 
-    public boolean hasData(String key) {
+    public boolean hasData(@NotNull String key) {
         return data.containsKey(key);
     }
 
-    public void removeData(String key) {
+    public void removeData(@NotNull String key) {
         data.remove(key);
     }
 
-    public Map<String, Object> getAllData() {
+    public @NotNull Map<String, Object> getAllData() {
         return new HashMap<>(data);
     }
 }

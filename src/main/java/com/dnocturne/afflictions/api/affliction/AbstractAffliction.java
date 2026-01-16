@@ -1,6 +1,8 @@
 package com.dnocturne.afflictions.api.affliction;
 
 import com.dnocturne.afflictions.api.component.AfflictionComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,22 +33,22 @@ public abstract class AbstractAffliction implements Affliction {
     }
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
         return id;
     }
 
     @Override
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return displayName;
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return description;
     }
 
     @Override
-    public AfflictionCategory getCategory() {
+    public @NotNull AfflictionCategory getCategory() {
         return category;
     }
 
@@ -61,13 +63,13 @@ public abstract class AbstractAffliction implements Affliction {
     }
 
     @Override
-    public Collection<AfflictionComponent> getComponents() {
+    public @NotNull Collection<AfflictionComponent> getComponents() {
         return Collections.unmodifiableList(components);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends AfflictionComponent> T getComponent(Class<T> componentClass) {
+    public <T extends AfflictionComponent> @Nullable T getComponent(@NotNull Class<T> componentClass) {
         for (AfflictionComponent component : components) {
             if (componentClass.isInstance(component)) {
                 return (T) component;
@@ -77,14 +79,14 @@ public abstract class AbstractAffliction implements Affliction {
     }
 
     @Override
-    public boolean hasComponent(Class<? extends AfflictionComponent> componentClass) {
+    public boolean hasComponent(@NotNull Class<? extends AfflictionComponent> componentClass) {
         return getComponent(componentClass) != null;
     }
 
     /**
      * Add a component to this affliction.
      */
-    protected void addComponent(AfflictionComponent component) {
+    protected void addComponent(@NotNull AfflictionComponent component) {
         components.add(component);
     }
 
@@ -100,41 +102,41 @@ public abstract class AbstractAffliction implements Affliction {
         protected boolean curable = true;
         protected List<AfflictionComponent> components = new ArrayList<>();
 
-        public Builder(String id) {
+        public Builder(@NotNull String id) {
             this.id = id;
             this.displayName = id;
         }
 
-        public Builder displayName(String displayName) {
+        public @NotNull Builder displayName(@NotNull String displayName) {
             this.displayName = displayName;
             return this;
         }
 
-        public Builder description(String description) {
+        public @NotNull Builder description(@NotNull String description) {
             this.description = description;
             return this;
         }
 
-        public Builder category(AfflictionCategory category) {
+        public @NotNull Builder category(@NotNull AfflictionCategory category) {
             this.category = category;
             return this;
         }
 
-        public Builder maxLevel(int maxLevel) {
+        public @NotNull Builder maxLevel(int maxLevel) {
             this.maxLevel = maxLevel;
             return this;
         }
 
-        public Builder curable(boolean curable) {
+        public @NotNull Builder curable(boolean curable) {
             this.curable = curable;
             return this;
         }
 
-        public Builder component(AfflictionComponent component) {
+        public @NotNull Builder component(@NotNull AfflictionComponent component) {
             this.components.add(component);
             return this;
         }
 
-        public abstract Affliction build();
+        public abstract @NotNull Affliction build();
     }
 }

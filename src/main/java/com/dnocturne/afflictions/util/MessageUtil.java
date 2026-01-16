@@ -7,6 +7,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -29,21 +31,21 @@ public final class MessageUtil {
     /**
      * Parse a MiniMessage string into a Component.
      */
-    public static Component parse(String message) {
+    public static @NotNull Component parse(@NotNull String message) {
         return MINI_MESSAGE.deserialize(message);
     }
 
     /**
      * Parse a MiniMessage string with placeholders.
      */
-    public static Component parse(String message, TagResolver... resolvers) {
+    public static @NotNull Component parse(@NotNull String message, @NotNull TagResolver... resolvers) {
         return MINI_MESSAGE.deserialize(message, resolvers);
     }
 
     /**
      * Parse a MiniMessage string with simple key-value placeholders.
      */
-    public static Component parse(String message, Map<String, String> placeholders) {
+    public static @NotNull Component parse(@NotNull String message, @NotNull Map<String, String> placeholders) {
         TagResolver.Builder builder = TagResolver.builder();
         placeholders.forEach((key, value) ->
                 builder.resolver(Placeholder.parsed(key, value))
@@ -54,49 +56,49 @@ public final class MessageUtil {
     /**
      * Send a MiniMessage to a player.
      */
-    public static void send(CommandSender sender, String message) {
+    public static void send(@NotNull CommandSender sender, @NotNull String message) {
         sender.sendMessage(parse(message));
     }
 
     /**
      * Send a MiniMessage with placeholders to a player.
      */
-    public static void send(CommandSender sender, String message, TagResolver... resolvers) {
+    public static void send(@NotNull CommandSender sender, @NotNull String message, @NotNull TagResolver... resolvers) {
         sender.sendMessage(parse(message, resolvers));
     }
 
     /**
      * Send a MiniMessage with key-value placeholders.
      */
-    public static void send(CommandSender sender, String message, Map<String, String> placeholders) {
+    public static void send(@NotNull CommandSender sender, @NotNull String message, @NotNull Map<String, String> placeholders) {
         sender.sendMessage(parse(message, placeholders));
     }
 
     /**
      * Send an action bar message to a player.
      */
-    public static void sendActionBar(Player player, String message) {
+    public static void sendActionBar(@NotNull Player player, @NotNull String message) {
         player.sendActionBar(parse(message));
     }
 
     /**
      * Send an action bar message with placeholders.
      */
-    public static void sendActionBar(Player player, String message, TagResolver... resolvers) {
+    public static void sendActionBar(@NotNull Player player, @NotNull String message, @NotNull TagResolver... resolvers) {
         player.sendActionBar(parse(message, resolvers));
     }
 
     /**
      * Create a simple placeholder resolver.
      */
-    public static TagResolver placeholder(String key, String value) {
+    public static @NotNull TagResolver placeholder(@NotNull String key, @NotNull String value) {
         return Placeholder.parsed(key, value);
     }
 
     /**
      * Create a component placeholder resolver.
      */
-    public static TagResolver placeholder(String key, Component value) {
+    public static @NotNull TagResolver placeholder(@NotNull String key, @NotNull Component value) {
         return Placeholder.component(key, value);
     }
 
@@ -105,9 +107,9 @@ public final class MessageUtil {
      * Useful for PlaceholderAPI which doesn't support MiniMessage natively.
      *
      * @param miniMessage The MiniMessage formatted string
-     * @return Legacy formatted string with color codes
+     * @return Legacy formatted string with color codes, or null/empty if input is null/empty
      */
-    public static String toLegacy(String miniMessage) {
+    public static @Nullable String toLegacy(@Nullable String miniMessage) {
         if (miniMessage == null || miniMessage.isEmpty()) {
             return miniMessage;
         }
@@ -119,9 +121,9 @@ public final class MessageUtil {
      * Convert a Component to legacy color codes.
      *
      * @param component The component to convert
-     * @return Legacy formatted string with color codes
+     * @return Legacy formatted string with color codes, empty string if component is null
      */
-    public static String toLegacy(Component component) {
+    public static @NotNull String toLegacy(@Nullable Component component) {
         if (component == null) {
             return "";
         }

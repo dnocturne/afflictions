@@ -13,6 +13,7 @@ import com.dnocturne.afflictions.manager.AfflictionManager;
 import com.dnocturne.afflictions.storage.StorageManager;
 import com.dnocturne.afflictions.util.TaskUtil;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -23,16 +24,16 @@ import java.util.Map;
  */
 public class Afflictions extends JavaPlugin {
 
-    private static Afflictions instance;
+    private static @Nullable Afflictions instance;
 
-    private ConfigManager configManager;
-    private LocalizationManager localizationManager;
-    private StorageManager storageManager;
-    private AfflictionManager afflictionManager;
-    private HookManager hookManager;
-    private CommandManager commandManager;
-    private TimeListener timeListener;
-    private VampirismConfig vampirismConfig;
+    private @Nullable ConfigManager configManager;
+    private @Nullable LocalizationManager localizationManager;
+    private @Nullable StorageManager storageManager;
+    private @Nullable AfflictionManager afflictionManager;
+    private @Nullable HookManager hookManager;
+    private @Nullable CommandManager commandManager;
+    private @Nullable TimeListener timeListener;
+    private @Nullable VampirismConfig vampirismConfig;
 
     // Registry of affliction display configs by ID
     private final Map<String, AfflictionDisplayConfig> displayConfigs = new HashMap<>();
@@ -120,42 +121,42 @@ public class Afflictions extends JavaPlugin {
     /**
      * Get the plugin instance.
      */
-    public static Afflictions getInstance() {
+    public static @Nullable Afflictions getInstance() {
         return instance;
     }
 
     /**
      * Get the configuration manager.
      */
-    public ConfigManager getConfigManager() {
+    public @Nullable ConfigManager getConfigManager() {
         return configManager;
     }
 
     /**
      * Get the localization manager.
      */
-    public LocalizationManager getLocalizationManager() {
+    public @Nullable LocalizationManager getLocalizationManager() {
         return localizationManager;
     }
 
     /**
      * Get the affliction manager.
      */
-    public AfflictionManager getAfflictionManager() {
+    public @Nullable AfflictionManager getAfflictionManager() {
         return afflictionManager;
     }
 
     /**
      * Get the hook manager.
      */
-    public HookManager getHookManager() {
+    public @Nullable HookManager getHookManager() {
         return hookManager;
     }
 
     /**
      * Get the storage manager.
      */
-    public StorageManager getStorageManager() {
+    public @Nullable StorageManager getStorageManager() {
         return storageManager;
     }
 
@@ -178,15 +179,14 @@ public class Afflictions extends JavaPlugin {
      * @param afflictionId The affliction ID (e.g., "vampirism")
      * @return The display config, or null if not found
      */
-    @Nullable
-    public AfflictionDisplayConfig getDisplayConfig(String afflictionId) {
+    public @Nullable AfflictionDisplayConfig getDisplayConfig(@NotNull String afflictionId) {
         return displayConfigs.get(afflictionId.toLowerCase());
     }
 
     /**
      * Get the Vampirism configuration.
      */
-    public VampirismConfig getVampirismConfig() {
+    public @Nullable VampirismConfig getVampirismConfig() {
         return vampirismConfig;
     }
 }
