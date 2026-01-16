@@ -7,19 +7,22 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents a player's affliction state.
+ * <p>
+ * This class is thread-safe and can be accessed from async operations
+ * (e.g., storage callbacks during player load).
  */
 public class AfflictedPlayer {
 
     private final UUID uuid;
-    private final Map<String, AfflictionInstance> activeAfflictions = new HashMap<>();
+    private final Map<String, AfflictionInstance> activeAfflictions = new ConcurrentHashMap<>();
 
     public AfflictedPlayer(UUID uuid) {
         this.uuid = uuid;
