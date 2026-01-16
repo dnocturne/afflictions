@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -121,6 +122,6 @@ public class AfflictionInstance {
     }
 
     public @NotNull Map<String, Object> getAllData() {
-        return new HashMap<>(data);
+        return Collections.unmodifiableMap(data);
     }
 }
