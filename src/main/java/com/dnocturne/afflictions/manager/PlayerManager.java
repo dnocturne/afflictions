@@ -4,17 +4,20 @@ import com.dnocturne.afflictions.player.AfflictedPlayer;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages afflicted player data.
+ * <p>
+ * This class is thread-safe and can be accessed from async operations
+ * (e.g., storage callbacks, async events).
  */
 public class PlayerManager {
 
-    private final Map<UUID, AfflictedPlayer> players = new HashMap<>();
+    private final Map<UUID, AfflictedPlayer> players = new ConcurrentHashMap<>();
 
     /**
      * Get or create an AfflictedPlayer for a UUID.
