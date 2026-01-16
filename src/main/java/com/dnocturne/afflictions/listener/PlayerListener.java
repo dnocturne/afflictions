@@ -53,8 +53,20 @@ public class PlayerListener implements Listener {
     }
 
     private void loadPlayerData(Player player) {
-        Storage storage = plugin.getStorageManager().getStorage();
+        // Null safety checks for managers
+        var storageManager = plugin.getStorageManager();
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
+
+        if (storageManager == null || afflictionManager == null) {
+            plugin.getLogger().warning("Cannot load player data: managers not initialized");
+            return;
+        }
+
+        Storage storage = storageManager.getStorage();
+        if (storage == null) {
+            plugin.getLogger().warning("Cannot load player data: storage not initialized");
+            return;
+        }
 
         // Determine lookup method based on config
         CompletableFuture<Optional<PlayerAfflictionData>> loadFuture = getLoadFuture(player, storage);
@@ -105,8 +117,12 @@ public class PlayerListener implements Listener {
      * Get the appropriate load future based on player-lookup config setting.
      */
     private CompletableFuture<Optional<PlayerAfflictionData>> getLoadFuture(Player player, Storage storage) {
-        String lookupMode = plugin.getConfigManager().getMainConfig()
-                .getString("storage.player-lookup", "auto");
+        var configManager = plugin.getConfigManager();
+
+        // Default to "auto" if config not available
+        String lookupMode = configManager != null
+                ? configManager.getMainConfig().getString("storage.player-lookup", "auto")
+                : "auto";
 
         boolean useNameLookup = switch (lookupMode.toLowerCase()) {
             case "name" -> true;
@@ -129,15 +145,28 @@ public class PlayerListener implements Listener {
     }
 
     private void savePlayerData(Player player) {
+        // Null safety checks for managers
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
-        Storage storage = plugin.getStorageManager().getStorage();
+        var storageManager = plugin.getStorageManager();
+
+        if (afflictionManager == null || storageManager == null) {
+            plugin.getLogger().warning("Cannot save player data: managers not initialized");
+            return;
+        }
+
+        Storage storage = storageManager.getStorage();
+        if (storage == null) {
+            plugin.getLogger().warning("Cannot save player data: storage not initialized");
+            return;
+        }
 
         AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
                 .get(player.getUniqueId())
                 .orElse(null);
 
         if (afflicted == null || !afflicted.hasAnyAffliction()) {
-            // No data to save, optionally delete existing
+            // No data to save, clean up tracking
+            afflictionManager.getPlayerManager().remove(player.getUniqueId());
             return;
         }
         List<AfflictionData> afflictionDataList = new ArrayList<>();
