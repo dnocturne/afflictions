@@ -221,17 +221,17 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
 
             // %afflictions_<id>_name% - What the player "is" (e.g., "Vampire")
             if (property.equalsIgnoreCase("name")) {
-                return hasAffliction ? MessageUtil.toLegacy(getDisplayName(afflictionId)) : "";
+                return hasAffliction ? getDisplayNameLegacy(afflictionId) : "";
             }
 
             // %afflictions_<id>_affliction% - The affliction name (e.g., "Vampirism")
             if (property.equalsIgnoreCase("affliction")) {
-                return hasAffliction ? MessageUtil.toLegacy(getDisplayAfflictionName(afflictionId)) : "";
+                return hasAffliction ? getDisplayAfflictionNameLegacy(afflictionId) : "";
             }
 
             // %afflictions_<id>_prefix% - Short prefix/tag (e.g., "[V]")
             if (property.equalsIgnoreCase("prefix")) {
-                return hasAffliction ? MessageUtil.toLegacy(getDisplayPrefix(afflictionId)) : "";
+                return hasAffliction ? getDisplayPrefixLegacy(afflictionId) : "";
             }
 
             // %afflictions_<id>_title% - Level title (e.g., "Fledgling", "Elder")
@@ -241,8 +241,8 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
                         .flatMap(ap -> ap.getAffliction(afflictionId))
                         .map(AfflictionInstance::getLevel)
                         .orElse(1);
-                String title = getLevelTitle(afflictionId, level);
-                return title != null ? MessageUtil.toLegacy(title) : "";
+                String title = getLevelTitleLegacy(afflictionId, level);
+                return title != null ? title : "";
             }
 
             // Other properties require the player to have the affliction
@@ -283,39 +283,39 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
     }
 
     /**
-     * Get the display name (what the player "is") for an affliction.
+     * Get the cached legacy-formatted display name for an affliction.
      * Example: "Vampire", "Werewolf"
      */
-    private String getDisplayName(String afflictionId) {
+    private String getDisplayNameLegacy(String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
-        return config != null ? config.getName() : "";
+        return config != null ? config.getNameLegacy() : "";
     }
 
     /**
-     * Get the affliction name for an affliction.
+     * Get the cached legacy-formatted affliction name.
      * Example: "Vampirism", "Lycanthropy"
      */
-    private String getDisplayAfflictionName(String afflictionId) {
+    private String getDisplayAfflictionNameLegacy(String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
-        return config != null ? config.getAfflictionName() : "";
+        return config != null ? config.getAfflictionNameLegacy() : "";
     }
 
     /**
-     * Get the short prefix/tag for an affliction.
+     * Get the cached legacy-formatted prefix/tag.
      * Example: "[V]", "[WW]"
      */
-    private String getDisplayPrefix(String afflictionId) {
+    private String getDisplayPrefixLegacy(String afflictionId) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
-        return config != null ? config.getPrefix() : "";
+        return config != null ? config.getPrefixLegacy() : "";
     }
 
     /**
-     * Get the level title for an affliction at a specific level.
+     * Get the cached legacy-formatted level title.
      * Example: "Fledgling", "Elder", "Ancient"
      */
-    private String getLevelTitle(String afflictionId, int level) {
+    private String getLevelTitleLegacy(String afflictionId, int level) {
         AfflictionDisplayConfig config = getConfig(afflictionId);
-        return config != null ? config.getLevelTitle(level) : null;
+        return config != null ? config.getLevelTitleLegacy(level) : null;
     }
 
     /**

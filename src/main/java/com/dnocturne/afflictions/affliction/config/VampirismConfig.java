@@ -11,7 +11,7 @@ import java.util.logging.Level;
 /**
  * Configuration holder for Vampirism affliction.
  */
-public class VampirismConfig implements AfflictionDisplayConfig {
+public class VampirismConfig extends AbstractAfflictionConfig {
 
     private static final String ID = "vampirism";
 
@@ -94,6 +94,9 @@ public class VampirismConfig implements AfflictionDisplayConfig {
                 levelTitles.put(level, title);
             }
         }
+
+        // Build legacy cache for PlaceholderAPI performance
+        buildLegacyCache();
 
         // Sun damage settings
         sunDamageEnabled = config.getBoolean("sun-damage.enabled", sunDamageEnabled);

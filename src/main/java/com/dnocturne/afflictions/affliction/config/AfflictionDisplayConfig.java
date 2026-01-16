@@ -76,4 +76,39 @@ public interface AfflictionDisplayConfig {
         String title = getLevelTitle(level);
         return title != null ? title : fallback;
     }
+
+    // ============================================================
+    // Cached legacy versions for PlaceholderAPI
+    // These avoid repeated MiniMessage parsing on every request
+    // ============================================================
+
+    /**
+     * Get the cached legacy-formatted name.
+     *
+     * @return The name converted to legacy color codes
+     */
+    String getNameLegacy();
+
+    /**
+     * Get the cached legacy-formatted affliction name.
+     *
+     * @return The affliction name converted to legacy color codes
+     */
+    String getAfflictionNameLegacy();
+
+    /**
+     * Get the cached legacy-formatted prefix.
+     *
+     * @return The prefix converted to legacy color codes
+     */
+    String getPrefixLegacy();
+
+    /**
+     * Get the cached legacy-formatted level title.
+     *
+     * @param level The affliction level
+     * @return The title converted to legacy color codes, or null if not configured
+     */
+    @Nullable
+    String getLevelTitleLegacy(int level);
 }
