@@ -8,18 +8,24 @@ import com.dnocturne.afflictions.util.TimeUtil.MoonPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Listens for day/night transitions and broadcasts messages.
  */
 public class TimeListener {
 
+    private static final long CHECK_INTERVAL_TICKS = 100L; // 5 seconds
+
     private final Afflictions plugin;
     private final LocalizationManager lang;
     private final Map<String, Boolean> wasNight = new HashMap<>();
+    private BukkitTask task;
 
     public TimeListener(Afflictions plugin) {
         this.plugin = plugin;
@@ -30,17 +36,32 @@ public class TimeListener {
      * Start the time checking task.
      */
     public void start() {
-        // Check every 100 ticks (5 seconds)
-        TaskUtil.runTimer(this::checkTimeTransitions, 100L, 100L);
+        task = TaskUtil.runTimer(this::checkTimeTransitions, CHECK_INTERVAL_TICKS, CHECK_INTERVAL_TICKS);
+    }
+
+    /**
+     * Stop the time checking task and clean up resources.
+     */
+    public void stop() {
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
+        wasNight.clear();
     }
 
     private void checkTimeTransitions() {
+        // Collect currently loaded world names to detect unloaded worlds
+        Set<String> loadedWorldNames = new HashSet<>();
+
         for (World world : Bukkit.getWorlds()) {
             if (world.getEnvironment() != World.Environment.NORMAL) {
                 continue; // Skip nether/end
             }
 
             String worldName = world.getName();
+            loadedWorldNames.add(worldName);
+
             boolean isNightNow = TimeUtil.isNight(world);
             Boolean wasNightBefore = wasNight.get(worldName);
 
@@ -61,6 +82,9 @@ public class TimeListener {
 
             wasNight.put(worldName, isNightNow);
         }
+
+        // Clean up entries for unloaded worlds to prevent memory leaks
+        wasNight.keySet().removeIf(worldName -> !loadedWorldNames.contains(worldName));
     }
 
     private void onNightfall(World world) {
