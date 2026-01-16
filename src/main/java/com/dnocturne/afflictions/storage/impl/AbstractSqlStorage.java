@@ -192,28 +192,28 @@ public abstract class AbstractSqlStorage implements Storage {
 
                 // Upsert player record
                 try (PreparedStatement stmt = connection.prepareStatement(getUpsertPlayerSql())) {
-                    stmt.setString(1, data.getUuid().toString());
-                    stmt.setString(2, data.getUsername());
+                    stmt.setString(1, data.uuid().toString());
+                    stmt.setString(2, data.username());
                     stmt.setLong(3, System.currentTimeMillis());
                     stmt.executeUpdate();
                 }
 
                 // Delete existing afflictions
                 try (PreparedStatement stmt = connection.prepareStatement(DELETE_AFFLICTIONS_SQL)) {
-                    stmt.setString(1, data.getUuid().toString());
+                    stmt.setString(1, data.uuid().toString());
                     stmt.executeUpdate();
                 }
 
                 // Insert current afflictions
-                if (!data.getAfflictions().isEmpty()) {
+                if (!data.afflictions().isEmpty()) {
                     try (PreparedStatement stmt = connection.prepareStatement(INSERT_AFFLICTION_SQL)) {
-                        for (AfflictionData affliction : data.getAfflictions()) {
-                            stmt.setString(1, data.getUuid().toString());
-                            stmt.setString(2, affliction.getAfflictionId());
-                            stmt.setInt(3, affliction.getLevel());
-                            stmt.setLong(4, affliction.getDuration());
-                            stmt.setLong(5, affliction.getContractedAt());
-                            stmt.setString(6, gson.toJson(affliction.getData()));
+                        for (AfflictionData affliction : data.afflictions()) {
+                            stmt.setString(1, data.uuid().toString());
+                            stmt.setString(2, affliction.afflictionId());
+                            stmt.setInt(3, affliction.level());
+                            stmt.setLong(4, affliction.duration());
+                            stmt.setLong(5, affliction.contractedAt());
+                            stmt.setString(6, gson.toJson(affliction.data()));
                             stmt.addBatch();
                         }
                         stmt.executeBatch();
@@ -222,7 +222,7 @@ public abstract class AbstractSqlStorage implements Storage {
 
                 connection.commit();
             } catch (SQLException e) {
-                logger.severe("Failed to save player " + data.getUuid() + ": " + e.getMessage());
+                logger.severe("Failed to save player " + data.uuid() + ": " + e.getMessage());
                 try {
                     connection.rollback();
                 } catch (SQLException rollbackEx) {

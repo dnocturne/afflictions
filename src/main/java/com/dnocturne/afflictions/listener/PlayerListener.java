@@ -74,13 +74,13 @@ public class PlayerListener implements Listener {
         loadFuture.thenAccept(dataOpt -> dataOpt.ifPresent(data -> {
             // Run on main thread to interact with Bukkit
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                for (AfflictionData afflictionData : data.getAfflictions()) {
+                for (AfflictionData afflictionData : data.afflictions()) {
                     Affliction affliction = afflictionManager.getRegistry()
-                            .get(afflictionData.getAfflictionId())
+                            .get(afflictionData.afflictionId())
                             .orElse(null);
 
                     if (affliction == null) {
-                        plugin.getLogger().warning("Unknown affliction '" + afflictionData.getAfflictionId()
+                        plugin.getLogger().warning("Unknown affliction '" + afflictionData.afflictionId()
                                 + "' for player " + player.getName() + ", skipping");
                         continue;
                     }
@@ -89,13 +89,13 @@ public class PlayerListener implements Listener {
                     AfflictionInstance instance = new AfflictionInstance(
                             player.getUniqueId(),
                             affliction,
-                            afflictionData.getLevel(),
-                            afflictionData.getDuration(),
-                            afflictionData.getContractedAt()
+                            afflictionData.level(),
+                            afflictionData.duration(),
+                            afflictionData.contractedAt()
                     );
 
                     // Restore custom data
-                    for (Map.Entry<String, String> entry : afflictionData.getData().entrySet()) {
+                    for (Map.Entry<String, String> entry : afflictionData.data().entrySet()) {
                         instance.setData(entry.getKey(), entry.getValue());
                     }
 
@@ -105,8 +105,8 @@ public class PlayerListener implements Listener {
                     afflictedPlayer.addAffliction(instance);
                 }
 
-                if (!data.getAfflictions().isEmpty()) {
-                    plugin.getLogger().info("Loaded " + data.getAfflictions().size()
+                if (!data.afflictions().isEmpty()) {
+                    plugin.getLogger().info("Loaded " + data.afflictions().size()
                             + " affliction(s) for " + player.getName());
                 }
             });

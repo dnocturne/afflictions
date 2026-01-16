@@ -11,7 +11,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for PlayerAfflictionData DTO.
+ * Tests for PlayerAfflictionData record.
  */
 @DisplayName("PlayerAfflictionData")
 class PlayerAfflictionDataTest {
@@ -28,9 +28,9 @@ class PlayerAfflictionDataTest {
         void constructor_uuidAndUsernameOnly() {
             PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
 
-            assertEquals(TEST_UUID, data.getUuid());
-            assertEquals(TEST_USERNAME, data.getUsername());
-            assertTrue(data.getAfflictions().isEmpty());
+            assertEquals(TEST_UUID, data.uuid());
+            assertEquals(TEST_USERNAME, data.username());
+            assertTrue(data.afflictions().isEmpty());
         }
 
         @Test
@@ -42,13 +42,13 @@ class PlayerAfflictionDataTest {
 
             PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME, afflictions);
 
-            assertEquals(TEST_UUID, data.getUuid());
-            assertEquals(TEST_USERNAME, data.getUsername());
-            assertEquals(2, data.getAfflictions().size());
+            assertEquals(TEST_UUID, data.uuid());
+            assertEquals(TEST_USERNAME, data.username());
+            assertEquals(2, data.afflictions().size());
         }
 
         @Test
-        @DisplayName("copies affliction list defensively")
+        @DisplayName("copies affliction list defensively (immutable)")
         void constructor_copiesListDefensively() {
             List<AfflictionData> originalList = new ArrayList<>();
             originalList.add(new AfflictionData("vampirism", 1, -1L, 0L));
@@ -58,56 +58,36 @@ class PlayerAfflictionDataTest {
             // Modify original list
             originalList.clear();
 
-            // Data should still have the affliction
-            assertEquals(1, data.getAfflictions().size());
+            // Data should still have the affliction (immutable copy)
+            assertEquals(1, data.afflictions().size());
+        }
+
+        @Test
+        @DisplayName("afflictions list is immutable")
+        void constructor_afflictionsListIsImmutable() {
+            List<AfflictionData> afflictions = new ArrayList<>();
+            afflictions.add(new AfflictionData("vampirism", 1, -1L, 0L));
+
+            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME, afflictions);
+
+            // Attempting to modify should throw
+            assertThrows(UnsupportedOperationException.class, () ->
+                data.afflictions().add(new AfflictionData("test", 1, -1L, 0L))
+            );
         }
     }
 
     @Nested
-    @DisplayName("Affliction Management")
-    class AfflictionManagement {
+    @DisplayName("hasAffliction")
+    class HasAffliction {
 
         @Test
-        @DisplayName("addAffliction adds to list")
-        void addAffliction_addsToList() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-
-            AfflictionData affliction = new AfflictionData("vampirism", 1, -1L, 0L);
-            data.addAffliction(affliction);
-
-            assertEquals(1, data.getAfflictions().size());
-            assertEquals("vampirism", data.getAfflictions().get(0).getAfflictionId());
-        }
-
-        @Test
-        @DisplayName("removeAffliction removes by ID (case-insensitive)")
-        void removeAffliction_removesById() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1L, 0L));
-            data.addAffliction(new AfflictionData("werewolf", 1, -1L, 0L));
-
-            data.removeAffliction("VAMPIRISM"); // uppercase
-
-            assertEquals(1, data.getAfflictions().size());
-            assertEquals("werewolf", data.getAfflictions().get(0).getAfflictionId());
-        }
-
-        @Test
-        @DisplayName("removeAffliction does nothing for non-existent ID")
-        void removeAffliction_nonExistent_doesNothing() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1L, 0L));
-
-            data.removeAffliction("nonexistent");
-
-            assertEquals(1, data.getAfflictions().size());
-        }
-
-        @Test
-        @DisplayName("hasAffliction returns true for existing (case-insensitive)")
+        @DisplayName("returns true for existing (case-insensitive)")
         void hasAffliction_exists_returnsTrue() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1L, 0L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1L, 0L)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME, afflictions);
 
             assertTrue(data.hasAffliction("vampirism"));
             assertTrue(data.hasAffliction("VAMPIRISM"));
@@ -115,7 +95,7 @@ class PlayerAfflictionDataTest {
         }
 
         @Test
-        @DisplayName("hasAffliction returns false for non-existent")
+        @DisplayName("returns false for non-existent")
         void hasAffliction_notExists_returnsFalse() {
             PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
 
@@ -130,26 +110,17 @@ class PlayerAfflictionDataTest {
         @Test
         @DisplayName("can have multiple different afflictions")
         void multipleAfflictions() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1L, 0L));
-            data.addAffliction(new AfflictionData("werewolf", 2, -1L, 0L));
-            data.addAffliction(new AfflictionData("curse", 3, 1000L, 0L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1L, 0L),
+                new AfflictionData("werewolf", 2, -1L, 0L),
+                new AfflictionData("curse", 3, 1000L, 0L)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME, afflictions);
 
-            assertEquals(3, data.getAfflictions().size());
+            assertEquals(3, data.afflictions().size());
             assertTrue(data.hasAffliction("vampirism"));
             assertTrue(data.hasAffliction("werewolf"));
             assertTrue(data.hasAffliction("curse"));
-        }
-
-        @Test
-        @DisplayName("can add duplicate affliction IDs (no validation)")
-        void duplicateAfflictions_noValidation() {
-            // Note: This class doesn't prevent duplicates - that's handled at a higher level
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1L, 0L));
-            data.addAffliction(new AfflictionData("vampirism", 2, -1L, 0L));
-
-            assertEquals(2, data.getAfflictions().size());
         }
     }
 
@@ -161,25 +132,42 @@ class PlayerAfflictionDataTest {
         @DisplayName("handles empty username")
         void emptyUsername() {
             PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, "");
-            assertEquals("", data.getUsername());
+            assertEquals("", data.username());
+        }
+    }
+
+    @Nested
+    @DisplayName("Record Features")
+    class RecordFeatures {
+
+        @Test
+        @DisplayName("equals works correctly")
+        void equals_worksCorrectly() {
+            PlayerAfflictionData data1 = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
+            PlayerAfflictionData data2 = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
+            PlayerAfflictionData data3 = new PlayerAfflictionData(UUID.randomUUID(), TEST_USERNAME);
+
+            assertEquals(data1, data2);
+            assertNotEquals(data1, data3);
         }
 
         @Test
-        @DisplayName("handles null username")
-        void nullUsername() {
-            PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, null);
-            assertNull(data.getUsername());
+        @DisplayName("hashCode is consistent")
+        void hashCode_isConsistent() {
+            PlayerAfflictionData data1 = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
+            PlayerAfflictionData data2 = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
+
+            assertEquals(data1.hashCode(), data2.hashCode());
         }
 
         @Test
-        @DisplayName("getAfflictions returns mutable list")
-        void getAfflictions_returnsMutableList() {
+        @DisplayName("toString contains all fields")
+        void toString_containsAllFields() {
             PlayerAfflictionData data = new PlayerAfflictionData(TEST_UUID, TEST_USERNAME);
+            String str = data.toString();
 
-            // Can add directly to returned list
-            data.getAfflictions().add(new AfflictionData("test", 1, -1L, 0L));
-
-            assertEquals(1, data.getAfflictions().size());
+            assertTrue(str.contains(TEST_UUID.toString()));
+            assertTrue(str.contains(TEST_USERNAME));
         }
     }
 }

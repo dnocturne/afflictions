@@ -1,53 +1,45 @@
 package com.dnocturne.afflictions.storage.data;
 
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Data transfer object for player affliction storage.
+ * Immutable data transfer object for player affliction storage.
  * Represents serializable player data for persistence.
+ *
+ * @param uuid        The player's UUID
+ * @param username    The player's username (for offline mode support)
+ * @param afflictions The list of affliction data
  */
-public class PlayerAfflictionData {
-
-    private final UUID uuid;
-    private final String username;
-    private final List<AfflictionData> afflictions;
-
-    public PlayerAfflictionData(UUID uuid, String username) {
-        this.uuid = uuid;
-        this.username = username;
-        this.afflictions = new ArrayList<>();
+public record PlayerAfflictionData(
+        @NotNull UUID uuid,
+        @NotNull String username,
+        @NotNull List<AfflictionData> afflictions
+) {
+    /**
+     * Compact constructor that ensures afflictions list is immutable.
+     */
+    public PlayerAfflictionData {
+        afflictions = List.copyOf(afflictions);
     }
 
-    public PlayerAfflictionData(UUID uuid, String username, List<AfflictionData> afflictions) {
-        this.uuid = uuid;
-        this.username = username;
-        this.afflictions = new ArrayList<>(afflictions);
+    /**
+     * Create player data with no afflictions.
+     */
+    public PlayerAfflictionData(@NotNull UUID uuid, @NotNull String username) {
+        this(uuid, username, List.of());
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public List<AfflictionData> getAfflictions() {
-        return afflictions;
-    }
-
-    public void addAffliction(AfflictionData affliction) {
-        afflictions.add(affliction);
-    }
-
-    public void removeAffliction(String afflictionId) {
-        afflictions.removeIf(a -> a.getAfflictionId().equalsIgnoreCase(afflictionId));
-    }
-
-    public boolean hasAffliction(String afflictionId) {
+    /**
+     * Check if the player has a specific affliction.
+     *
+     * @param afflictionId The affliction ID to check
+     * @return true if the player has this affliction
+     */
+    public boolean hasAffliction(@NotNull String afflictionId) {
         return afflictions.stream()
-                .anyMatch(a -> a.getAfflictionId().equalsIgnoreCase(afflictionId));
+                .anyMatch(a -> a.afflictionId().equalsIgnoreCase(afflictionId));
     }
 }

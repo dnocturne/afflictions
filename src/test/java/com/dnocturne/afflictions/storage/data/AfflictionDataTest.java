@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for AfflictionData DTO.
+ * Tests for AfflictionData record.
  */
 @DisplayName("AfflictionData")
 class AfflictionDataTest {
@@ -24,11 +24,11 @@ class AfflictionDataTest {
         void constructor_withBasicFields() {
             AfflictionData data = new AfflictionData("vampirism", 3, 1000L, 123456789L);
 
-            assertEquals("vampirism", data.getAfflictionId());
-            assertEquals(3, data.getLevel());
-            assertEquals(1000L, data.getDuration());
-            assertEquals(123456789L, data.getContractedAt());
-            assertTrue(data.getData().isEmpty());
+            assertEquals("vampirism", data.afflictionId());
+            assertEquals(3, data.level());
+            assertEquals(1000L, data.duration());
+            assertEquals(123456789L, data.contractedAt());
+            assertTrue(data.data().isEmpty());
         }
 
         @Test
@@ -40,17 +40,17 @@ class AfflictionDataTest {
 
             AfflictionData data = new AfflictionData("werewolf", 1, -1L, 999L, customData);
 
-            assertEquals("werewolf", data.getAfflictionId());
-            assertEquals(1, data.getLevel());
-            assertEquals(-1L, data.getDuration());
-            assertEquals(999L, data.getContractedAt());
-            assertEquals(2, data.getData().size());
+            assertEquals("werewolf", data.afflictionId());
+            assertEquals(1, data.level());
+            assertEquals(-1L, data.duration());
+            assertEquals(999L, data.contractedAt());
+            assertEquals(2, data.data().size());
             assertEquals("value1", data.getData("key1"));
             assertEquals("value2", data.getData("key2"));
         }
 
         @Test
-        @DisplayName("copies data map defensively")
+        @DisplayName("copies data map defensively (immutable)")
         void constructor_copiesDataMapDefensively() {
             Map<String, String> originalMap = new HashMap<>();
             originalMap.put("key", "original");
@@ -60,8 +60,22 @@ class AfflictionDataTest {
             // Modify original map
             originalMap.put("key", "modified");
 
-            // Data should still have original value
+            // Data should still have original value (immutable copy)
             assertEquals("original", data.getData("key"));
+        }
+
+        @Test
+        @DisplayName("data map is immutable")
+        void constructor_dataMapIsImmutable() {
+            Map<String, String> customData = new HashMap<>();
+            customData.put("key", "value");
+
+            AfflictionData data = new AfflictionData("test", 1, -1L, 0L, customData);
+
+            // Attempting to modify should throw
+            assertThrows(UnsupportedOperationException.class, () ->
+                data.data().put("newKey", "newValue")
+            );
         }
     }
 
@@ -77,34 +91,12 @@ class AfflictionDataTest {
         }
 
         @Test
-        @DisplayName("setData adds new key-value pair")
-        void setData_addsNewPair() {
-            AfflictionData data = new AfflictionData("test", 1, -1L, 0L);
-            data.setData("newKey", "newValue");
+        @DisplayName("getData returns value for existing key")
+        void getData_existingKey_returnsValue() {
+            Map<String, String> customData = Map.of("key", "value");
+            AfflictionData data = new AfflictionData("test", 1, -1L, 0L, customData);
 
-            assertEquals("newValue", data.getData("newKey"));
-        }
-
-        @Test
-        @DisplayName("setData overwrites existing key")
-        void setData_overwritesExisting() {
-            Map<String, String> initialData = new HashMap<>();
-            initialData.put("key", "oldValue");
-
-            AfflictionData data = new AfflictionData("test", 1, -1L, 0L, initialData);
-            data.setData("key", "newValue");
-
-            assertEquals("newValue", data.getData("key"));
-        }
-
-        @Test
-        @DisplayName("getData map is mutable")
-        void getDataMap_isMutable() {
-            AfflictionData data = new AfflictionData("test", 1, -1L, 0L);
-            data.getData().put("directKey", "directValue");
-
-            // Changes to returned map affect the internal state
-            assertEquals("directValue", data.getData("directKey"));
+            assertEquals("value", data.getData("key"));
         }
     }
 
@@ -116,30 +108,66 @@ class AfflictionDataTest {
         @DisplayName("handles permanent duration (-1)")
         void permanentDuration() {
             AfflictionData data = new AfflictionData("test", 1, -1L, 0L);
-            assertEquals(-1L, data.getDuration());
+            assertEquals(-1L, data.duration());
         }
 
         @Test
         @DisplayName("handles level 0")
         void levelZero() {
             AfflictionData data = new AfflictionData("test", 0, -1L, 0L);
-            assertEquals(0, data.getLevel());
+            assertEquals(0, data.level());
         }
 
         @Test
         @DisplayName("handles empty affliction ID")
         void emptyAfflictionId() {
             AfflictionData data = new AfflictionData("", 1, -1L, 0L);
-            assertEquals("", data.getAfflictionId());
+            assertEquals("", data.afflictionId());
         }
 
         @Test
-        @DisplayName("handles null data map by creating empty")
-        void nullDataMap() {
-            // Using basic constructor which creates empty map
+        @DisplayName("handles empty data map")
+        void emptyDataMap() {
             AfflictionData data = new AfflictionData("test", 1, -1L, 0L);
-            assertNotNull(data.getData());
-            assertTrue(data.getData().isEmpty());
+            assertNotNull(data.data());
+            assertTrue(data.data().isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("Record Features")
+    class RecordFeatures {
+
+        @Test
+        @DisplayName("equals works correctly")
+        void equals_worksCorrectly() {
+            AfflictionData data1 = new AfflictionData("test", 1, -1L, 0L);
+            AfflictionData data2 = new AfflictionData("test", 1, -1L, 0L);
+            AfflictionData data3 = new AfflictionData("other", 1, -1L, 0L);
+
+            assertEquals(data1, data2);
+            assertNotEquals(data1, data3);
+        }
+
+        @Test
+        @DisplayName("hashCode is consistent")
+        void hashCode_isConsistent() {
+            AfflictionData data1 = new AfflictionData("test", 1, -1L, 0L);
+            AfflictionData data2 = new AfflictionData("test", 1, -1L, 0L);
+
+            assertEquals(data1.hashCode(), data2.hashCode());
+        }
+
+        @Test
+        @DisplayName("toString contains all fields")
+        void toString_containsAllFields() {
+            AfflictionData data = new AfflictionData("vampirism", 3, 1000L, 123L);
+            String str = data.toString();
+
+            assertTrue(str.contains("vampirism"));
+            assertTrue(str.contains("3"));
+            assertTrue(str.contains("1000"));
+            assertTrue(str.contains("123"));
         }
     }
 }

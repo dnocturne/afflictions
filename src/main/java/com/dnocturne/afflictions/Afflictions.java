@@ -118,6 +118,9 @@ public class Afflictions extends JavaPlugin {
             configManager.save();
         }
 
+        // Clean up static utilities
+        TaskUtil.shutdown();
+
         getLogger().info("Afflictions has been disabled!");
         instance = null;
     }

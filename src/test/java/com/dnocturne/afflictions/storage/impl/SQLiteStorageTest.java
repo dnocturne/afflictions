@@ -91,9 +91,9 @@ class SQLiteStorageTest {
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(uuid, loaded.get().getUuid());
-            assertEquals(username, loaded.get().getUsername());
-            assertTrue(loaded.get().getAfflictions().isEmpty());
+            assertEquals(uuid, loaded.get().uuid());
+            assertEquals(username, loaded.get().username());
+            assertTrue(loaded.get().afflictions().isEmpty());
         }
 
         @Test
@@ -102,21 +102,23 @@ class SQLiteStorageTest {
             UUID uuid = UUID.randomUUID();
             String username = "VampirePlayer";
 
-            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username);
-            dataToSave.addAffliction(new AfflictionData("vampirism", 3, -1, 1234567890L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 3, -1, 1234567890L)
+            );
+            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username, afflictions);
 
             storage.savePlayer(dataToSave).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(1, loaded.get().getAfflictions().size());
+            assertEquals(1, loaded.get().afflictions().size());
 
-            AfflictionData affliction = loaded.get().getAfflictions().get(0);
-            assertEquals("vampirism", affliction.getAfflictionId());
-            assertEquals(3, affliction.getLevel());
-            assertEquals(-1, affliction.getDuration());
-            assertEquals(1234567890L, affliction.getContractedAt());
+            AfflictionData affliction = loaded.get().afflictions().get(0);
+            assertEquals("vampirism", affliction.afflictionId());
+            assertEquals(3, affliction.level());
+            assertEquals(-1, affliction.duration());
+            assertEquals(1234567890L, affliction.contractedAt());
         }
 
         @Test
@@ -125,17 +127,19 @@ class SQLiteStorageTest {
             UUID uuid = UUID.randomUUID();
             String username = "CursedPlayer";
 
-            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username);
-            dataToSave.addAffliction(new AfflictionData("vampirism", 2, -1, 1000L));
-            dataToSave.addAffliction(new AfflictionData("werewolf", 1, 5000L, 2000L));
-            dataToSave.addAffliction(new AfflictionData("curse", 5, 10000L, 3000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 2, -1, 1000L),
+                new AfflictionData("werewolf", 1, 5000L, 2000L),
+                new AfflictionData("curse", 5, 10000L, 3000L)
+            );
+            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username, afflictions);
 
             storage.savePlayer(dataToSave).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(3, loaded.get().getAfflictions().size());
+            assertEquals(3, loaded.get().afflictions().size());
         }
 
         @Test
@@ -149,15 +153,17 @@ class SQLiteStorageTest {
             customData.put("blood_level", "50");
             customData.put("last_fed", "1234567890");
 
-            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username);
-            dataToSave.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L, customData));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1, 1000L, customData)
+            );
+            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username, afflictions);
 
             storage.savePlayer(dataToSave).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            AfflictionData affliction = loaded.get().getAfflictions().get(0);
+            AfflictionData affliction = loaded.get().afflictions().get(0);
             assertEquals("true", affliction.getData("burning"));
             assertEquals("50", affliction.getData("blood_level"));
             assertEquals("1234567890", affliction.getData("last_fed"));
@@ -170,21 +176,25 @@ class SQLiteStorageTest {
             String username = "UpdatePlayer";
 
             // First save
-            PlayerAfflictionData data1 = new PlayerAfflictionData(uuid, username);
-            data1.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L));
+            List<AfflictionData> afflictions1 = List.of(
+                new AfflictionData("vampirism", 1, -1, 1000L)
+            );
+            PlayerAfflictionData data1 = new PlayerAfflictionData(uuid, username, afflictions1);
             storage.savePlayer(data1).get();
 
             // Second save with different data
-            PlayerAfflictionData data2 = new PlayerAfflictionData(uuid, username);
-            data2.addAffliction(new AfflictionData("werewolf", 5, -1, 2000L));
+            List<AfflictionData> afflictions2 = List.of(
+                new AfflictionData("werewolf", 5, -1, 2000L)
+            );
+            PlayerAfflictionData data2 = new PlayerAfflictionData(uuid, username, afflictions2);
             storage.savePlayer(data2).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(1, loaded.get().getAfflictions().size());
-            assertEquals("werewolf", loaded.get().getAfflictions().get(0).getAfflictionId());
-            assertEquals(5, loaded.get().getAfflictions().get(0).getLevel());
+            assertEquals(1, loaded.get().afflictions().size());
+            assertEquals("werewolf", loaded.get().afflictions().get(0).afflictionId());
+            assertEquals(5, loaded.get().afflictions().get(0).level());
         }
 
         @Test
@@ -193,19 +203,20 @@ class SQLiteStorageTest {
             UUID uuid = UUID.randomUUID();
 
             // First save with old name
-            PlayerAfflictionData data1 = new PlayerAfflictionData(uuid, "OldName");
-            data1.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1, 1000L)
+            );
+            PlayerAfflictionData data1 = new PlayerAfflictionData(uuid, "OldName", afflictions);
             storage.savePlayer(data1).get();
 
             // Second save with new name
-            PlayerAfflictionData data2 = new PlayerAfflictionData(uuid, "NewName");
-            data2.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L));
+            PlayerAfflictionData data2 = new PlayerAfflictionData(uuid, "NewName", afflictions);
             storage.savePlayer(data2).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals("NewName", loaded.get().getUsername());
+            assertEquals("NewName", loaded.get().username());
         }
     }
 
@@ -219,16 +230,18 @@ class SQLiteStorageTest {
             UUID uuid = UUID.randomUUID();
             String username = "NamedPlayer";
 
-            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username);
-            dataToSave.addAffliction(new AfflictionData("vampirism", 2, -1, 1000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 2, -1, 1000L)
+            );
+            PlayerAfflictionData dataToSave = new PlayerAfflictionData(uuid, username, afflictions);
             storage.savePlayer(dataToSave).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayerByName(username).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(uuid, loaded.get().getUuid());
-            assertEquals(username, loaded.get().getUsername());
-            assertEquals(1, loaded.get().getAfflictions().size());
+            assertEquals(uuid, loaded.get().uuid());
+            assertEquals(username, loaded.get().username());
+            assertEquals(1, loaded.get().afflictions().size());
         }
 
         @Test
@@ -264,8 +277,10 @@ class SQLiteStorageTest {
             UUID uuid = UUID.randomUUID();
             String username = "DeleteMe";
 
-            PlayerAfflictionData data = new PlayerAfflictionData(uuid, username);
-            data.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1, 1000L)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(uuid, username, afflictions);
             storage.savePlayer(data).get();
 
             assertTrue(storage.hasPlayer(uuid).get());
@@ -333,14 +348,16 @@ class SQLiteStorageTest {
         void emptyCustomData() throws ExecutionException, InterruptedException {
             UUID uuid = UUID.randomUUID();
 
-            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "EmptyDataPlayer");
-            data.addAffliction(new AfflictionData("vampirism", 1, -1, 1000L, new HashMap<>()));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("vampirism", 1, -1, 1000L, new HashMap<>())
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "EmptyDataPlayer", afflictions);
             storage.savePlayer(data).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertTrue(loaded.get().getAfflictions().get(0).getData().isEmpty());
+            assertTrue(loaded.get().afflictions().get(0).data().isEmpty());
         }
 
         @Test
@@ -353,14 +370,16 @@ class SQLiteStorageTest {
             specialData.put("unicode", "\u00E9\u00E8\u00EA");
             specialData.put("newlines", "line1\nline2\nline3");
 
-            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "SpecialPlayer");
-            data.addAffliction(new AfflictionData("test", 1, -1, 1000L, specialData));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("test", 1, -1, 1000L, specialData)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "SpecialPlayer", afflictions);
             storage.savePlayer(data).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            AfflictionData affliction = loaded.get().getAfflictions().get(0);
+            AfflictionData affliction = loaded.get().afflictions().get(0);
             assertEquals("Hello \"World\"!", affliction.getData("message"));
             assertEquals("\u00E9\u00E8\u00EA", affliction.getData("unicode"));
             assertEquals("line1\nline2\nline3", affliction.getData("newlines"));
@@ -371,14 +390,16 @@ class SQLiteStorageTest {
         void zeroDuration() throws ExecutionException, InterruptedException {
             UUID uuid = UUID.randomUUID();
 
-            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "ZeroDuration");
-            data.addAffliction(new AfflictionData("test", 1, 0, 1000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("test", 1, 0, 1000L)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "ZeroDuration", afflictions);
             storage.savePlayer(data).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(0, loaded.get().getAfflictions().get(0).getDuration());
+            assertEquals(0, loaded.get().afflictions().get(0).duration());
         }
 
         @Test
@@ -386,14 +407,16 @@ class SQLiteStorageTest {
         void maxLevel() throws ExecutionException, InterruptedException {
             UUID uuid = UUID.randomUUID();
 
-            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "MaxLevel");
-            data.addAffliction(new AfflictionData("test", Integer.MAX_VALUE, -1, 1000L));
+            List<AfflictionData> afflictions = List.of(
+                new AfflictionData("test", Integer.MAX_VALUE, -1, 1000L)
+            );
+            PlayerAfflictionData data = new PlayerAfflictionData(uuid, "MaxLevel", afflictions);
             storage.savePlayer(data).get();
 
             Optional<PlayerAfflictionData> loaded = storage.loadPlayer(uuid).get();
 
             assertTrue(loaded.isPresent());
-            assertEquals(Integer.MAX_VALUE, loaded.get().getAfflictions().get(0).getLevel());
+            assertEquals(Integer.MAX_VALUE, loaded.get().afflictions().get(0).level());
         }
     }
 
@@ -515,32 +538,32 @@ class SQLiteStorageTest {
                             ON CONFLICT(uuid) DO UPDATE SET username = excluded.username, last_seen = excluded.last_seen
                             """;
                     try (PreparedStatement stmt = connection.prepareStatement(upsertPlayer)) {
-                        stmt.setString(1, data.getUuid().toString());
-                        stmt.setString(2, data.getUsername());
+                        stmt.setString(1, data.uuid().toString());
+                        stmt.setString(2, data.username());
                         stmt.setLong(3, System.currentTimeMillis());
                         stmt.executeUpdate();
                     }
 
                     String deleteSql = "DELETE FROM player_afflictions WHERE player_uuid = ?";
                     try (PreparedStatement stmt = connection.prepareStatement(deleteSql)) {
-                        stmt.setString(1, data.getUuid().toString());
+                        stmt.setString(1, data.uuid().toString());
                         stmt.executeUpdate();
                     }
 
-                    if (!data.getAfflictions().isEmpty()) {
+                    if (!data.afflictions().isEmpty()) {
                         String insertSql = """
                                 INSERT INTO player_afflictions
                                 (player_uuid, affliction_id, level, duration, contracted_at, data)
                                 VALUES (?, ?, ?, ?, ?, ?)
                                 """;
                         try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
-                            for (AfflictionData affliction : data.getAfflictions()) {
-                                stmt.setString(1, data.getUuid().toString());
-                                stmt.setString(2, affliction.getAfflictionId());
-                                stmt.setInt(3, affliction.getLevel());
-                                stmt.setLong(4, affliction.getDuration());
-                                stmt.setLong(5, affliction.getContractedAt());
-                                stmt.setString(6, gson.toJson(affliction.getData()));
+                            for (AfflictionData affliction : data.afflictions()) {
+                                stmt.setString(1, data.uuid().toString());
+                                stmt.setString(2, affliction.afflictionId());
+                                stmt.setInt(3, affliction.level());
+                                stmt.setLong(4, affliction.duration());
+                                stmt.setLong(5, affliction.contractedAt());
+                                stmt.setString(6, gson.toJson(affliction.data()));
                                 stmt.addBatch();
                             }
                             stmt.executeBatch();

@@ -1,57 +1,48 @@
 package com.dnocturne.afflictions.storage.data;
 
-import java.util.HashMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 
 /**
- * Data transfer object for a single affliction instance.
+ * Immutable data transfer object for a single affliction instance.
  * Represents serializable affliction data for persistence.
+ *
+ * @param afflictionId The affliction type ID
+ * @param level        The affliction level
+ * @param duration     The duration in ticks (-1 for permanent)
+ * @param contractedAt The timestamp when contracted
+ * @param data         Additional custom data
  */
-public class AfflictionData {
-
-    private final String afflictionId;
-    private final int level;
-    private final long duration;
-    private final long contractedAt;
-    private final Map<String, String> data;
-
-    public AfflictionData(String afflictionId, int level, long duration, long contractedAt) {
-        this(afflictionId, level, duration, contractedAt, new HashMap<>());
+public record AfflictionData(
+        @NotNull String afflictionId,
+        int level,
+        long duration,
+        long contractedAt,
+        @NotNull Map<String, String> data
+) {
+    /**
+     * Compact constructor that ensures data map is immutable.
+     */
+    public AfflictionData {
+        data = Map.copyOf(data);
     }
 
-    public AfflictionData(String afflictionId, int level, long duration, long contractedAt, Map<String, String> data) {
-        this.afflictionId = afflictionId;
-        this.level = level;
-        this.duration = duration;
-        this.contractedAt = contractedAt;
-        this.data = new HashMap<>(data);
+    /**
+     * Create affliction data without custom data.
+     */
+    public AfflictionData(@NotNull String afflictionId, int level, long duration, long contractedAt) {
+        this(afflictionId, level, duration, contractedAt, Map.of());
     }
 
-    public String getAfflictionId() {
-        return afflictionId;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public long getContractedAt() {
-        return contractedAt;
-    }
-
-    public Map<String, String> getData() {
-        return data;
-    }
-
-    public String getData(String key) {
+    /**
+     * Get a specific data value by key.
+     *
+     * @param key The data key
+     * @return The value, or null if not present
+     */
+    public @Nullable String getData(@NotNull String key) {
         return data.get(key);
-    }
-
-    public void setData(String key, String value) {
-        data.put(key, value);
     }
 }
