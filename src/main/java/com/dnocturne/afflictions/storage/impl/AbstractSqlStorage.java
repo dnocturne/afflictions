@@ -39,6 +39,22 @@ public abstract class AbstractSqlStorage implements Storage {
         this.gson = new Gson();
     }
 
+    /**
+     * Get the connection, throwing if not initialized or closed.
+     *
+     * @return The active database connection
+     * @throws SQLException if connection is null or closed
+     */
+    protected Connection requireConnection() throws SQLException {
+        if (connection == null) {
+            throw new SQLException("Database connection not initialized. Call init() first.");
+        }
+        if (connection.isClosed()) {
+            throw new SQLException("Database connection has been closed.");
+        }
+        return connection;
+    }
+
     // ============================================================
     // Abstract methods for dialect-specific SQL
     // ============================================================
@@ -134,9 +150,10 @@ public abstract class AbstractSqlStorage implements Storage {
     public CompletableFuture<Optional<PlayerAfflictionData>> loadPlayer(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try {
+                Connection conn = requireConnection();
                 // Check if player exists and get username
                 String username;
-                try (PreparedStatement stmt = connection.prepareStatement(SELECT_PLAYER_SQL);
+                try (PreparedStatement stmt = conn.prepareStatement(SELECT_PLAYER_SQL);
                      ResultSet rs = executeQuery(stmt, uuid.toString())) {
                     if (!rs.next()) {
                         return Optional.empty();
@@ -157,10 +174,11 @@ public abstract class AbstractSqlStorage implements Storage {
     public CompletableFuture<Optional<PlayerAfflictionData>> loadPlayerByName(String username) {
         return CompletableFuture.supplyAsync(() -> {
             try {
+                Connection conn = requireConnection();
                 UUID playerUuid;
                 String storedUsername;
 
-                try (PreparedStatement stmt = connection.prepareStatement(getFindPlayerByNameSql());
+                try (PreparedStatement stmt = conn.prepareStatement(getFindPlayerByNameSql());
                      ResultSet rs = executeQuery(stmt, username)) {
                     if (!rs.next()) {
                         return Optional.empty();
@@ -187,11 +205,13 @@ public abstract class AbstractSqlStorage implements Storage {
     @Override
     public CompletableFuture<Void> savePlayer(PlayerAfflictionData data) {
         return CompletableFuture.runAsync(() -> {
+            Connection conn = null;
             try {
-                connection.setAutoCommit(false);
+                conn = requireConnection();
+                conn.setAutoCommit(false);
 
                 // Upsert player record
-                try (PreparedStatement stmt = connection.prepareStatement(getUpsertPlayerSql())) {
+                try (PreparedStatement stmt = conn.prepareStatement(getUpsertPlayerSql())) {
                     stmt.setString(1, data.uuid().toString());
                     stmt.setString(2, data.username());
                     stmt.setLong(3, System.currentTimeMillis());
@@ -199,14 +219,14 @@ public abstract class AbstractSqlStorage implements Storage {
                 }
 
                 // Delete existing afflictions
-                try (PreparedStatement stmt = connection.prepareStatement(DELETE_AFFLICTIONS_SQL)) {
+                try (PreparedStatement stmt = conn.prepareStatement(DELETE_AFFLICTIONS_SQL)) {
                     stmt.setString(1, data.uuid().toString());
                     stmt.executeUpdate();
                 }
 
                 // Insert current afflictions
                 if (!data.afflictions().isEmpty()) {
-                    try (PreparedStatement stmt = connection.prepareStatement(INSERT_AFFLICTION_SQL)) {
+                    try (PreparedStatement stmt = conn.prepareStatement(INSERT_AFFLICTION_SQL)) {
                         for (AfflictionData affliction : data.afflictions()) {
                             stmt.setString(1, data.uuid().toString());
                             stmt.setString(2, affliction.afflictionId());
@@ -220,19 +240,23 @@ public abstract class AbstractSqlStorage implements Storage {
                     }
                 }
 
-                connection.commit();
+                conn.commit();
             } catch (SQLException e) {
                 logger.severe("Failed to save player " + data.uuid() + ": " + e.getMessage());
-                try {
-                    connection.rollback();
-                } catch (SQLException rollbackEx) {
-                    logger.severe("Rollback failed: " + rollbackEx.getMessage());
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException rollbackEx) {
+                        logger.severe("Rollback failed: " + rollbackEx.getMessage());
+                    }
                 }
             } finally {
-                try {
-                    connection.setAutoCommit(true);
-                } catch (SQLException e) {
-                    logger.severe("Failed to reset auto-commit: " + e.getMessage());
+                if (conn != null) {
+                    try {
+                        conn.setAutoCommit(true);
+                    } catch (SQLException e) {
+                        logger.severe("Failed to reset auto-commit: " + e.getMessage());
+                    }
                 }
             }
         });
@@ -242,8 +266,9 @@ public abstract class AbstractSqlStorage implements Storage {
     public CompletableFuture<Void> deletePlayer(UUID uuid) {
         return CompletableFuture.runAsync(() -> {
             try {
+                Connection conn = requireConnection();
                 // Foreign key cascade will delete afflictions
-                try (PreparedStatement stmt = connection.prepareStatement(DELETE_PLAYER_SQL)) {
+                try (PreparedStatement stmt = conn.prepareStatement(DELETE_PLAYER_SQL)) {
                     stmt.setString(1, uuid.toString());
                     stmt.executeUpdate();
                 }
@@ -257,7 +282,8 @@ public abstract class AbstractSqlStorage implements Storage {
     public CompletableFuture<Boolean> hasPlayer(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                try (PreparedStatement stmt = connection.prepareStatement(HAS_PLAYER_SQL);
+                Connection conn = requireConnection();
+                try (PreparedStatement stmt = conn.prepareStatement(HAS_PLAYER_SQL);
                      ResultSet rs = executeQuery(stmt, uuid.toString())) {
                     return rs.next();
                 }
@@ -276,8 +302,9 @@ public abstract class AbstractSqlStorage implements Storage {
      * Load afflictions for a player UUID.
      */
     private List<AfflictionData> loadAfflictions(String playerUuid) throws SQLException {
+        Connection conn = requireConnection();
         List<AfflictionData> afflictions = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(SELECT_AFFLICTIONS_SQL);
+        try (PreparedStatement stmt = conn.prepareStatement(SELECT_AFFLICTIONS_SQL);
              ResultSet rs = executeQuery(stmt, playerUuid)) {
 
             while (rs.next()) {
