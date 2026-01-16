@@ -72,8 +72,16 @@ public class Afflictions extends JavaPlugin {
         // Setup hooks
         hookManager.init();
 
-        // Configure tick rate from config
+        // Configure tick rate from config (validate bounds)
         long tickRate = configManager.getMainConfig().getLong("general.tick-rate", 20L);
+        if (tickRate <= 0) {
+            getLogger().warning("Invalid tick-rate " + tickRate + " in config, using default of 20");
+            tickRate = 20L;
+        } else if (tickRate > 1200) {
+            // More than 60 seconds is probably a mistake
+            getLogger().warning("Tick-rate " + tickRate + " seems too high (>60s), using default of 20");
+            tickRate = 20L;
+        }
         afflictionManager.setTickRate(tickRate);
 
         // Start affliction tick loop
