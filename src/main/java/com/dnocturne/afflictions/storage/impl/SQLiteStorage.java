@@ -38,7 +38,7 @@ public class SQLiteStorage extends AbstractSqlStorage {
                 return true;
             } catch (SQLException e) {
                 logger.severe("Failed to initialize SQLite storage: " + e.getMessage());
-                e.printStackTrace();
+                logger.severe("SQL State: " + e.getSQLState() + ", Error Code: " + e.getErrorCode());
                 return false;
             }
         });
