@@ -30,9 +30,14 @@ public class HookManager {
 
     private void hookPlaceholderApi() {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            placeholderApiEnabled = true;
-            new AfflictionsExpansion(plugin).register();
-            logger.info("Hooked into PlaceholderAPI - expansion registered");
+            try {
+                new AfflictionsExpansion(plugin).register();
+                placeholderApiEnabled = true;
+                logger.info("Hooked into PlaceholderAPI - expansion registered");
+            } catch (Exception e) {
+                logger.warning("Failed to register PlaceholderAPI expansion: " + e.getMessage());
+                placeholderApiEnabled = false;
+            }
         }
     }
 
