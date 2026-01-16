@@ -31,6 +31,7 @@ public class Afflictions extends JavaPlugin {
     private AfflictionManager afflictionManager;
     private HookManager hookManager;
     private CommandManager commandManager;
+    private TimeListener timeListener;
     private VampirismConfig vampirismConfig;
 
     // Registry of affliction display configs by ID
@@ -74,7 +75,8 @@ public class Afflictions extends JavaPlugin {
         afflictionManager.start();
 
         // Start time listener
-        new TimeListener(this).start();
+        timeListener = new TimeListener(this);
+        timeListener.start();
 
         // Register player listener
         new PlayerListener(this).register();
@@ -94,6 +96,11 @@ public class Afflictions extends JavaPlugin {
         // Stop tick loop
         if (afflictionManager != null) {
             afflictionManager.stop();
+        }
+
+        // Stop time listener
+        if (timeListener != null) {
+            timeListener.stop();
         }
 
         // Shutdown storage
