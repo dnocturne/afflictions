@@ -20,7 +20,7 @@ A Minecraft Paper plugin for supernatural afflictions.
 
 ## Requirements
 
-- Paper 1.21+
+- **Paper 1.21.1** (The use of Paper only configurations and API resulted in the plugin only supporting latest versions. I have no real active interest in trying to support multiple minecraft versions all the time.)
 - Java 21+
 
 ## Optional Dependencies
