@@ -41,13 +41,13 @@ Aliases: `/aff`, `/afflict`
 
 ## Implementation
 
-Commands use the **Cloud (Incendo)** framework with a modular subcommand architecture:
+Commands use the **Cloud (Incendo)** framework with **PaperCommandManager** (Paper 1.20.6+ Brigadier API) and a modular subcommand architecture:
 
 ```
 command/
-├── CommandManager.java          # Bootstraps Cloud
+├── CommandManager.java          # Bootstraps Cloud PaperCommandManager
 ├── commands/
-│   └── AfflictionsCommand.java  # Registers subcommands
+│   └── AfflictionsCommand.java  # Uses SubCommandRegistry
 └── subcommand/
     ├── SubCommand.java          # Interface
     ├── player/
@@ -58,9 +58,23 @@ command/
         ├── RemoveCommand.java
         ├── ClearCommand.java
         └── ReloadCommand.java
+
+registry/
+└── SubCommandRegistry.java      # Fluent API for command registration
 ```
 
-Adding new commands: Create a class implementing `SubCommand` and register it in `AfflictionsCommand`.
+### Adding New Commands
+
+1. Create a class implementing `SubCommand`
+2. Register it in `AfflictionsCommand` using the registry:
+
+```java
+this.registry = SubCommandRegistry.create(plugin, manager)
+    .register(ListCommand::new)
+    .register(InfoCommand::new)
+    .register(MyNewCommand::new)  // Add your command
+    .registerIf(someCondition, OptionalCommand::new);  // Conditional
+```
 
 ---
 

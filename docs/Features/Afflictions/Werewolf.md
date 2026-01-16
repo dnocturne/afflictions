@@ -137,26 +137,26 @@ See [[Werewolf Configuration]] for full customization options including:
 ## Contraction
 
 How to become a werewolf:
-- Bitten by a transformed werewolf player
-- Admin command
-- (Optional) Rare item/ritual
+- Bitten by a transformed werewolf player (planned)
+- Admin command (`/aff give <player> lycanthropy`)
+
+> **Note:** This plugin does not add custom items. Server owners can create custom contraction methods via the API.
 
 ---
 
 ## Cure
 
 How to remove lycanthropy:
-- Wolfsbane potion (rare ingredients)
-- Specific ritual during new moon
-- Admin command
+- Admin command (`/aff remove <player> lycanthropy`)
+- Planned: Ritual mechanics during new moon
+
+> **Note:** Custom cure items can be implemented by server owners using the API with item plugins like ItemsAdder or Oraxen.
 
 ---
 
 ## Weaknesses
 
-- **Silver:** Increased damage from silver weapons (if implemented)
-- **Wolfsbane:** Poison effect, prevents transformation
-- **New Moon:** Significantly weakened
+- **New Moon:** Significantly weakened, no voluntary transformation
 
 ---
 

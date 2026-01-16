@@ -66,7 +66,8 @@ com.dnocturne.afflictions
 ├── player/
 │   └── AfflictedPlayer.java
 ├── registry/
-│   └── AfflictionRegistry.java
+│   ├── AfflictionRegistry.java
+│   └── SubCommandRegistry.java
 ├── storage/
 │   ├── Storage.java
 │   ├── StorageManager.java
@@ -103,9 +104,10 @@ Handles data persistence.
 - MySQL/MariaDB planned for future
 
 ### CommandManager
-Manages Cloud command framework.
-- Modular subcommand architecture
+Manages Cloud command framework with PaperCommandManager (Brigadier API).
+- Modular subcommand architecture via `SubCommandRegistry`
 - Tab completion support
+- Fluent registration API
 
 ### LocalizationManager
 Multi-language message support.
@@ -175,7 +177,7 @@ Event/Command → AfflictionManager → PlayerManager → Storage
 
 | Dependency | Purpose |
 |------------|---------|
-| Paper API 1.21.1 | Server API |
+| Paper API 1.21.11 | Server API |
 | Cloud (Incendo) | Command framework |
 | BoostedYAML | Configuration |
 | PlaceholderAPI | Placeholder support (soft) |

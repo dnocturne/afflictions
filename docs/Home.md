@@ -1,6 +1,11 @@
 # Afflictions
 
-A Paper plugin for Minecraft that introduces afflictions to gameplay.
+A Paper plugin for Minecraft that introduces supernatural afflictions to gameplay.
+
+## Requirements
+
+- **Paper 1.21.11**
+- Java 21+
 
 ---
 

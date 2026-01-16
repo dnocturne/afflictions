@@ -8,11 +8,12 @@ Plugin configuration options.
 
 ```
 plugins/Afflictions/
-├── config.yml        # Main configuration
-├── afflictions/      # Individual affliction configs
-│   └── *.yml
-├── messages.yml      # Customizable messages
-└── data/            # Player data storage
+├── config.yml           # Main configuration
+├── afflictions/         # Individual affliction configs
+│   └── vampirism.yml
+├── lang/                # Localized messages
+│   └── en.yml
+└── afflictions.db       # SQLite database
 ```
 
 ---
@@ -22,33 +23,57 @@ plugins/Afflictions/
 ```yaml
 # General Settings
 debug: false
-check-for-updates: true
-
-# Affliction Settings
-afflictions:
-  tick-rate: 20              # Ticks between affliction updates
-  max-per-player: 5          # Maximum simultaneous afflictions
-  persist-on-death: true     # Keep afflictions after death
 
 # Storage
 storage:
-  type: yaml                 # yaml, sqlite, mysql
-  auto-save-interval: 300    # Seconds between auto-saves
+  type: sqlite           # sqlite (mysql planned)
+  auto-save-interval: 300
 
-# Integration
-hooks:
-  placeholderapi: true
+# Offline mode support
+# - auto: Detect server online-mode automatically
+# - uuid: Always use UUID lookup
+# - name: Always use username lookup
+player-lookup: auto
 ```
 
 ---
 
-## Messages (messages.yml)
+## Localization (lang/en.yml)
+
+Messages use MiniMessage format for rich text formatting.
 
 ```yaml
-prefix: "&8[&cAfflictions&8] "
-affliction-gained: "&cYou have contracted {affliction}!"
-affliction-cured: "&aYou have been cured of {affliction}!"
-affliction-progressed: "&4Your {affliction} has worsened!"
+prefix: "<gray>[<red>Afflictions</red>]</gray> "
+
+affliction:
+  contracted: "<red>You have contracted <affliction>!</red>"
+  cured: "<green>You have been cured of <affliction>!</green>"
+
+time:
+  placeholder:
+    day: "☀ Day"
+    night: "Night"
+  moon:
+    full-moon:
+      name: "Full Moon"
+      symbol: "🌕"
+```
+
+---
+
+## Affliction Config (afflictions/vampirism.yml)
+
+Each affliction has its own configuration file. See [[Vampirism Configuration]] for full details.
+
+```yaml
+vampirism:
+  enabled: true
+  max-level: 5
+
+  sun-damage:
+    enabled: true
+    base-damage: 2.0
+    # ... level scaling, helmet reduction, etc.
 ```
 
 ---
@@ -56,3 +81,4 @@ affliction-progressed: "&4Your {affliction} has worsened!"
 ## See Also
 - [[Commands]]
 - [[Data Storage]]
+- [[Vampirism Configuration]]

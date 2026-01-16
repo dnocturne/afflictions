@@ -142,26 +142,26 @@ Vampires grow stronger through age and feeding.
 ### Starvation
 - Low blood = weakened abilities
 - Empty blood = constant damage
-- Feral state? (lose control, attack anything)
 
 ---
 
 ## Contraction
 
 How to become a vampire:
-- Bitten by a vampire player (Level 5 Sire ability)
-- Blood ritual
-- Admin command
-- (Optional) Rare cursed item
+- Bitten by a vampire player (Level 5 Sire ability) - Planned
+- Admin command (`/aff give <player> vampirism`)
+
+> **Note:** This plugin does not add custom items. Server owners can create custom contraction methods via the API.
 
 ---
 
 ## Cure
 
 How to cure vampirism:
-- Holy water + specific ingredients
-- Ritual at sunrise (painful)
-- Admin command
+- Admin command (`/aff remove <player> vampirism`)
+- Planned: Ritual mechanics using vanilla blocks/interactions
+
+> **Note:** Custom cure items can be implemented by server owners using the API with item plugins like ItemsAdder or Oraxen.
 
 ---
 
@@ -170,10 +170,8 @@ How to cure vampirism:
 | Weakness | Effect |
 |----------|--------|
 | **Sunlight** | Damage, cannot be fully negated |
-| **Fire** | Increased fire damage |
-| **Holy Water** | Burning/damage effect |
-| **Garlic** | Weakness/nausea (if implemented) |
-| **Running Water** | Slowness when crossing? |
+| **Fire** | Increased fire damage (planned) |
+| **Running Water** | Slowness when crossing (planned) |
 
 ---
 
