@@ -33,6 +33,7 @@ public class AfflictionManager {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         this.registry = new AfflictionRegistry();
+        this.registry.setLogger(logger);
         this.playerManager = new PlayerManager();
     }
 

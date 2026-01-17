@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Registry for all affliction types.
@@ -14,6 +15,15 @@ import java.util.Optional;
 public class AfflictionRegistry {
 
     private final Map<String, Affliction> afflictions = new HashMap<>();
+    private Logger logger;
+
+    /**
+     * Set the logger for diagnostic messages.
+     * If not set, registration conflicts will only throw exceptions without logging.
+     */
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Register an affliction type.
@@ -24,9 +34,26 @@ public class AfflictionRegistry {
     public void register(Affliction affliction) {
         String id = affliction.getId().toLowerCase();
         if (afflictions.containsKey(id)) {
-            throw new IllegalArgumentException("Affliction with ID '" + id + "' is already registered");
+            Affliction existing = afflictions.get(id);
+            String errorMsg = String.format(
+                    "Affliction ID conflict: Cannot register '%s' (class: %s) - " +
+                    "ID '%s' is already registered by '%s' (class: %s). " +
+                    "Note: IDs are case-insensitive.",
+                    affliction.getDisplayName(),
+                    affliction.getClass().getName(),
+                    id,
+                    existing.getDisplayName(),
+                    existing.getClass().getName()
+            );
+            if (logger != null) {
+                logger.severe(errorMsg);
+            }
+            throw new IllegalArgumentException(errorMsg);
         }
         afflictions.put(id, affliction);
+        if (logger != null) {
+            logger.info("Registered affliction: " + id + " (" + affliction.getDisplayName() + ")");
+        }
     }
 
     /**
