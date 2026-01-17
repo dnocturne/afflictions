@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +29,13 @@ import java.util.logging.Logger;
  * dialect-specific SQL and connection handling.
  */
 public abstract class AbstractSqlStorage implements Storage {
+
+    /**
+     * Virtual thread executor for non-blocking database I/O.
+     * Virtual threads (Java 21) allow efficient blocking I/O without thread pool exhaustion.
+     */
+    private static final ExecutorService VIRTUAL_EXECUTOR =
+            Executors.newVirtualThreadPerTaskExecutor();
 
     protected final Afflictions plugin;
     protected final Logger logger;
@@ -143,7 +152,7 @@ public abstract class AbstractSqlStorage implements Storage {
             } catch (SQLException e) {
                 logger.severe("Error closing " + getType() + " connection: " + e.getMessage());
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     @Override
@@ -167,7 +176,7 @@ public abstract class AbstractSqlStorage implements Storage {
                 logger.severe("Failed to load player " + uuid + ": " + e.getMessage());
                 return Optional.empty();
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     @Override
@@ -199,7 +208,7 @@ public abstract class AbstractSqlStorage implements Storage {
                 logger.severe("Failed to load player by name '" + username + "': " + e.getMessage());
                 return Optional.empty();
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     @Override
@@ -259,7 +268,7 @@ public abstract class AbstractSqlStorage implements Storage {
                     }
                 }
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     @Override
@@ -275,7 +284,7 @@ public abstract class AbstractSqlStorage implements Storage {
             } catch (SQLException e) {
                 logger.severe("Failed to delete player " + uuid + ": " + e.getMessage());
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     @Override
@@ -291,7 +300,7 @@ public abstract class AbstractSqlStorage implements Storage {
                 logger.severe("Failed to check player " + uuid + ": " + e.getMessage());
                 return false;
             }
-        });
+        }, VIRTUAL_EXECUTOR);
     }
 
     // ============================================================
