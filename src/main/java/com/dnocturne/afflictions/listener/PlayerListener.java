@@ -76,15 +76,16 @@ public class PlayerListener implements Listener {
             // Run on main thread to interact with Bukkit
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 for (AfflictionData afflictionData : data.afflictions()) {
-                    Affliction affliction = afflictionManager.getRegistry()
-                            .get(afflictionData.afflictionId())
-                            .orElse(null);
+                    Optional<Affliction> afflictionOpt = afflictionManager.getRegistry()
+                            .get(afflictionData.afflictionId());
 
-                    if (affliction == null) {
+                    if (afflictionOpt.isEmpty()) {
                         plugin.getLogger().warning("Unknown affliction '" + afflictionData.afflictionId()
                                 + "' for player " + player.getName() + ", skipping");
                         continue;
                     }
+
+                    Affliction affliction = afflictionOpt.get();
 
                     // Create instance with stored data
                     AfflictionInstance instance = new AfflictionInstance(
@@ -165,15 +166,17 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+        Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
                 .get(player.getUniqueId())
-                .orElse(null);
+                .filter(AfflictedPlayer::hasAnyAffliction);
 
-        if (afflicted == null || !afflicted.hasAnyAffliction()) {
+        if (afflictedOpt.isEmpty()) {
             // No data to save, clean up tracking
             afflictionManager.getPlayerManager().remove(player.getUniqueId());
             return;
         }
+
+        AfflictedPlayer afflicted = afflictedOpt.get();
         List<AfflictionData> afflictionDataList = new ArrayList<>();
 
         for (AfflictionInstance instance : afflicted.getAfflictions()) {
