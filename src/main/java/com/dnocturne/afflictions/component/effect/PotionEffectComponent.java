@@ -8,9 +8,15 @@ import org.bukkit.potion.PotionEffectType;
 
 /**
  * Applies a potion effect to the player.
- * Reapplies each tick to maintain the effect.
+ * Only reapplies when effect is missing or about to expire to avoid allocation overhead.
  */
 public class PotionEffectComponent implements Effect {
+
+    /**
+     * Threshold in ticks before effect expiry to trigger reapplication.
+     * Using 40 ticks (2 seconds) provides buffer for tick interval variations.
+     */
+    private static final int REAPPLY_THRESHOLD_TICKS = 40;
 
     private final String id;
     private final PotionEffectType effectType;
@@ -42,6 +48,11 @@ public class PotionEffectComponent implements Effect {
 
     @Override
     public void onTick(Player player, AfflictionInstance instance) {
+        // Only reapply if effect is missing or about to expire
+        if (!needsReapplication(player)) {
+            return;
+        }
+
         player.addPotionEffect(new PotionEffect(
                 effectType,
                 duration,
@@ -50,6 +61,23 @@ public class PotionEffectComponent implements Effect {
                 particles,
                 icon
         ));
+    }
+
+    /**
+     * Check if the effect needs to be reapplied.
+     * Returns true if effect is missing, has lower amplifier, or is about to expire.
+     */
+    private boolean needsReapplication(Player player) {
+        PotionEffect active = player.getPotionEffect(effectType);
+        if (active == null) {
+            return true;
+        }
+        // Reapply if current amplifier is lower than desired
+        if (active.getAmplifier() < amplifier) {
+            return true;
+        }
+        // Reapply if effect is about to expire
+        return active.getDuration() <= REAPPLY_THRESHOLD_TICKS;
     }
 
     @Override
