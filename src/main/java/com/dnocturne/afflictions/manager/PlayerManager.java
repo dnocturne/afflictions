@@ -2,8 +2,10 @@ package com.dnocturne.afflictions.manager;
 
 import com.dnocturne.afflictions.player.AfflictedPlayer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +20,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerManager {
 
     private final Map<UUID, AfflictedPlayer> players = new ConcurrentHashMap<>();
+
+    /**
+     * Cached list of players with afflictions.
+     * Invalidated when afflictions are added/removed via {@link #invalidateAfflictedCache()}.
+     */
+    private volatile List<AfflictedPlayer> afflictedCache;
+
+    /**
+     * Flag to indicate cache needs rebuilding.
+     */
+    private volatile boolean cacheValid = false;
 
     /**
      * Get or create an AfflictedPlayer for a UUID.
@@ -70,13 +83,33 @@ public class PlayerManager {
 
     /**
      * Get all tracked players that have at least one affliction.
+     * Uses cached list that is invalidated when afflictions change.
      *
      * @return Collection of players with afflictions
      */
     public Collection<AfflictedPlayer> getAllAfflicted() {
-        return players.values().stream()
-                .filter(AfflictedPlayer::hasAnyAffliction)
-                .toList();
+        if (cacheValid && afflictedCache != null) {
+            return afflictedCache;
+        }
+
+        // Rebuild cache
+        List<AfflictedPlayer> result = new ArrayList<>();
+        for (AfflictedPlayer player : players.values()) {
+            if (player.hasAnyAffliction()) {
+                result.add(player);
+            }
+        }
+        afflictedCache = Collections.unmodifiableList(result);
+        cacheValid = true;
+        return afflictedCache;
+    }
+
+    /**
+     * Invalidate the afflicted players cache.
+     * Call this when afflictions are added or removed from any player.
+     */
+    public void invalidateAfflictedCache() {
+        cacheValid = false;
     }
 
     /**
@@ -84,5 +117,6 @@ public class PlayerManager {
      */
     public void clear() {
         players.clear();
+        invalidateAfflictedCache();
     }
 }
