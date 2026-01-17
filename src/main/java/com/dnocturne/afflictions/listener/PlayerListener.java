@@ -108,7 +108,7 @@ public class PlayerListener implements Listener {
 
                 if (!data.afflictions().isEmpty()) {
                     plugin.getLogger().info("Loaded " + data.afflictions().size()
-                            + " affliction(s) for " + player.getName());
+                            + " affliction(s) for " + player.getName() + " (" + player.getUniqueId() + ")");
                 }
             });
         })).exceptionally(ex -> {
@@ -201,7 +201,7 @@ public class PlayerListener implements Listener {
         );
         storage.savePlayer(playerData).thenRun(() -> {
             plugin.getLogger().info("Saved " + afflictionDataList.size()
-                    + " affliction(s) for " + player.getName());
+                    + " affliction(s) for " + player.getName() + " (" + player.getUniqueId() + ")");
         }).exceptionally(ex -> {
             plugin.getLogger().log(Level.SEVERE,
                     "Failed to save affliction data for player " + player.getName() + " (" + player.getUniqueId() + ")", ex);

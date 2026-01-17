@@ -126,7 +126,7 @@ public class AfflictionManager {
             component.onApply(player, instance);
         }
 
-        logger.info(player.getName() + " contracted " + affliction.getDisplayName());
+        logger.info(player.getName() + " (" + player.getUniqueId() + ") contracted " + affliction.getDisplayName());
         return true;
     }
 
@@ -158,7 +158,7 @@ public class AfflictionManager {
             component.onRemove(player, instance);
         }
 
-        logger.info(player.getName() + " was cured of " + affliction.getDisplayName() + " (" + reason + ")");
+        logger.info(player.getName() + " (" + player.getUniqueId() + ") was cured of " + affliction.getDisplayName() + " (" + reason + ")");
         return true;
     }
 
