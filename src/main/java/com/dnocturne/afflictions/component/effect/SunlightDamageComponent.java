@@ -15,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SunlightDamageComponent implements TickableComponent {
 
+    /**
+     * Cached helmet condition to avoid repeated method calls.
+     */
+    private static final Condition HELMET_CONDITION = Conditions.hasHelmet();
+
     private final String id;
     private final double baseDamage;
     private final int tickInterval;
@@ -121,12 +126,11 @@ public class SunlightDamageComponent implements TickableComponent {
         double levelReduction = 1.0 - ((level - 1) * 0.1);
         damage *= levelReduction;
 
-        // Helmet provides damage reduction
-        if (Conditions.hasHelmet().test(player)) {
+        // Helmet provides damage reduction (uses cached condition)
+        boolean hasHelmet = HELMET_CONDITION.test(player);
+        instance.setData("has_helmet", hasHelmet);
+        if (hasHelmet) {
             damage *= (1.0 - helmetDamageReduction);
-            instance.setData("has_helmet", true);
-        } else {
-            instance.setData("has_helmet", false);
         }
 
         return Math.max(0.5, damage); // Minimum 0.5 damage
