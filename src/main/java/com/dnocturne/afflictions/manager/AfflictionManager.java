@@ -121,6 +121,7 @@ public class AfflictionManager {
 
         AfflictionInstance instance = new AfflictionInstance(player.getUniqueId(), affliction, level, -1);
         afflictedPlayer.addAffliction(instance);
+        playerManager.invalidateAfflictedCache();
 
         // Call onApply for all components
         for (AfflictionComponent component : affliction.getComponents()) {
@@ -150,6 +151,8 @@ public class AfflictionManager {
         if (instanceOpt.isEmpty()) {
             return false;
         }
+
+        playerManager.invalidateAfflictedCache();
 
         AfflictionInstance instance = instanceOpt.get();
         Affliction affliction = instance.getAffliction();
@@ -181,6 +184,7 @@ public class AfflictionManager {
             }
         }
         afflictedPlayer.clearAfflictions();
+        playerManager.invalidateAfflictedCache();
     }
 
     /**
