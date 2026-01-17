@@ -2,7 +2,6 @@ package com.dnocturne.afflictions.condition;
 
 import com.dnocturne.afflictions.util.TimeUtil;
 import com.dnocturne.afflictions.util.TimeUtil.MoonPhase;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +29,35 @@ import java.util.Set;
  */
 public final class Conditions {
 
+    // ============================================================
+    // Cached condition instances (avoid allocations in hot paths)
+    // ============================================================
+
+    private static final Condition IS_DAY = new DescribedCondition("isDay",
+            player -> TimeUtil.isDay(player.getWorld()));
+    private static final Condition IS_NIGHT = new DescribedCondition("isNight",
+            player -> TimeUtil.isNight(player.getWorld()));
+    private static final Condition HAS_SKY_ACCESS = new DescribedCondition("hasSkyAccess",
+            player -> player.getLocation().getBlock().getLightFromSky() >= 15);
+    private static final Condition HAS_STORM = new DescribedCondition("hasStorm",
+            player -> player.getWorld().hasStorm());
+    private static final Condition HAS_HELMET = new DescribedCondition("hasHelmet",
+            player -> player.getInventory().getHelmet() != null);
+    private static final Condition IS_FULL_MOON = new DescribedCondition("isFullMoon",
+            player -> TimeUtil.isFullMoon(player.getWorld()));
+    private static final Condition IS_NEW_MOON = new DescribedCondition("isNewMoon",
+            player -> TimeUtil.isNewMoon(player.getWorld()));
+    private static final Condition IS_THUNDERING = new DescribedCondition("isThundering",
+            player -> player.getWorld().isThundering());
+    private static final Condition IS_IN_OVERWORLD = new DescribedCondition("isInOverworld",
+            player -> player.getWorld().getEnvironment() == World.Environment.NORMAL);
+    private static final Condition IS_IN_NETHER = new DescribedCondition("isInNether",
+            player -> player.getWorld().getEnvironment() == World.Environment.NETHER);
+    private static final Condition IS_IN_END = new DescribedCondition("isInEnd",
+            player -> player.getWorld().getEnvironment() == World.Environment.THE_END);
+    private static final Condition IS_BRIGHT_MOON = new DescribedCondition("isBrightMoon",
+            player -> TimeUtil.getMoonPhaseEnum(player.getWorld()).isBright());
+
     private Conditions() {
     }
 
@@ -41,14 +69,14 @@ public final class Conditions {
      * Condition that is true during daytime.
      */
     public static @NotNull Condition isDay() {
-        return new DescribedCondition("isDay", player -> TimeUtil.isDay(player.getWorld()));
+        return IS_DAY;
     }
 
     /**
      * Condition that is true during nighttime.
      */
     public static @NotNull Condition isNight() {
-        return new DescribedCondition("isNight", player -> TimeUtil.isNight(player.getWorld()));
+        return IS_NIGHT;
     }
 
     /**
@@ -80,14 +108,14 @@ public final class Conditions {
      * Condition that is true during a full moon.
      */
     public static @NotNull Condition isFullMoon() {
-        return new DescribedCondition("isFullMoon", player -> TimeUtil.isFullMoon(player.getWorld()));
+        return IS_FULL_MOON;
     }
 
     /**
      * Condition that is true during a new moon.
      */
     public static @NotNull Condition isNewMoon() {
-        return new DescribedCondition("isNewMoon", player -> TimeUtil.isNewMoon(player.getWorld()));
+        return IS_NEW_MOON;
     }
 
     /**
@@ -121,10 +149,7 @@ public final class Conditions {
      * Includes: Full Moon, Waning Gibbous, First Quarter, Third Quarter, Waxing Gibbous
      */
     public static @NotNull Condition isBrightMoon() {
-        return new DescribedCondition("isBrightMoon", player -> {
-            MoonPhase phase = TimeUtil.getMoonPhaseEnum(player.getWorld());
-            return phase.isBright();
-        });
+        return IS_BRIGHT_MOON;
     }
 
     /**
@@ -143,10 +168,7 @@ public final class Conditions {
      * Condition that is true when the player has direct sky access (light level 15).
      */
     public static @NotNull Condition hasSkyAccess() {
-        return new DescribedCondition("hasSkyAccess", player -> {
-            Location loc = player.getLocation();
-            return loc.getBlock().getLightFromSky() >= 15;
-        });
+        return HAS_SKY_ACCESS;
     }
 
     /**
@@ -160,7 +182,7 @@ public final class Conditions {
      * Condition that is true when there is a storm (rain/thunder) in the world.
      */
     public static @NotNull Condition hasStorm() {
-        return new DescribedCondition("hasStorm", player -> player.getWorld().hasStorm());
+        return HAS_STORM;
     }
 
     /**
@@ -174,7 +196,7 @@ public final class Conditions {
      * Condition that is true when there is thunder.
      */
     public static @NotNull Condition isThundering() {
-        return new DescribedCondition("isThundering", player -> player.getWorld().isThundering());
+        return IS_THUNDERING;
     }
 
     // ============================================================
@@ -185,8 +207,7 @@ public final class Conditions {
      * Condition that is true when the player is wearing a helmet.
      */
     public static @NotNull Condition hasHelmet() {
-        return new DescribedCondition("hasHelmet",
-                player -> player.getInventory().getHelmet() != null);
+        return HAS_HELMET;
     }
 
     /**
@@ -204,24 +225,21 @@ public final class Conditions {
      * Condition that is true when the player is in the overworld.
      */
     public static @NotNull Condition isInOverworld() {
-        return new DescribedCondition("isInOverworld",
-                player -> player.getWorld().getEnvironment() == World.Environment.NORMAL);
+        return IS_IN_OVERWORLD;
     }
 
     /**
      * Condition that is true when the player is in the nether.
      */
     public static @NotNull Condition isInNether() {
-        return new DescribedCondition("isInNether",
-                player -> player.getWorld().getEnvironment() == World.Environment.NETHER);
+        return IS_IN_NETHER;
     }
 
     /**
      * Condition that is true when the player is in the end.
      */
     public static @NotNull Condition isInEnd() {
-        return new DescribedCondition("isInEnd",
-                player -> player.getWorld().getEnvironment() == World.Environment.THE_END);
+        return IS_IN_END;
     }
 
     // ============================================================
