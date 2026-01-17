@@ -17,6 +17,68 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
+ * Represents a parsed placeholder parameter with a prefix and value.
+ * For example, "has_vampirism" would be parsed as prefix="has", value="vampirism".
+ *
+ * @param prefix The prefix before the underscore
+ * @param value  The value after the underscore
+ */
+record ParsedParam(String prefix, String value) {
+    /**
+     * Parse a parameter string that has a prefix followed by underscore and value.
+     *
+     * @param params       The full parameter string (e.g., "has_vampirism", "data_vampirism_key")
+     * @param prefixLength Length of the known prefix to extract
+     * @return Optional containing the value after the prefix, or empty if invalid
+     */
+    static Optional<String> extractValue(String params, int prefixLength) {
+        if (params.length() <= prefixLength) {
+            return Optional.empty();
+        }
+        return Optional.of(params.substring(prefixLength));
+    }
+
+    /**
+     * Parse a parameter with two underscores (e.g., "data_vampirism_key").
+     *
+     * @param params       The full parameter string
+     * @param prefixLength Length of the first prefix to skip
+     * @return Optional containing parsed id and key, or empty if invalid format
+     */
+    static Optional<ParsedParam> extractIdAndKey(String params, int prefixLength) {
+        if (params.length() <= prefixLength) {
+            return Optional.empty();
+        }
+        String rest = params.substring(prefixLength);
+        int separatorIndex = rest.indexOf('_');
+        if (separatorIndex <= 0) {
+            return Optional.empty();
+        }
+        return Optional.of(new ParsedParam(
+                rest.substring(0, separatorIndex),
+                rest.substring(separatorIndex + 1)
+        ));
+    }
+
+    /**
+     * Split a parameter at the first underscore into id and property.
+     *
+     * @param params The parameter string (e.g., "vampirism_prefix")
+     * @return Optional containing parsed id and property, or empty if no underscore
+     */
+    static Optional<ParsedParam> splitAtFirstUnderscore(String params) {
+        int underscoreIndex = params.indexOf('_');
+        if (underscoreIndex <= 0) {
+            return Optional.empty();
+        }
+        return Optional.of(new ParsedParam(
+                params.substring(0, underscoreIndex),
+                params.substring(underscoreIndex + 1)
+        ));
+    }
+}
+
+/**
  * PlaceholderAPI expansion for Afflictions.
  *
  * <p>General placeholders:</p>
@@ -174,44 +236,43 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
 
         // %afflictions_has_<id>%
         if (params.startsWith("has_")) {
-            String afflictionId = params.substring(4);
-            return String.valueOf(afflictedOpt
-                    .map(ap -> ap.hasAffliction(afflictionId))
-                    .orElse(false));
+            return ParsedParam.extractValue(params, 4)
+                    .map(afflictionId -> String.valueOf(afflictedOpt
+                            .map(ap -> ap.hasAffliction(afflictionId))
+                            .orElse(false)))
+                    .orElse("false");
         }
 
         // %afflictions_level_<id>%
         if (params.startsWith("level_")) {
-            String afflictionId = params.substring(6);
-            return String.valueOf(afflictedOpt
-                    .flatMap(ap -> ap.getAffliction(afflictionId))
-                    .map(AfflictionInstance::getLevel)
-                    .orElse(0));
+            return ParsedParam.extractValue(params, 6)
+                    .map(afflictionId -> String.valueOf(afflictedOpt
+                            .flatMap(ap -> ap.getAffliction(afflictionId))
+                            .map(AfflictionInstance::getLevel)
+                            .orElse(0)))
+                    .orElse("0");
         }
 
         // %afflictions_data_<id>_<key>%
         if (params.startsWith("data_")) {
-            String rest = params.substring(5);
-            int separatorIndex = rest.indexOf('_');
-            if (separatorIndex > 0) {
-                String afflictionId = rest.substring(0, separatorIndex);
-                String key = rest.substring(separatorIndex + 1);
-                return afflictedOpt
-                        .flatMap(ap -> ap.getAffliction(afflictionId))
-                        .map(instance -> {
-                            Object value = instance.getData(key);
-                            return value != null ? String.valueOf(value) : "";
-                        })
-                        .orElse("");
-            }
+            return ParsedParam.extractIdAndKey(params, 5)
+                    .map(parsed -> afflictedOpt
+                            .flatMap(ap -> ap.getAffliction(parsed.prefix()))
+                            .map(instance -> {
+                                Object value = instance.getData(parsed.value());
+                                return value != null ? String.valueOf(value) : "";
+                            })
+                            .orElse(""))
+                    .orElse("");
         }
 
         // Affliction-specific placeholders: %afflictions_<id>_<property>%
         // e.g., %afflictions_vampirism_prefix%, %afflictions_vampirism_name%
-        int underscoreIndex = params.indexOf('_');
-        if (underscoreIndex > 0) {
-            String afflictionId = params.substring(0, underscoreIndex);
-            String property = params.substring(underscoreIndex + 1);
+        Optional<ParsedParam> parsedOpt = ParsedParam.splitAtFirstUnderscore(params);
+        if (parsedOpt.isPresent()) {
+            ParsedParam parsed = parsedOpt.get();
+            String afflictionId = parsed.prefix();
+            String property = parsed.value();
 
             // Handle display properties - these return empty string if not afflicted
             // so admins can use them flexibly in formatting
