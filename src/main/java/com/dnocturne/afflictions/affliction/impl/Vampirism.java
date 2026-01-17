@@ -126,6 +126,8 @@ public class Vampirism extends AbstractAffliction {
         }
 
         public Vampirism build(VampirismConfig config) {
+            validate();
+
             // Add sunlight damage component
             this.components.add(new SunlightDamageComponent(
                     "vampirism_sun_damage",

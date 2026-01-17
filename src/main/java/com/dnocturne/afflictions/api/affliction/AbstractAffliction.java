@@ -123,6 +123,9 @@ public abstract class AbstractAffliction implements Affliction {
         }
 
         public @NotNull Builder maxLevel(int maxLevel) {
+            if (maxLevel <= 0) {
+                throw new IllegalArgumentException("maxLevel must be positive, got: " + maxLevel);
+            }
             this.maxLevel = maxLevel;
             return this;
         }
@@ -135,6 +138,27 @@ public abstract class AbstractAffliction implements Affliction {
         public @NotNull Builder component(@NotNull AfflictionComponent component) {
             this.components.add(component);
             return this;
+        }
+
+        /**
+         * Validate builder fields before building.
+         * Subclasses should call this at the start of their build() method.
+         *
+         * @throws IllegalStateException if required fields are missing or invalid
+         */
+        protected void validate() {
+            if (id == null || id.isBlank()) {
+                throw new IllegalStateException("Affliction id cannot be null or blank");
+            }
+            if (displayName == null || displayName.isBlank()) {
+                throw new IllegalStateException("Affliction displayName cannot be null or blank");
+            }
+            if (category == null) {
+                throw new IllegalStateException("Affliction category cannot be null");
+            }
+            if (maxLevel <= 0) {
+                throw new IllegalStateException("Affliction maxLevel must be positive, got: " + maxLevel);
+            }
         }
 
         public abstract @NotNull Affliction build();
