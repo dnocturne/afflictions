@@ -5,7 +5,6 @@ import com.dnocturne.afflictions.command.subcommand.SubCommand;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
-import com.dnocturne.afflictions.player.AfflictedPlayer;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,18 +36,13 @@ public class RemoveCommand implements SubCommand {
                         .required("affliction", stringParser(), (ctx, input) -> {
                             Player target = ctx.get("player");
                             AfflictionManager afflictionManager = plugin.getAfflictionManager();
-                            AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
-                                    .get(target.getUniqueId())
-                                    .orElse(null);
-
-                            if (afflicted == null) {
-                                return CompletableFuture.completedFuture(java.util.Collections.emptyList());
-                            }
-
                             return CompletableFuture.completedFuture(
-                                    afflicted.getAfflictions().stream()
-                                            .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
-                                            .toList()
+                                    afflictionManager.getPlayerManager()
+                                            .get(target.getUniqueId())
+                                            .map(afflicted -> afflicted.getAfflictions().stream()
+                                                    .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
+                                                    .toList())
+                                            .orElse(java.util.Collections.emptyList())
                             );
                         })
                         .permission("afflictions.admin.remove")

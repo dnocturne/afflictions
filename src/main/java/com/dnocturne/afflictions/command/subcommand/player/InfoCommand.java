@@ -6,7 +6,6 @@ import com.dnocturne.afflictions.command.subcommand.SubCommand;
 import com.dnocturne.afflictions.locale.LocalizationManager;
 import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.afflictions.manager.AfflictionManager;
-import com.dnocturne.afflictions.player.AfflictedPlayer;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.PaperCommandManager;
@@ -14,6 +13,7 @@ import org.incendo.cloud.suggestion.Suggestion;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
@@ -39,18 +39,13 @@ public class InfoCommand implements SubCommand {
                                 return CompletableFuture.completedFuture(java.util.Collections.emptyList());
                             }
                             AfflictionManager afflictionManager = plugin.getAfflictionManager();
-                            AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
-                                    .get(player.getUniqueId())
-                                    .orElse(null);
-
-                            if (afflicted == null) {
-                                return CompletableFuture.completedFuture(java.util.Collections.emptyList());
-                            }
-
                             return CompletableFuture.completedFuture(
-                                    afflicted.getAfflictions().stream()
-                                            .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
-                                            .toList()
+                                    afflictionManager.getPlayerManager()
+                                            .get(player.getUniqueId())
+                                            .map(afflicted -> afflicted.getAfflictions().stream()
+                                                    .map(inst -> Suggestion.suggestion(inst.getAffliction().getId()))
+                                                    .toList())
+                                            .orElse(java.util.Collections.emptyList())
                             );
                         })
                         .permission("afflictions.info")
@@ -67,23 +62,17 @@ public class InfoCommand implements SubCommand {
         LocalizationManager lang = plugin.getLocalizationManager();
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
 
-        AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+        Optional<AfflictionInstance> instanceOpt = afflictionManager.getPlayerManager()
                 .get(player.getUniqueId())
-                .orElse(null);
+                .flatMap(afflicted -> afflicted.getAffliction(afflictionId));
 
-        if (afflicted == null) {
+        if (instanceOpt.isEmpty()) {
             lang.send(player, MessageKey.INVALID_AFFLICTION,
                     LocalizationManager.placeholder("affliction", afflictionId));
             return;
         }
 
-        AfflictionInstance instance = afflicted.getAffliction(afflictionId).orElse(null);
-
-        if (instance == null) {
-            lang.send(player, MessageKey.INVALID_AFFLICTION,
-                    LocalizationManager.placeholder("affliction", afflictionId));
-            return;
-        }
+        AfflictionInstance instance = instanceOpt.get();
 
         lang.send(player, MessageKey.AFFLICTION_INFO_HEADER,
                 LocalizationManager.placeholder("affliction", instance.getAffliction().getDisplayName()));

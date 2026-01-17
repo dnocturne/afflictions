@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.paper.PaperCommandManager;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * /afflictions list - Shows the player's active afflictions.
@@ -42,21 +43,16 @@ public class ListCommand implements SubCommand {
         LocalizationManager lang = plugin.getLocalizationManager();
         AfflictionManager afflictionManager = plugin.getAfflictionManager();
 
-        AfflictedPlayer afflicted = afflictionManager.getPlayerManager()
+        Optional<AfflictedPlayer> afflictedOpt = afflictionManager.getPlayerManager()
                 .get(player.getUniqueId())
-                .orElse(null);
+                .filter(AfflictedPlayer::hasAnyAffliction);
 
-        if (afflicted == null) {
+        if (afflictedOpt.isEmpty()) {
             lang.send(player, MessageKey.AFFLICTION_LIST_NONE);
             return;
         }
 
-        Collection<AfflictionInstance> afflictions = afflicted.getAfflictions();
-
-        if (afflictions.isEmpty()) {
-            lang.send(player, MessageKey.AFFLICTION_LIST_NONE);
-            return;
-        }
+        Collection<AfflictionInstance> afflictions = afflictedOpt.get().getAfflictions();
 
         lang.send(player, MessageKey.AFFLICTION_LIST_HEADER);
 
