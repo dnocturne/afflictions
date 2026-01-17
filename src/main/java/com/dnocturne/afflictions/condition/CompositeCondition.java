@@ -71,10 +71,34 @@ public final class CompositeCondition implements Condition {
     @Override
     public boolean test(@NotNull Player player) {
         return switch (operator) {
-            case AND -> conditions.stream().allMatch(c -> c.test(player));
-            case OR -> conditions.stream().anyMatch(c -> c.test(player));
+            case AND -> testAnd(player);
+            case OR -> testOr(player);
             case NOT -> !conditions.get(0).test(player);
         };
+    }
+
+    /**
+     * Test AND condition using for-loop (avoids stream allocation overhead).
+     */
+    private boolean testAnd(Player player) {
+        for (Condition condition : conditions) {
+            if (!condition.test(player)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Test OR condition using for-loop (avoids stream allocation overhead).
+     */
+    private boolean testOr(Player player) {
+        for (Condition condition : conditions) {
+            if (condition.test(player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
