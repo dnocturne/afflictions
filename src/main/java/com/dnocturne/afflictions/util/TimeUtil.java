@@ -139,6 +139,18 @@ public final class TimeUtil {
         FIRST_QUARTER(6, "First Quarter", "🌓"),
         WAXING_GIBBOUS(7, "Waxing Gibbous", "🌔");
 
+        /**
+         * Pre-computed lookup array for O(1) phase lookups.
+         * Avoids values() iteration and array allocation on each call.
+         */
+        private static final MoonPhase[] BY_PHASE = new MoonPhase[8];
+
+        static {
+            for (MoonPhase mp : values()) {
+                BY_PHASE[mp.phase] = mp;
+            }
+        }
+
         private final int phase;
         private final String displayName;
         private final String symbol;
@@ -182,13 +194,17 @@ public final class TimeUtil {
             return getBrightness() >= 0.5f;
         }
 
+        /**
+         * Get MoonPhase from phase number using O(1) array lookup.
+         *
+         * @param phase The phase number (0-7)
+         * @return The corresponding MoonPhase, or FULL_MOON if out of range
+         */
         public static @NotNull MoonPhase fromPhase(int phase) {
-            for (MoonPhase mp : values()) {
-                if (mp.phase == phase) {
-                    return mp;
-                }
+            if (phase < 0 || phase >= BY_PHASE.length) {
+                return FULL_MOON; // Default fallback
             }
-            return FULL_MOON; // Default fallback
+            return BY_PHASE[phase];
         }
 
         /**
