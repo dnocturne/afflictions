@@ -108,7 +108,7 @@ public class TimeListener {
     }
 
     private String getMoonPhaseName(MoonPhase phase) {
-        String key = "time.moon." + phase.name().toLowerCase().replace("_", "-") + ".name";
+        String key = "time.moon." + phase.getLocaleKey() + ".name";
         String value = lang.getRaw(key);
         // Fallback to enum display name if not configured
         return value.equals(key) ? phase.getDisplayName() : value;

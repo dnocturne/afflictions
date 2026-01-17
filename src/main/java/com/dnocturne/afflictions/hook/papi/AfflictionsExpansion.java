@@ -383,7 +383,7 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the localized moon phase name from the locale file.
      */
     private @NotNull String getMoonPhaseName(@NotNull TimeUtil.MoonPhase phase) {
-        String key = "time.moon." + getMoonPhaseKey(phase) + ".name";
+        String key = "time.moon." + phase.getLocaleKey() + ".name";
         String value = plugin.getLocalizationManager().getRaw(key);
         // Fallback to enum display name if not configured
         return value.equals(key) ? phase.getDisplayName() : value;
@@ -393,16 +393,9 @@ public class AfflictionsExpansion extends PlaceholderExpansion {
      * Get the moon phase symbol from the locale file.
      */
     private @NotNull String getMoonSymbol(@NotNull TimeUtil.MoonPhase phase) {
-        String key = "time.moon." + getMoonPhaseKey(phase) + ".symbol";
+        String key = "time.moon." + phase.getLocaleKey() + ".symbol";
         String value = plugin.getLocalizationManager().getRaw(key);
         // Fallback to enum symbol if not configured
         return value.equals(key) ? phase.getSymbol() : value;
-    }
-
-    /**
-     * Convert MoonPhase enum to locale key format (e.g., FULL_MOON -> full-moon).
-     */
-    private @NotNull String getMoonPhaseKey(@NotNull TimeUtil.MoonPhase phase) {
-        return phase.name().toLowerCase().replace('_', '-');
     }
 }

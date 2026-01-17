@@ -190,5 +190,13 @@ public final class TimeUtil {
             }
             return FULL_MOON; // Default fallback
         }
+
+        /**
+         * Get the locale key for this moon phase (e.g., "full-moon", "waning-gibbous").
+         * Used for looking up localized names and symbols.
+         */
+        public @NotNull String getLocaleKey() {
+            return name().toLowerCase().replace('_', '-');
+        }
     }
 }
