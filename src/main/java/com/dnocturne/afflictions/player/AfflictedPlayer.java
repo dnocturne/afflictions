@@ -5,6 +5,7 @@ import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -128,9 +129,13 @@ public class AfflictedPlayer {
      * @return List of affliction instances in that category
      */
     public List<AfflictionInstance> getAfflictionsByCategory(AfflictionCategory category) {
-        return activeAfflictions.values().stream()
-                .filter(instance -> instance.getAffliction().getCategory() == category)
-                .toList();
+        List<AfflictionInstance> result = new ArrayList<>();
+        for (AfflictionInstance instance : activeAfflictions.values()) {
+            if (instance.getAffliction().getCategory() == category) {
+                result.add(instance);
+            }
+        }
+        return Collections.unmodifiableList(result);
     }
 
     /**
@@ -140,8 +145,12 @@ public class AfflictedPlayer {
      * @return true if player has at least one affliction in that category
      */
     public boolean hasAfflictionInCategory(AfflictionCategory category) {
-        return activeAfflictions.values().stream()
-                .anyMatch(instance -> instance.getAffliction().getCategory() == category);
+        for (AfflictionInstance instance : activeAfflictions.values()) {
+            if (instance.getAffliction().getCategory() == category) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -152,9 +161,12 @@ public class AfflictedPlayer {
      * @return Optional containing the supernatural affliction instance
      */
     public Optional<AfflictionInstance> getSupernaturalAffliction() {
-        return activeAfflictions.values().stream()
-                .filter(instance -> instance.getAffliction().getCategory() == AfflictionCategory.SUPERNATURAL)
-                .findFirst();
+        for (AfflictionInstance instance : activeAfflictions.values()) {
+            if (instance.getAffliction().getCategory() == AfflictionCategory.SUPERNATURAL) {
+                return Optional.of(instance);
+            }
+        }
+        return Optional.empty();
     }
 
     /**
@@ -170,8 +182,12 @@ public class AfflictedPlayer {
      * Get the number of curses on this player.
      */
     public int getCurseCount() {
-        return (int) activeAfflictions.values().stream()
-                .filter(instance -> instance.getAffliction().getCategory() == AfflictionCategory.CURSE)
-                .count();
+        int count = 0;
+        for (AfflictionInstance instance : activeAfflictions.values()) {
+            if (instance.getAffliction().getCategory() == AfflictionCategory.CURSE) {
+                count++;
+            }
+        }
+        return count;
     }
 }
