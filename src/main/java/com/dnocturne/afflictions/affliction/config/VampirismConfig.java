@@ -68,6 +68,20 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private double minimumDamage = 0.5;
     private int fireTicks = 40;
 
+    // Night bonus settings
+    private boolean nightBonusEnabled = true;
+    private int nightBonusTickInterval = 1;
+    private boolean nightSpeedEnabled = true;
+    private int nightSpeedBaseAmplifier = 0;
+    private double nightSpeedLevelScaling = 0.25;
+    private boolean nightStrengthEnabled = false;
+    private int nightStrengthBaseAmplifier = 0;
+    private double nightStrengthLevelScaling = 0.25;
+    private boolean nightJumpEnabled = false;
+    private int nightJumpBaseAmplifier = 0;
+    private double nightJumpLevelScaling = 0.25;
+    private boolean nightVisionEnabled = true;
+
     public VampirismConfig(Afflictions plugin) {
         this.plugin = plugin;
     }
@@ -163,6 +177,20 @@ public class VampirismConfig extends AbstractAfflictionConfig {
         helmetReduction = config.getDouble("sun-damage.helmet-reduction", helmetReduction);
         minimumDamage = config.getDouble("sun-damage.minimum-damage", minimumDamage);
         fireTicks = config.getInt("sun-damage.fire-ticks", fireTicks);
+
+        // Night bonus settings
+        nightBonusEnabled = config.getBoolean("night-bonuses.enabled", nightBonusEnabled);
+        nightBonusTickInterval = config.getInt("night-bonuses.tick-interval", nightBonusTickInterval);
+        nightSpeedEnabled = config.getBoolean("night-bonuses.speed.enabled", nightSpeedEnabled);
+        nightSpeedBaseAmplifier = config.getInt("night-bonuses.speed.base-amplifier", nightSpeedBaseAmplifier);
+        nightSpeedLevelScaling = config.getDouble("night-bonuses.speed.level-scaling", nightSpeedLevelScaling);
+        nightStrengthEnabled = config.getBoolean("night-bonuses.strength.enabled", nightStrengthEnabled);
+        nightStrengthBaseAmplifier = config.getInt("night-bonuses.strength.base-amplifier", nightStrengthBaseAmplifier);
+        nightStrengthLevelScaling = config.getDouble("night-bonuses.strength.level-scaling", nightStrengthLevelScaling);
+        nightJumpEnabled = config.getBoolean("night-bonuses.jump.enabled", nightJumpEnabled);
+        nightJumpBaseAmplifier = config.getInt("night-bonuses.jump.base-amplifier", nightJumpBaseAmplifier);
+        nightJumpLevelScaling = config.getDouble("night-bonuses.jump.level-scaling", nightJumpLevelScaling);
+        nightVisionEnabled = config.getBoolean("night-bonuses.night-vision.enabled", nightVisionEnabled);
     }
 
     // Getters
@@ -320,6 +348,69 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     @Override
     public @Nullable String getLevelTitle(int level) {
         return levelTitles.get(level);
+    }
+
+    // Night bonus getters
+
+    public boolean isNightBonusEnabled() {
+        return nightBonusEnabled;
+    }
+
+    public int getNightBonusTickInterval() {
+        return nightBonusTickInterval;
+    }
+
+    public boolean isNightSpeedEnabled() {
+        return nightSpeedEnabled;
+    }
+
+    public int getNightSpeedBaseAmplifier() {
+        return nightSpeedBaseAmplifier;
+    }
+
+    public double getNightSpeedLevelScaling() {
+        return nightSpeedLevelScaling;
+    }
+
+    public boolean isNightStrengthEnabled() {
+        return nightStrengthEnabled;
+    }
+
+    public int getNightStrengthBaseAmplifier() {
+        return nightStrengthBaseAmplifier;
+    }
+
+    public double getNightStrengthLevelScaling() {
+        return nightStrengthLevelScaling;
+    }
+
+    public boolean isNightJumpEnabled() {
+        return nightJumpEnabled;
+    }
+
+    public int getNightJumpBaseAmplifier() {
+        return nightJumpBaseAmplifier;
+    }
+
+    public double getNightJumpLevelScaling() {
+        return nightJumpLevelScaling;
+    }
+
+    public boolean isNightVisionEnabled() {
+        return nightVisionEnabled;
+    }
+
+    /**
+     * Calculate the amplifier for a night bonus effect based on level.
+     *
+     * @param baseAmplifier The base amplifier from config
+     * @param levelScaling  The scaling factor per level
+     * @param level         The player's vampire level
+     * @return The final amplifier (clamped to 0-255)
+     */
+    public int calculateNightBonusAmplifier(int baseAmplifier, double levelScaling, int level) {
+        double amplifier = baseAmplifier + ((level - 1) * levelScaling);
+        return Math.max(0, Math.min(255, (int) amplifier));
     }
 
     @Override

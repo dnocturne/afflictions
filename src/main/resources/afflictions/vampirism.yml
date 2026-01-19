@@ -134,3 +134,39 @@ sun-damage:
   # Fire ticks applied when burning (visual effect)
   # 20 ticks = 1 second
   fire-ticks: 40
+
+# Night bonuses - buffs applied while it's nighttime
+night-bonuses:
+  # Enable or disable night bonuses entirely
+  enabled: true
+
+  # How often to refresh the effects (in affliction ticks)
+  # Effects are applied with slightly longer duration to prevent flickering
+  tick-interval: 1
+
+  # Speed boost at night
+  speed:
+    enabled: true
+    # Base amplifier (0 = Speed I, 1 = Speed II, etc.)
+    # Final amplifier = base + (level - 1) * level-scaling
+    base-amplifier: 0
+    # Additional amplifier per vampire level above 1
+    # Example: base 0 + level 3 with scaling 0.5 = amplifier 1 (Speed II)
+    level-scaling: 0.25
+
+  # Strength boost at night
+  strength:
+    enabled: false
+    base-amplifier: 0
+    level-scaling: 0.25
+
+  # Jump boost at night
+  jump:
+    enabled: false
+    base-amplifier: 0
+    level-scaling: 0.25
+
+  # Night vision at night
+  night-vision:
+    enabled: true
+    # Night vision has no amplifier levels, just on/off

@@ -4,6 +4,7 @@ import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.api.affliction.AbstractAffliction;
 import com.dnocturne.afflictions.api.affliction.AfflictionCategory;
 import com.dnocturne.afflictions.component.effect.BloodComponent;
+import com.dnocturne.afflictions.component.effect.NightBonusComponent;
 import com.dnocturne.afflictions.component.effect.SunlightDamageComponent;
 
 /**
@@ -88,6 +89,20 @@ public class Vampirism extends AbstractAffliction {
         private int actionBarUpdateInterval = 10;
         private boolean actionBarOnlyOnChange = false;
 
+        // Night bonus settings
+        private boolean nightBonusEnabled = false;
+        private int nightBonusTickInterval = 1;
+        private boolean nightSpeedEnabled = true;
+        private int nightSpeedBaseAmplifier = 0;
+        private double nightSpeedLevelScaling = 0.25;
+        private boolean nightStrengthEnabled = false;
+        private int nightStrengthBaseAmplifier = 0;
+        private double nightStrengthLevelScaling = 0.25;
+        private boolean nightJumpEnabled = false;
+        private int nightJumpBaseAmplifier = 0;
+        private double nightJumpLevelScaling = 0.25;
+        private boolean nightVisionEnabled = true;
+
         public Builder() {
             super(ID);
             this.displayName = "Vampirism";
@@ -124,6 +139,20 @@ public class Vampirism extends AbstractAffliction {
             this.actionBarEnabled = config.isActionBarEnabled();
             this.actionBarUpdateInterval = config.getActionBarUpdateInterval();
             this.actionBarOnlyOnChange = config.isActionBarOnlyOnChange();
+
+            // Night bonus settings
+            this.nightBonusEnabled = config.isNightBonusEnabled();
+            this.nightBonusTickInterval = config.getNightBonusTickInterval();
+            this.nightSpeedEnabled = config.isNightSpeedEnabled();
+            this.nightSpeedBaseAmplifier = config.getNightSpeedBaseAmplifier();
+            this.nightSpeedLevelScaling = config.getNightSpeedLevelScaling();
+            this.nightStrengthEnabled = config.isNightStrengthEnabled();
+            this.nightStrengthBaseAmplifier = config.getNightStrengthBaseAmplifier();
+            this.nightStrengthLevelScaling = config.getNightStrengthLevelScaling();
+            this.nightJumpEnabled = config.isNightJumpEnabled();
+            this.nightJumpBaseAmplifier = config.getNightJumpBaseAmplifier();
+            this.nightJumpLevelScaling = config.getNightJumpLevelScaling();
+            this.nightVisionEnabled = config.isNightVisionEnabled();
             return this;
         }
 
@@ -179,6 +208,18 @@ public class Vampirism extends AbstractAffliction {
                     sunDrain,
                     emptySunMultiplier
             ));
+
+            // Add night bonus component if enabled
+            if (nightBonusEnabled) {
+                this.components.add(new NightBonusComponent(
+                        "vampirism_night_bonus",
+                        nightBonusTickInterval,
+                        nightSpeedEnabled, nightSpeedBaseAmplifier, nightSpeedLevelScaling,
+                        nightStrengthEnabled, nightStrengthBaseAmplifier, nightStrengthLevelScaling,
+                        nightJumpEnabled, nightJumpBaseAmplifier, nightJumpLevelScaling,
+                        nightVisionEnabled
+                ));
+            }
 
             return new Vampirism(this, config);
         }
