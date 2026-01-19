@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Obsidian (keep notes only, let settings be personal)
+docs/.obsidian/
+
+# Java
+*.class
+*.jar
+!gradle/wrapper/*.jar
+*.log
+hs_err_pid*

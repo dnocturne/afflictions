@@ -1,0 +1,110 @@
+plugins {
+    id 'java'
+    id 'java-test-fixtures'
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
+}
+
+group = 'com.dnocturne'
+version = '1.0.0'
+
+def paperVersion = '1.21.11-R0.1-SNAPSHOT'
+
+// Cloud command framework versions
+def cloudMinecraftVersion = '2.0.0-beta.14'
+def cloudAnnotationsVersion = '2.0.0'
+def cloudConfirmationVersion = '1.0.0-rc.1'
+
+// Test versions
+def mockBukkitVersion = '4.100.0'
+def junitVersion = '6.0.2'
+def mockitoVersion = '3.12.2'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenLocal() // For Basalt library
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://repo.extendedclip.com/releases/' } // PlaceholderAPI
+}
+
+dependencies {
+    // Basalt library (shaded)
+    implementation 'com.dnocturne:basalt:1.0.0'
+
+    // Paper API
+    compileOnly "io.papermc.paper:paper-api:${paperVersion}"
+    testImplementation("io.papermc.paper:paper-api:$paperVersion")
+    testFixturesImplementation("io.papermc.paper:paper-api:$paperVersion")
+
+    // Cloud command framework
+    implementation "org.incendo:cloud-paper:${cloudMinecraftVersion}"
+    implementation "org.incendo:cloud-minecraft-extras:${cloudMinecraftVersion}"
+    implementation "org.incendo:cloud-annotations:${cloudAnnotationsVersion}"
+    implementation "org.incendo:cloud-processors-confirmation:${cloudConfirmationVersion}"
+    annotationProcessor "org.incendo:cloud-annotations:${cloudAnnotationsVersion}"
+
+    // Configuration
+    implementation 'dev.dejvokep:boosted-yaml:1.3.7'
+
+    // Soft dependencies (compileOnly = not bundled)
+    compileOnly 'me.clip:placeholderapi:2.11.7'
+
+    // MockBukkit
+    testImplementation "org.mockbukkit.mockbukkit:mockbukkit-v1.21:${mockBukkitVersion}"
+    testFixturesImplementation "org.mockbukkit.mockbukkit:mockbukkit-v1.21:${mockBukkitVersion}"
+
+    // JUnit (explicit for MockBukkit compatibility)
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+    testFixturesImplementation platform("org.junit:junit-bom:${junitVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testFixturesImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito
+    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
+    testFixturesImplementation "org.mockito:mockito-inline:${mockitoVersion}"
+
+    // SQLite for storage tests
+    testImplementation 'org.xerial:sqlite-jdbc:3.47.2.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    def props = [version: version, name: project.name]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('paper-plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    archiveBaseName = 'Afflictions'
+    archiveClassifier = ''
+
+    // Relocate to avoid conflicts with other plugins
+    relocate 'org.incendo.cloud', 'com.dnocturne.afflictions.lib.cloud'
+    relocate 'dev.dejvokep.boostedyaml', 'com.dnocturne.afflictions.lib.boostedyaml'
+    relocate 'com.dnocturne.basalt', 'com.dnocturne.afflictions.lib.basalt'
+
+    // Depend on tests passing first
+    dependsOn test
+}
+
+// Keep jar task but give it a different output name so it doesn't conflict
+tasks.named('jar').configure {
+    archiveClassifier = 'slim'
+}
+
+// Build should run tests, then shadowJar
+tasks.named('build').configure {
+    dependsOn shadowJar
+}

@@ -1,0 +1,150 @@
+# ==========================================
+# Afflictions - English (en)
+# ==========================================
+# MiniMessage format is supported for all messages.
+# https://docs.advntr.dev/minimessage/format.html
+# ==========================================
+
+# Plugin prefix (set to empty to disable)
+prefix: ""
+
+# General messages
+general:
+  reload-success: "\ ⟳ <reset><#85bb65><bold>ꜱʏꜱᴛᴇᴍ <reset><#6d6d6d>• <white>ᴄᴏɴꜰɪɢᴜʀᴀᴛɪᴏɴ ʀᴇʟᴏᴀᴅᴇᴅ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ!"
+  reload-failed: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ꜰᴀɪʟᴇᴅ ᴛᴏ ʀᴇʟᴏᴀᴅ ᴄᴏɴꜰɪɢᴜʀᴀᴛɪᴏɴ."
+  no-permission: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ ᴛᴏ ᴅᴏ ᴛʜᴀᴛ."
+  player-only: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜꜱᴇᴅ ʙʏ ᴘʟᴀʏᴇʀꜱ."
+  player-not-found: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴘʟᴀʏᴇʀ <#ffaa00><player></reset> <white>ɴᴏᴛ ꜰᴏᴜɴᴅ."
+  invalid-affliction: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴜɴᴋɴᴏᴡɴ ᴀꜰꜰʟɪᴄᴛɪᴏɴ: <#ffaa00><affliction>"
+
+# Affliction messages
+affliction:
+  contracted: "\ ☠ <reset><#c93434><bold>ᴀꜰꜰʟɪᴄᴛᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ᴄᴏɴᴛʀᴀᴄᴛᴇᴅ <#c93434><affliction><white>!"
+  cured: "\ ✦ <reset><#85bb65><bold>ᴄᴜʀᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴄᴜʀᴇᴅ ᴏꜰ <#85bb65><affliction><white>!"
+  progressed: "\ ⚠ <reset><#8b0000><bold>ᴡᴏʀꜱᴇɴᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜʀ <#c93434><affliction></reset> <white>ʜᴀꜱ ᴡᴏʀꜱᴇɴᴇᴅ!"
+  expired: "\ ✦ <reset><#85bb65><bold>ᴇxᴘɪʀᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜʀ <#85bb65><affliction></reset> <white>ʜᴀꜱ ᴡᴏʀɴ ᴏꜰꜰ."
+  already-has: "\ ⚠ <reset><#ffaa00><bold>ᴡᴀʀɴɪɴɢ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴀʟʀᴇᴀᴅʏ ʜᴀᴠᴇ <#ffaa00><affliction><white>."
+  immune: "\ ✦ <reset><#85bb65><bold>ɪᴍᴍᴜɴᴇ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴀʀᴇ ɪᴍᴍᴜɴᴇ ᴛᴏ <#85bb65><affliction><white>."
+
+  # List command
+  list:
+    header: "\ ☠ <reset><#c93434><bold>ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ <reset><#6d6d6d>• <white>ʏᴏᴜʀ ᴀᴄᴛɪᴠᴇ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ:"
+    entry: "   <#6d6d6d>› <#c93434><affliction> <#6d6d6d>(<white>ʟᴇᴠᴇʟ <level><#6d6d6d>)"
+    none: "\ ✦ <reset><#85bb65><bold>ʜᴇᴀʟᴛʜʏ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴀᴄᴛɪᴠᴇ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ."
+
+  # Info command
+  info:
+    header: "\ ☠ <reset><#c93434><bold><affliction>"
+    level: "   <#6d6d6d>› <white>ʟᴇᴠᴇʟ: <#c93434><level>"
+    duration: "   <#6d6d6d>› <white>ᴅᴜʀᴀᴛɪᴏɴ: <#c93434><duration>"
+    contracted: "   <#6d6d6d>› <white>ᴄᴏɴᴛʀᴀᴄᴛᴇᴅ: <#c93434><time></reset> <white>ᴀɢᴏ"
+
+# Admin messages
+admin:
+  give:
+    success: "\ ☠ <reset><#85bb65><bold>ᴀᴅᴍɪɴ <reset><#6d6d6d>• <white>ɢᴀᴠᴇ <#c93434><affliction></reset> <white>ᴛᴏ <#a9c8ff><player><white>."
+    failed: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ꜰᴀɪʟᴇᴅ ᴛᴏ ɢɪᴠᴇ <#c93434><affliction></reset> <white>ᴛᴏ <#a9c8ff><player><white>."
+  remove:
+    success: "\ ✦ <reset><#85bb65><bold>ᴀᴅᴍɪɴ <reset><#6d6d6d>• <white>ʀᴇᴍᴏᴠᴇᴅ <#c93434><affliction></reset> <white>ꜰʀᴏᴍ <#a9c8ff><player><white>."
+    failed: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ꜰᴀɪʟᴇᴅ ᴛᴏ ʀᴇᴍᴏᴠᴇ <#c93434><affliction></reset> <white>ꜰʀᴏᴍ <#a9c8ff><player><white>."
+  clear:
+    success: "\ ✦ <reset><#85bb65><bold>ᴀᴅᴍɪɴ <reset><#6d6d6d>• <white>ᴄʟᴇᴀʀᴇᴅ ᴀʟʟ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ ꜰʀᴏᴍ <#a9c8ff><player><white>."
+    failed: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ꜰᴀɪʟᴇᴅ ᴛᴏ ᴄʟᴇᴀʀ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ ꜰʀᴏᴍ <#a9c8ff><player><white>."
+
+# Vampirism specific
+vampirism:
+  infected: "\ 🦇 <reset><#8b0000><bold>ᴠᴀᴍᴘɪʀɪꜱᴍ <reset><#6d6d6d>• <white>ʏᴏᴜ ꜰᴇᴇʟ ʏᴏᴜʀ ʜᴇᴀʀᴛ ꜱʟᴏᴡ... <#c93434>ᴛʜᴇ ᴛʜɪʀꜱᴛ ʙᴇɢɪɴꜱ."
+  sun-burning: "\ ☀ <reset><#ff5348><bold>ʙᴜʀɴɪɴɢ <reset><#6d6d6d>• <#c93434>ᴛʜᴇ ꜱᴜɴ ʙᴜʀɴꜱ ʏᴏᴜʀ ꜰʟᴇꜱʜ!"
+  night-falls: "\ 🌙 <reset><#6d6d6d><bold>ɴɪɢʜᴛ <reset><#6d6d6d>• <white>ᴅᴀʀᴋɴᴇꜱꜱ ᴇᴍʙʀᴀᴄᴇꜱ ʏᴏᴜ. <#c93434>ᴛʜᴇ ʜᴜɴᴛ ʙᴇɢɪɴꜱ."
+  dawn-approaches: "\ ☀ <reset><#ffaa00><bold>ᴅᴀᴡɴ <reset><#6d6d6d>• <#ffaa00>ᴛʜᴇ ʜᴏʀɪᴢᴏɴ ʟɪɢʜᴛᴇɴꜱ. <white>ꜱᴇᴇᴋ ꜱʜᴇʟᴛᴇʀ."
+  blood-low: "\ 🩸 <reset><#8b0000><bold>ᴛʜɪʀꜱᴛ <reset><#6d6d6d>• <#c93434>ʏᴏᴜʀ ᴛʜɪʀꜱᴛ ɢʀᴏᴡꜱ ᴜɴʙᴇᴀʀᴀʙʟᴇ..."
+  blood-critical: "\ 🩸 <reset><#8b0000><bold>ᴛʜɪʀꜱᴛ <reset><#6d6d6d>• <#c93434><bold>ʏᴏᴜ ᴍᴜꜱᴛ ꜰᴇᴇᴅ!"
+  feeding: "\ 🩸 <reset><#c93434><bold>ꜰᴇᴇᴅɪɴɢ <reset><#6d6d6d>• <#c93434>ʏᴏᴜ ᴅʀɪɴᴋ ᴅᴇᴇᴘ..."
+
+  # Blood action bar display
+  # Placeholders: <value> (current), <max> (maximum), <percent> (percentage), <bar> (visual bar)
+  action-bar:
+    # The format shown in the action bar
+    # Uses a visual bar with filled/empty segments
+    format: "<#8b0000>🩸 <#c93434><value><#6d6d6d>/<#8b0000><max> <bar>"
+
+    # Visual bar settings
+    bar:
+      # Character for filled segments
+      filled: "▌"
+      # Character for empty segments
+      empty: "▌"
+      # Color for filled segments (gradient from high to low blood)
+      filled-color-high: "<#c93434>"
+      filled-color-mid: "<#ff6b35>"
+      filled-color-low: "<#8b0000>"
+      # Color for empty segments
+      empty-color: "<#3d3d3d>"
+      # Number of segments in the bar
+      segments: 10
+  ability-locked: "\ ✘ <reset><#c93434><bold>ʟᴏᴄᴋᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴍᴜꜱᴛ ʀᴇᴀᴄʜ ʟᴇᴠᴇʟ <#c93434><level></reset> <white>ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ᴀʙɪʟɪᴛʏ."
+  sire-success: "\ 🦇 <reset><#8b0000><bold>ꜱɪʀᴇ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ᴛᴜʀɴᴇᴅ <#a9c8ff><player></reset> <white>ɪɴᴛᴏ ᴀ ᴠᴀᴍᴘɪʀᴇ."
+  sire-received: "\ 🦇 <reset><#8b0000><bold>ᴛᴜʀɴᴇᴅ <reset><#6d6d6d>• <#a9c8ff><player></reset> <white>ʜᴀꜱ ᴛᴜʀɴᴇᴅ ʏᴏᴜ ɪɴᴛᴏ ᴀ ᴠᴀᴍᴘɪʀᴇ."
+
+# Werewolf specific
+werewolf:
+  infected: "\ 🐺 <reset><#d4a017><bold>ʟʏᴄᴀɴᴛʜʀᴏᴘʏ <reset><#6d6d6d>• <white>ʏᴏᴜ ꜰᴇᴇʟ <#d4a017>ᴛʜᴇ ʙᴇᴀꜱᴛ</reset> <white>ꜱᴛɪʀʀɪɴɢ ᴡɪᴛʜɪɴ..."
+  transformation-start: "\ 🐺 <reset><#d4a017><bold>ᴛʀᴀɴꜱꜰᴏʀᴍ <reset><#6d6d6d>• <#d4a017>ᴛʜᴇ ʙᴇᴀꜱᴛ ᴛᴀᴋᴇꜱ ᴏᴠᴇʀ!"
+  transformation-end: "\ 🐺 <reset><#6d6d6d><bold>ʜᴜᴍᴀɴ <reset><#6d6d6d>• <white>ᴛʜᴇ ʙᴇᴀꜱᴛ ʀᴇᴛʀᴇᴀᴛꜱ... <#6d6d6d>ꜰᴏʀ ɴᴏᴡ."
+  full-moon-warning: "\ 🌕 <reset><#d4a017><bold>ꜰᴜʟʟ ᴍᴏᴏɴ <reset><#6d6d6d>• <#d4a017><bold>ᴛʜᴇ ꜰᴜʟʟ ᴍᴏᴏɴ ʀɪꜱᴇꜱ ᴛᴏɴɪɢʜᴛ..."
+  new-moon-weakness: "\ 🌑 <reset><#6d6d6d><bold>ɴᴇᴡ ᴍᴏᴏɴ <reset><#6d6d6d>• <white>ᴛʜᴇ ɴᴇᴡ ᴍᴏᴏɴ ᴡᴇᴀᴋᴇɴꜱ ʏᴏᴜ..."
+
+  # Clan messages
+  clan:
+    joined: "\ 🐺 <reset><#85bb65><bold>ᴄʟᴀɴ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ᴊᴏɪɴᴇᴅ <#d4a017><clan><white>!"
+    left: "\ 🐺 <reset><#6d6d6d><bold>ᴄʟᴀɴ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ʟᴇꜰᴛ <#d4a017><clan><white>."
+    promoted-alpha: "\ 🐺 <reset><#d4a017><bold>ᴀʟᴘʜᴀ <reset><#6d6d6d>• <#d4a017>ʏᴏᴜ ᴀʀᴇ ɴᴏᴡ ᴛʜᴇ ᴀʟᴘʜᴀ ᴏꜰ <clan>!"
+    demoted: "\ 🐺 <reset><#6d6d6d><bold>ᴄʟᴀɴ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴀʀᴇ ɴᴏ ʟᴏɴɢᴇʀ ᴛʜᴇ ᴀʟᴘʜᴀ ᴏꜰ <#d4a017><clan><white>."
+    recruited: "\ 🐺 <reset><#85bb65><bold>ᴄʟᴀɴ <reset><#6d6d6d>• <#a9c8ff><player></reset> <white>ʜᴀꜱ ᴊᴏɪɴᴇᴅ <#d4a017><clan><white>!"
+    kicked: "\ 🐺 <reset><#c93434><bold>ᴋɪᴄᴋᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ ꜰʀᴏᴍ <#d4a017><clan><white>."
+    invite-received: "\ 🐺 <reset><#d4a017><bold>ɪɴᴠɪᴛᴇ <reset><#6d6d6d>• <#a9c8ff><player></reset> <white>ʜᴀꜱ ɪɴᴠɪᴛᴇᴅ ʏᴏᴜ ᴛᴏ ᴊᴏɪɴ <#d4a017><clan><white>. <click:run_command:'/werewolf clan accept'><#85bb65>[ᴀᴄᴄᴇᴘᴛ]</click>"
+    invite-sent: "\ 🐺 <reset><#85bb65><bold>ɪɴᴠɪᴛᴇ <reset><#6d6d6d>• <white>ɪɴᴠɪᴛᴀᴛɪᴏɴ ꜱᴇɴᴛ ᴛᴏ <#a9c8ff><player><white>."
+    invite-expired: "\ 🐺 <reset><#6d6d6d><bold>ᴇxᴘɪʀᴇᴅ <reset><#6d6d6d>• <white>ᴛʜᴇ ᴄʟᴀɴ ɪɴᴠɪᴛᴀᴛɪᴏɴ ʜᴀꜱ ᴇxᴘɪʀᴇᴅ."
+    already-in-clan: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ɪɴ ᴀ ᴄʟᴀɴ."
+    not-in-clan: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ɪɴ ᴀ ᴄʟᴀɴ."
+    not-alpha: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴏɴʟʏ ᴛʜᴇ ᴀʟᴘʜᴀ ᴄᴀɴ ᴅᴏ ᴛʜᴀᴛ."
+    clan-full: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴛʜɪꜱ ᴄʟᴀɴ ɪꜱ ꜰᴜʟʟ."
+
+# Time/moon messages
+time:
+  nightfall: "\ 🌙 <reset><#6d6d6d><bold>ɴɪɢʜᴛ <reset><#6d6d6d>• <white>ɴɪɢʜᴛ ʜᴀꜱ ꜰᴀʟʟᴇɴ. <#a9c8ff><moon_phase>"
+  dawn: "\ ☀ <reset><#d4a017><bold>ᴅᴀᴡɴ <reset><#6d6d6d>• <white>ᴛʜᴇ ꜱᴜɴ ʀɪꜱᴇꜱ. <#d4a017>ᴀ ɴᴇᴡ ᴅᴀʏ ʙᴇɢɪɴꜱ."
+
+  # PlaceholderAPI display text for %afflictions_time%
+  # MiniMessage format - automatically converted to legacy for PlaceholderAPI
+  placeholder:
+    day: "<#ffdd00>☀ <#ff9500>ᴅᴀʏ"
+    night: "<#6d6d6d>ɴɪɢʜᴛ"
+
+  # Moon phase names and symbols for placeholders
+  # MiniMessage format - automatically converted to legacy for PlaceholderAPI
+  moon:
+    full-moon:
+      name: "<#ffd700>ꜰᴜʟʟ ᴍᴏᴏɴ"
+      symbol: "<#ffd700>🌕"
+    waning-gibbous:
+      name: "<#d4c4a8>ᴡᴀɴɪɴɢ ɢɪʙʙᴏᴜꜱ"
+      symbol: "<#d4c4a8>🌖"
+    third-quarter:
+      name: "<#a9a9a9>ᴛʜɪʀᴅ Qᴜᴀʀᴛᴇʀ"
+      symbol: "<#a9a9a9>🌗"
+    waning-crescent:
+      name: "<#708090>ᴡᴀɴɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
+      symbol: "<#708090>🌘"
+    new-moon:
+      name: "<#4a4a4a>ɴᴇᴡ ᴍᴏᴏɴ"
+      symbol: "<#4a4a4a>🌑"
+    waxing-crescent:
+      name: "<#708090>ᴡᴀxɪɴɢ ᴄʀᴇꜱᴄᴇɴᴛ"
+      symbol: "<#708090>🌒"
+    first-quarter:
+      name: "<#a9a9a9>ꜰɪʀꜱᴛ Qᴜᴀʀᴛᴇʀ"
+      symbol: "<#a9a9a9>🌓"
+    waxing-gibbous:
+      name: "<#d4c4a8>ᴡᴀxɪɴɢ ɢɪʙʙᴏᴜꜱ"
+      symbol: "<#d4c4a8>🌔"

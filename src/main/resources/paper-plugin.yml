@@ -1,0 +1,13 @@
+name: ${name}
+version: ${version}
+main: com.dnocturne.afflictions.Afflictions
+api-version: '1.21'
+description: Supernatural afflictions for Minecraft - Vampirism, Lycanthropy, and more
+author: 'dnocturne'
+
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true

@@ -1,0 +1,117 @@
+# ==========================================
+# Vampirism Configuration
+# ==========================================
+
+# Configuration file version (do not modify)
+config-version: 1
+
+# Display settings for PlaceholderAPI
+# MiniMessage format - automatically converted to legacy for PlaceholderAPI
+display:
+  # What the player "is" - used for "You are: {name}"
+  # Placeholder: %afflictions_vampirism_name%
+  name: "<#c93434>Vampire"
+
+  # The affliction name - used for "Affliction: {affliction}"
+  # Placeholder: %afflictions_vampirism_affliction%
+  affliction: "<#8b0000>Vampirism"
+
+  # Short prefix/tag - used for chat prefixes, tab, etc.
+  # Placeholder: %afflictions_vampirism_prefix%
+  # Set to empty string "" to disable
+  prefix: "<#8b0000>[<#c93434>V<#8b0000>] "
+
+  # Description of the affliction
+  description: "A dark curse that burns in sunlight but grants power in darkness."
+
+# Affliction settings
+settings:
+  # Enable or disable this affliction entirely
+  # When disabled, the affliction will not be registered
+  enabled: true
+
+  # Maximum level (1-10)
+  max-level: 5
+
+  # Can this affliction be cured?
+  curable: true
+
+# Level titles - translatable names for each level
+# Placeholder: %afflictions_vampirism_title%
+# MiniMessage format - automatically converted to legacy for PlaceholderAPI
+levels:
+  1:
+    title: "<#8b0000>Fledgling"
+  2:
+    title: "<#a00000>Nightstalker"
+  3:
+    title: "<#b50000>Bloodborn"
+  4:
+    title: "<#c93434>Elder"
+  5:
+    title: "<#ff0000>Ancient"
+
+# Blood system settings
+blood:
+  # Enable or disable the blood system
+  enabled: true
+
+  # Maximum blood capacity
+  max-blood: 100
+
+  # Starting blood when first becoming a vampire
+  start-blood: 50
+
+  # Blood gained per point of damage dealt to living entities
+  gain-per-damage: 2.0
+
+  # Passive blood drain per affliction tick
+  passive-drain: 0.01
+
+  # Additional blood drain per tick while in sunlight
+  sun-drain: 0.05
+
+  # Sun damage multiplier when blood is empty (1.0 = normal, 2.0 = double)
+  empty-sun-multiplier: 2.0
+
+  # Action bar display settings
+  action-bar:
+    # Enable or disable the blood action bar display
+    enabled: true
+
+    # How often to update the action bar (in affliction ticks)
+    # The affliction system ticks once per second by default
+    # Set to 1 to update every affliction tick (recommended for constant display)
+    update-interval: 1
+
+    # Only show action bar when blood changes (feeding, draining, etc.)
+    # If false, always shows while vampire
+    only-on-change: false
+
+# Sun damage settings
+sun-damage:
+  # Whether sun damage is enabled
+  enabled: true
+
+  # Base damage per tick (in half-hearts)
+  # At level 1, full damage is dealt
+  # Higher levels reduce damage (level 5 = 60% damage)
+  base-damage: 2.0
+
+  # How often damage is dealt (in affliction ticks)
+  # 1 = every tick, 2 = every other tick, etc.
+  tick-interval: 1
+
+  # Whether weather (rain/storm) protects from sun damage
+  weather-protection: true
+
+  # Damage reduction when wearing a helmet (0.0 - 1.0)
+  # 0.5 = 50% damage reduction
+  helmet-reduction: 0.5
+
+  # Minimum damage dealt (even with all reductions)
+  minimum-damage: 0.5
+
+  # Fire ticks applied when burning (visual effect)
+  # 20 ticks = 1 second
+  fire-ticks: 40
