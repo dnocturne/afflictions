@@ -5,7 +5,12 @@ A Minecraft Paper plugin for supernatural afflictions.
 ## Features
 
 ### Implemented
-- **Vampirism** - Players take damage in sunlight, reduced by wearing helmets and higher affliction levels
+- **Vampirism** - Complete vampire experience with:
+  - Sunlight damage (reduced by helmets and higher levels)
+  - Grace period before burning with warning particles
+  - Night bonuses (speed, strength, jump boost, night vision)
+  - Blood system with feeding, passive drain, and hunger debuffs
+  - Blood action bar display
 - **Time & Moon System** - Day/night cycle tracking with 8 moon phases
 - **Persistent storage** - SQLite storage with offline player support
 - **Localization** - Full MiniMessage support for customizable messages
@@ -14,7 +19,6 @@ A Minecraft Paper plugin for supernatural afflictions.
 ### Planned
 - **Lycanthropy** - Werewolf transformation tied to moon phases
 - **Curses** - Stackable debuff afflictions
-- **Blood/Thirst System** - Resource management for vampires
 - **Vampire Abilities** - Level-locked powers
 - **Siring** - Turn other players into vampires
 
@@ -29,14 +33,30 @@ A Minecraft Paper plugin for supernatural afflictions.
 
 ## Commands
 
+### Player Commands
+
 | Command | Description | Permission |
 |---------|-------------|------------|
 | `/afflictions list [player]` | List afflictions | `afflictions.command.list` |
-| `/afflictions give <player> <affliction> [level]` | Give an affliction | `afflictions.command.give` |
-| `/afflictions remove <player> <affliction>` | Remove an affliction | `afflictions.command.remove` |
-| `/afflictions clear <player>` | Clear all afflictions | `afflictions.command.clear` |
 | `/afflictions info <affliction>` | View affliction details | `afflictions.command.info` |
-| `/afflictions reload` | Reload configuration | `afflictions.command.reload` |
+
+### Admin Commands
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/afflictions give <player> <affliction> [level]` | Give an affliction | `afflictions.admin.give` |
+| `/afflictions remove <player> <affliction>` | Remove an affliction | `afflictions.admin.remove` |
+| `/afflictions clear <player>` | Clear all afflictions | `afflictions.admin.clear` |
+| `/afflictions reload` | Reload configuration | `afflictions.admin.reload` |
+
+### Blood Commands (Vampirism)
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/afflictions blood set <player> <amount>` | Set a player's blood level | `afflictions.admin.blood` |
+| `/afflictions blood add <player> <amount>` | Add blood to a player | `afflictions.admin.blood` |
+| `/afflictions blood remove <player> <amount>` | Remove blood from a player | `afflictions.admin.blood` |
+| `/afflictions blood get <player>` | Check a player's blood level | `afflictions.admin.blood` |
 
 ## Configuration
 
@@ -86,6 +106,14 @@ Replace `<id>` with the affliction ID (e.g., `vampirism`).
 | Placeholder | Description |
 |-------------|-------------|
 | `%afflictions_data_<id>_<key>%` | Custom data value stored on affliction instance |
+
+### Blood Placeholders (Vampirism)
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%afflictions_data_vampirism_blood%` | Current blood level | `75.5` |
+| `%afflictions_vampirism_blood_max%` | Maximum blood capacity | `100` |
+| `%afflictions_vampirism_blood_percent%` | Blood as percentage | `75` |
 
 ### Time Placeholders
 
