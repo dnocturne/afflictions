@@ -150,4 +150,14 @@ public class AfflictionInstance {
     public @NotNull Map<String, Object> getAllData() {
         return Collections.unmodifiableMap(data);
     }
+
+    /**
+     * Get the mutable data map for direct access.
+     * This is used by components that need to read/write state.
+     *
+     * @return The mutable data map
+     */
+    public @NotNull Map<String, Object> getDataMap() {
+        return data;
+    }
 }

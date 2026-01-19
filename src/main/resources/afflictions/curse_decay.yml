@@ -1,0 +1,104 @@
+# ==========================================
+# Curse of Decay
+# ==========================================
+# A wasting curse that slowly drains life force.
+# Always active with damage over time and health reduction.
+# Most dangerous curse - use sparingly!
+# ==========================================
+
+display:
+  name: "<#5c3d2e>Decaying"
+  affliction: "<#3d2817>Curse of Decay"
+  prefix: "<#3d2817>[D] "
+  description: "A wasting curse that slowly drains your life force."
+
+settings:
+  enabled: true
+  max-level: 5
+  stackable: false
+  duration:
+    type: level-scaled
+    base-duration: 300   # 5 minutes base
+    level-scaling: 60    # +1 minute per level
+
+# Trigger: always active
+trigger:
+  type: always
+  inverted: false
+
+effects:
+  # Potion effects - wither and hunger
+  potions:
+    - type: WITHER
+      base-amplifier: 0
+      level-scaling: 0.2
+      ambient: true
+      particles: true
+      icon: true
+    - type: HUNGER
+      base-amplifier: 0
+      level-scaling: 0.5
+      ambient: true
+      particles: false
+      icon: true
+
+  # Damage over time - slow but constant
+  damage:
+    enabled: true
+    base-damage: 0.5
+    level-scaling: 0.25
+    bypass-armor: true
+    tick-interval: 100  # Every 5 seconds
+
+  # Attribute modifiers - reduced max health
+  attributes:
+    - attribute: GENERIC_MAX_HEALTH
+      base-amount: -2.0
+      level-scaling: -1.0
+      operation: ADD_NUMBER
+    - attribute: GENERIC_MOVEMENT_SPEED
+      base-amount: -0.01
+      level-scaling: -0.005
+      operation: ADD_NUMBER
+
+  # Particle effects - decay/rot particles
+  particles:
+    enabled: true
+    type: DAMAGE_INDICATOR
+    count: 2
+    offset-x: 0.4
+    offset-y: 0.8
+    offset-z: 0.4
+    speed: 0.05
+    height-offset: 0.5
+    tick-interval: 60
+
+  # Ominous sound
+  sound:
+    enabled: true
+    type: ENTITY_WITHER_AMBIENT
+    volume: 0.2
+    pitch: 0.5
+    tick-interval: 300
+    play-on-apply: true
+    play-on-remove: false
+
+# Custom messages
+messages:
+  on-apply: "<#3d2817>Your flesh begins to rot..."
+  on-remove: "<#85bb65>The decay halts. Your body begins to heal."
+  periodic: "<#5c3d2e>You feel your life slipping away..."
+  periodic-interval: 400
+
+# Level titles
+levels:
+  1:
+    title: "Touched by Decay"
+  2:
+    title: "Rotting"
+  3:
+    title: "Curse of Decay"
+  4:
+    title: "Advanced Decay"
+  5:
+    title: "Terminal Decay"

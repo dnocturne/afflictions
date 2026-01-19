@@ -160,3 +160,10 @@ time:
     waxing-gibbous:
       name: "<#d4c4a8>ᴡᴀxɪɴɢ ɢɪʙʙᴏᴜꜱ"
       symbol: "<#d4c4a8>🌔"
+
+# Curse messages (generic, can be overridden per-curse in YAML)
+curse:
+  applied: "\ ☠ <reset><#666666><bold>ᴄᴜʀꜱᴇᴅ <reset><#6d6d6d>• <white>ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴄᴜʀꜱᴇᴅ ᴡɪᴛʜ <#666666><curse><white>!"
+  removed: "\ ✦ <reset><#85bb65><bold>ᴄᴜʀᴇᴅ <reset><#6d6d6d>• <white>ᴛʜᴇ <#666666><curse></reset> <white>ʜᴀꜱ ʙᴇᴇɴ ʟɪꜰᴛᴇᴅ."
+  effect-start: "\ ⚠ <reset><#666666><bold>ᴄᴜʀꜱᴇ <reset><#6d6d6d>• <#6d6d6d>ᴛʜᴇ ᴄᴜʀꜱᴇ ᴛᴀᴋᴇꜱ ʜᴏʟᴅ..."
+  effect-end: "\ ⚠ <reset><#666666><bold>ᴄᴜʀꜱᴇ <reset><#6d6d6d>• <#6d6d6d>ᴛʜᴇ ᴄᴜʀꜱᴇ ᴡᴇᴀᴋᴇɴꜱ ᴍᴏᴍᴇɴᴛᴀʀɪʟʏ..."

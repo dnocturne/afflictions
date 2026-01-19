@@ -1,0 +1,83 @@
+# ==========================================
+# Curse of Weakness
+# ==========================================
+# A debilitating curse that saps strength and slows movement.
+# Always active - effects apply constantly while cursed.
+# ==========================================
+
+display:
+  name: "<#666666>Weakened"
+  affliction: "<#444444>Curse of Weakness"
+  prefix: "<#444444>[W] "
+  description: "A curse that saps your strength and vitality."
+
+settings:
+  enabled: true
+  max-level: 3
+  stackable: false
+  duration:
+    type: permanent  # permanent, fixed, or level-scaled
+    base-duration: 0
+    level-scaling: 0
+
+# Trigger: always active
+trigger:
+  type: always
+  inverted: false
+
+effects:
+  # Potion effects
+  potions:
+    - type: WEAKNESS
+      base-amplifier: 0
+      level-scaling: 0.5
+      ambient: true
+      particles: false
+      icon: true
+    - type: SLOWNESS
+      base-amplifier: 0
+      level-scaling: 0.25
+      ambient: true
+      particles: false
+      icon: true
+
+  # Damage over time (disabled for this curse)
+  damage:
+    enabled: false
+
+  # Attribute modifiers
+  attributes:
+    - attribute: GENERIC_ATTACK_DAMAGE
+      base-amount: -1.0
+      level-scaling: -0.5
+      operation: ADD_NUMBER
+
+  # Particle effects
+  particles:
+    enabled: true
+    type: WITCH
+    count: 3
+    offset-x: 0.3
+    offset-y: 0.5
+    offset-z: 0.3
+    speed: 0.01
+    height-offset: 1.0
+    tick-interval: 40
+
+  # Sound effects (disabled for this curse)
+  sound:
+    enabled: false
+
+# Custom messages (optional - uses defaults from lang file if not specified)
+messages:
+  on-apply: "<#666666>A wave of weakness washes over you..."
+  on-remove: "<#85bb65>Your strength returns!"
+
+# Level titles
+levels:
+  1:
+    title: "Minor Curse of Weakness"
+  2:
+    title: "Curse of Weakness"
+  3:
+    title: "Greater Curse of Weakness"

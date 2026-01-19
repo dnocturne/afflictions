@@ -1,0 +1,87 @@
+# ==========================================
+# Curse of Blindness
+# ==========================================
+# A curse that clouds vision, especially in bright light.
+# Triggers during daytime - effects are worse in sunlight.
+# ==========================================
+
+display:
+  name: "<#333333>Blinded"
+  affliction: "<#222222>Curse of Blindness"
+  prefix: "<#222222>[B] "
+  description: "A curse that clouds your vision in daylight."
+
+settings:
+  enabled: true
+  max-level: 3
+  stackable: false
+  duration:
+    type: fixed
+    base-duration: 600  # 10 minutes in seconds
+    level-scaling: 300  # +5 minutes per level
+
+# Trigger: activates during daytime
+trigger:
+  type: day
+  inverted: false
+
+effects:
+  # Potion effects
+  potions:
+    - type: BLINDNESS
+      base-amplifier: 0
+      level-scaling: 0
+      ambient: true
+      particles: false
+      icon: true
+    - type: SLOWNESS
+      base-amplifier: 0
+      level-scaling: 0.5
+      ambient: true
+      particles: false
+      icon: true
+
+  # No damage
+  damage:
+    enabled: false
+
+  # No attributes
+  attributes: []
+
+  # Particle effects - dark smoke around eyes
+  particles:
+    enabled: true
+    type: SMOKE
+    count: 5
+    offset-x: 0.2
+    offset-y: 0.3
+    offset-z: 0.2
+    speed: 0.02
+    height-offset: 1.6
+    tick-interval: 20
+
+  # Occasional eerie sound
+  sound:
+    enabled: true
+    type: AMBIENT_CAVE
+    volume: 0.3
+    pitch: 0.8
+    tick-interval: 200
+    play-on-apply: false
+    play-on-remove: false
+
+# Custom messages
+messages:
+  on-apply: "<#333333>Shadows creep into your vision..."
+  on-remove: "<#85bb65>Your sight clears."
+  on-effect-start: "<#333333>The light burns your eyes!"
+  on-effect-end: "<#6d6d6d>The darkness recedes as night falls."
+
+# Level titles
+levels:
+  1:
+    title: "Clouded Vision"
+  2:
+    title: "Curse of Blindness"
+  3:
+    title: "Abyssal Blindness"

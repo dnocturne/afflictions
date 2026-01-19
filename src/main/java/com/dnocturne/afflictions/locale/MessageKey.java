@@ -101,4 +101,10 @@ public final class MessageKey {
     public static final String MOON_WAXING_CRESCENT = "time.moon.waxing-crescent";
     public static final String MOON_FIRST_QUARTER = "time.moon.first-quarter";
     public static final String MOON_WAXING_GIBBOUS = "time.moon.waxing-gibbous";
+
+    // Curses
+    public static final String CURSE_APPLIED = "curse.applied";
+    public static final String CURSE_REMOVED = "curse.removed";
+    public static final String CURSE_EFFECT_START = "curse.effect-start";
+    public static final String CURSE_EFFECT_END = "curse.effect-end";
 }

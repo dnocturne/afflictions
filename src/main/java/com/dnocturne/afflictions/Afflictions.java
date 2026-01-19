@@ -2,6 +2,7 @@ package com.dnocturne.afflictions;
 
 import com.dnocturne.afflictions.affliction.config.AbstractAfflictionConfig;
 import com.dnocturne.afflictions.affliction.config.AfflictionDisplayConfig;
+import com.dnocturne.afflictions.affliction.config.CurseConfig;
 import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.command.CommandManager;
 import com.dnocturne.afflictions.hook.HookManager;
@@ -14,6 +15,7 @@ import com.dnocturne.basalt.BasaltPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,8 +170,11 @@ public class Afflictions extends BasaltPlugin {
      * Load and register all built-in afflictions.
      */
     private void registerAfflictions() {
-        // Add all affliction configs here
+        // Add built-in affliction configs
         afflictionConfigs.add(new VampirismConfig(this));
+
+        // Discover and load curse configs from afflictions directory
+        discoverCurses();
 
         // Load and register each config generically
         int registered = 0;
@@ -185,6 +190,57 @@ public class Afflictions extends BasaltPlugin {
         }
 
         getLogger().info("Registered " + registered + " affliction(s)");
+    }
+
+    /**
+     * Discover curse config files in the afflictions directory.
+     * Curse files must be named with the prefix "curse_" (e.g., curse_weakness.yml).
+     */
+    private void discoverCurses() {
+        File afflictionsDir = new File(getDataFolder(), "afflictions");
+        if (!afflictionsDir.exists()) {
+            afflictionsDir.mkdirs();
+        }
+
+        // Extract default curse files if they don't exist
+        extractDefaultCurses(afflictionsDir);
+
+        File[] files = afflictionsDir.listFiles((dir, name) ->
+                name.startsWith("curse_") && name.endsWith(".yml"));
+
+        if (files == null || files.length == 0) {
+            getLogger().info("No curse configs found in afflictions directory");
+            return;
+        }
+
+        for (File file : files) {
+            String fileName = file.getName();
+            // Extract curse ID from filename: curse_weakness.yml -> weakness
+            String curseId = fileName.substring("curse_".length(), fileName.length() - ".yml".length());
+
+            CurseConfig curseConfig = new CurseConfig(this, curseId, fileName);
+            afflictionConfigs.add(curseConfig);
+            getLogger().info("Discovered curse: " + curseId);
+        }
+    }
+
+    /**
+     * Extract default curse config files from resources if they don't exist.
+     */
+    private void extractDefaultCurses(File afflictionsDir) {
+        String[] defaultCurses = {
+                "curse_weakness.yml",
+                "curse_blindness.yml",
+                "curse_decay.yml"
+        };
+
+        for (String curseFile : defaultCurses) {
+            File targetFile = new File(afflictionsDir, curseFile);
+            if (!targetFile.exists()) {
+                saveResource("afflictions/" + curseFile, false);
+                getLogger().info("Extracted default curse: " + curseFile);
+            }
+        }
     }
 
     /**
