@@ -14,7 +14,7 @@ import org.incendo.cloud.paper.PaperCommandManager;
 /**
  * Main /afflictions command that delegates to modular subcommands.
  */
-@SuppressWarnings("UnstableApiUsage")
+
 public class AfflictionsCommand {
 
     private final SubCommandRegistry<Afflictions> registry;
