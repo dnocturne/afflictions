@@ -83,6 +83,11 @@ public abstract class AbstractAfflictionConfig implements AfflictionDisplayConfi
     public abstract void load();
 
     /**
+     * Reload configuration from file.
+     */
+    public abstract void reload();
+
+    /**
      * Create the affliction instance from this configuration.
      *
      * @return The configured affliction

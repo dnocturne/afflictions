@@ -125,6 +125,17 @@ public class Afflictions extends BasaltPlugin {
         instance = null;
     }
 
+    @Override
+    public void reload() {
+        // Reload base configs (main config + localization)
+        super.reload();
+
+        // Reload all affliction configs
+        for (AbstractAfflictionConfig config : afflictionConfigs) {
+            config.reload();
+        }
+    }
+
     /**
      * Get the plugin instance.
      */
