@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.dnocturne'
-version = '1.0.0'
+version = '1.0.0-ALPHA'
 
 def paperVersion = '1.21.11-R0.1-SNAPSHOT'
 
