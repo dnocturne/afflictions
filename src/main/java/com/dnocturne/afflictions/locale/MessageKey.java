@@ -54,10 +54,20 @@ public final class MessageKey {
     public static final String VAMPIRISM_DAWN_APPROACHES = "vampirism.dawn-approaches";
     public static final String VAMPIRISM_BLOOD_LOW = "vampirism.blood-low";
     public static final String VAMPIRISM_BLOOD_CRITICAL = "vampirism.blood-critical";
+    public static final String VAMPIRISM_HUNGER_START = "vampirism.hunger-start";
+    public static final String VAMPIRISM_HUNGER_END = "vampirism.hunger-end";
     public static final String VAMPIRISM_FEEDING = "vampirism.feeding";
     public static final String VAMPIRISM_ABILITY_LOCKED = "vampirism.ability-locked";
     public static final String VAMPIRISM_SIRE_SUCCESS = "vampirism.sire-success";
     public static final String VAMPIRISM_SIRE_RECEIVED = "vampirism.sire-received";
+
+    // Blood commands
+    public static final String BLOOD_SYSTEM_DISABLED = "blood.system-disabled";
+    public static final String BLOOD_NOT_VAMPIRE = "blood.not-vampire";
+    public static final String BLOOD_SET_SUCCESS = "blood.set-success";
+    public static final String BLOOD_ADD_SUCCESS = "blood.add-success";
+    public static final String BLOOD_REMOVE_SUCCESS = "blood.remove-success";
+    public static final String BLOOD_GET_SUCCESS = "blood.get-success";
 
     // Werewolf
     public static final String WEREWOLF_INFECTED = "werewolf.infected";

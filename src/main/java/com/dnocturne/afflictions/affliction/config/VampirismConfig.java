@@ -54,6 +54,17 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private boolean bloodSourcesWhitelist = false; // false = blacklist mode
     private final Set<EntityType> bloodSourceEntities = new HashSet<>();
 
+    // Blood hunger settings
+    private boolean bloodHungerEnabled = true;
+    private double bloodHungerThreshold = 20;
+    private int bloodHungerTickInterval = 1;
+    private boolean hungerSlownessEnabled = true;
+    private int hungerSlownessBaseAmplifier = 0;
+    private double hungerSlownessMaxScaling = 2;
+    private boolean hungerWeaknessEnabled = true;
+    private int hungerWeaknessBaseAmplifier = 0;
+    private double hungerWeaknessMaxScaling = 1;
+
     // Blood action bar settings
     private boolean actionBarEnabled = true;
     private int actionBarUpdateInterval = 10;
@@ -163,6 +174,17 @@ public class VampirismConfig extends AbstractAfflictionConfig {
                 plugin.getLogger().warning("Unknown entity type in blood.sources.entities: " + entityName);
             }
         }
+
+        // Blood hunger settings
+        bloodHungerEnabled = config.getBoolean("blood.hunger.enabled", bloodHungerEnabled);
+        bloodHungerThreshold = config.getDouble("blood.hunger.threshold", bloodHungerThreshold);
+        bloodHungerTickInterval = config.getInt("blood.hunger.tick-interval", bloodHungerTickInterval);
+        hungerSlownessEnabled = config.getBoolean("blood.hunger.slowness.enabled", hungerSlownessEnabled);
+        hungerSlownessBaseAmplifier = config.getInt("blood.hunger.slowness.base-amplifier", hungerSlownessBaseAmplifier);
+        hungerSlownessMaxScaling = config.getDouble("blood.hunger.slowness.max-scaling", hungerSlownessMaxScaling);
+        hungerWeaknessEnabled = config.getBoolean("blood.hunger.weakness.enabled", hungerWeaknessEnabled);
+        hungerWeaknessBaseAmplifier = config.getInt("blood.hunger.weakness.base-amplifier", hungerWeaknessBaseAmplifier);
+        hungerWeaknessMaxScaling = config.getDouble("blood.hunger.weakness.max-scaling", hungerWeaknessMaxScaling);
 
         // Blood action bar settings
         actionBarEnabled = config.getBoolean("blood.action-bar.enabled", actionBarEnabled);
@@ -307,6 +329,44 @@ public class VampirismConfig extends AbstractAfflictionConfig {
 
     public boolean isActionBarOnlyOnChange() {
         return actionBarOnlyOnChange;
+    }
+
+    // Blood hunger getters
+
+    public boolean isBloodHungerEnabled() {
+        return bloodHungerEnabled;
+    }
+
+    public double getBloodHungerThreshold() {
+        return bloodHungerThreshold;
+    }
+
+    public int getBloodHungerTickInterval() {
+        return bloodHungerTickInterval;
+    }
+
+    public boolean isHungerSlownessEnabled() {
+        return hungerSlownessEnabled;
+    }
+
+    public int getHungerSlownessBaseAmplifier() {
+        return hungerSlownessBaseAmplifier;
+    }
+
+    public double getHungerSlownessMaxScaling() {
+        return hungerSlownessMaxScaling;
+    }
+
+    public boolean isHungerWeaknessEnabled() {
+        return hungerWeaknessEnabled;
+    }
+
+    public int getHungerWeaknessBaseAmplifier() {
+        return hungerWeaknessBaseAmplifier;
+    }
+
+    public double getHungerWeaknessMaxScaling() {
+        return hungerWeaknessMaxScaling;
     }
 
     // Sun damage getters

@@ -4,6 +4,7 @@ import com.dnocturne.afflictions.affliction.config.VampirismConfig;
 import com.dnocturne.afflictions.api.affliction.AbstractAffliction;
 import com.dnocturne.afflictions.api.affliction.AfflictionCategory;
 import com.dnocturne.afflictions.component.effect.BloodComponent;
+import com.dnocturne.afflictions.component.effect.BloodHungerComponent;
 import com.dnocturne.afflictions.component.effect.NightBonusComponent;
 import com.dnocturne.afflictions.component.effect.SunlightDamageComponent;
 
@@ -89,6 +90,17 @@ public class Vampirism extends AbstractAffliction {
         private int actionBarUpdateInterval = 10;
         private boolean actionBarOnlyOnChange = false;
 
+        // Blood hunger settings
+        private boolean bloodHungerEnabled = false;
+        private int bloodHungerTickInterval = 1;
+        private double bloodHungerThreshold = 20;
+        private boolean hungerSlownessEnabled = true;
+        private int hungerSlownessBaseAmplifier = 0;
+        private double hungerSlownessMaxScaling = 2;
+        private boolean hungerWeaknessEnabled = true;
+        private int hungerWeaknessBaseAmplifier = 0;
+        private double hungerWeaknessMaxScaling = 1;
+
         // Night bonus settings
         private boolean nightBonusEnabled = false;
         private int nightBonusTickInterval = 1;
@@ -139,6 +151,17 @@ public class Vampirism extends AbstractAffliction {
             this.actionBarEnabled = config.isActionBarEnabled();
             this.actionBarUpdateInterval = config.getActionBarUpdateInterval();
             this.actionBarOnlyOnChange = config.isActionBarOnlyOnChange();
+
+            // Blood hunger settings
+            this.bloodHungerEnabled = config.isBloodHungerEnabled();
+            this.bloodHungerTickInterval = config.getBloodHungerTickInterval();
+            this.bloodHungerThreshold = config.getBloodHungerThreshold();
+            this.hungerSlownessEnabled = config.isHungerSlownessEnabled();
+            this.hungerSlownessBaseAmplifier = config.getHungerSlownessBaseAmplifier();
+            this.hungerSlownessMaxScaling = config.getHungerSlownessMaxScaling();
+            this.hungerWeaknessEnabled = config.isHungerWeaknessEnabled();
+            this.hungerWeaknessBaseAmplifier = config.getHungerWeaknessBaseAmplifier();
+            this.hungerWeaknessMaxScaling = config.getHungerWeaknessMaxScaling();
 
             // Night bonus settings
             this.nightBonusEnabled = config.isNightBonusEnabled();
@@ -218,6 +241,18 @@ public class Vampirism extends AbstractAffliction {
                         nightStrengthEnabled, nightStrengthBaseAmplifier, nightStrengthLevelScaling,
                         nightJumpEnabled, nightJumpBaseAmplifier, nightJumpLevelScaling,
                         nightVisionEnabled
+                ));
+            }
+
+            // Add blood hunger component if blood system is enabled and hunger is enabled
+            if (bloodEnabled && bloodHungerEnabled) {
+                this.components.add(new BloodHungerComponent(
+                        "vampirism_blood_hunger",
+                        bloodHungerTickInterval,
+                        maxBlood,
+                        bloodHungerThreshold,
+                        hungerSlownessEnabled, hungerSlownessBaseAmplifier, hungerSlownessMaxScaling,
+                        hungerWeaknessEnabled, hungerWeaknessBaseAmplifier, hungerWeaknessMaxScaling
                 ));
             }
 

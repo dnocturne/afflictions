@@ -51,6 +51,15 @@ admin:
     success: "\ ✦ <reset><#85bb65><bold>ᴀᴅᴍɪɴ <reset><#6d6d6d>• <white>ᴄʟᴇᴀʀᴇᴅ ᴀʟʟ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ ꜰʀᴏᴍ <#a9c8ff><player><white>."
     failed: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ꜰᴀɪʟᴇᴅ ᴛᴏ ᴄʟᴇᴀʀ ᴀꜰꜰʟɪᴄᴛɪᴏɴꜱ ꜰʀᴏᴍ <#a9c8ff><player><white>."
 
+# Blood management commands
+blood:
+  system-disabled: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <white>ᴛʜᴇ ʙʟᴏᴏᴅ ꜱʏꜱᴛᴇᴍ ɪꜱ ᴅɪꜱᴀʙʟᴇᴅ."
+  not-vampire: "\ ✘ <reset><#c93434><bold>ᴇʀʀᴏʀ <reset><#6d6d6d>• <#a9c8ff><player></reset> <white>ɪꜱ ɴᴏᴛ ᴀ ᴠᴀᴍᴘɪʀᴇ."
+  set-success: "\ 🩸 <reset><#85bb65><bold>ʙʟᴏᴏᴅ <reset><#6d6d6d>• <white>ꜱᴇᴛ <#a9c8ff><player></reset><white>'ꜱ ʙʟᴏᴏᴅ ᴛᴏ <#c93434><amount><#6d6d6d>/<#8b0000><max><white>."
+  add-success: "\ 🩸 <reset><#85bb65><bold>ʙʟᴏᴏᴅ <reset><#6d6d6d>• <white>ᴀᴅᴅᴇᴅ <#c93434><amount></reset> <white>ʙʟᴏᴏᴅ ᴛᴏ <#a9c8ff><player></reset><white>. ɴᴏᴡ: <#c93434><new_amount><#6d6d6d>/<#8b0000><max>"
+  remove-success: "\ 🩸 <reset><#c93434><bold>ʙʟᴏᴏᴅ <reset><#6d6d6d>• <white>ʀᴇᴍᴏᴠᴇᴅ <#c93434><amount></reset> <white>ʙʟᴏᴏᴅ ꜰʀᴏᴍ <#a9c8ff><player></reset><white>. ɴᴏᴡ: <#c93434><new_amount><#6d6d6d>/<#8b0000><max>"
+  get-success: "\ 🩸 <reset><#8b0000><bold>ʙʟᴏᴏᴅ <reset><#6d6d6d>• <#a9c8ff><player></reset><white>'ꜱ ʙʟᴏᴏᴅ: <#c93434><amount><#6d6d6d>/<#8b0000><max> <#6d6d6d>(<#c93434><percent>%<#6d6d6d>)"
+
 # Vampirism specific
 vampirism:
   infected: "\ 🦇 <reset><#8b0000><bold>ᴠᴀᴍᴘɪʀɪꜱᴍ <reset><#6d6d6d>• <white>ʏᴏᴜ ꜰᴇᴇʟ ʏᴏᴜʀ ʜᴇᴀʀᴛ ꜱʟᴏᴡ... <#c93434>ᴛʜᴇ ᴛʜɪʀꜱᴛ ʙᴇɢɪɴꜱ."
@@ -59,6 +68,8 @@ vampirism:
   dawn-approaches: "\ ☀ <reset><#ffaa00><bold>ᴅᴀᴡɴ <reset><#6d6d6d>• <#ffaa00>ᴛʜᴇ ʜᴏʀɪᴢᴏɴ ʟɪɢʜᴛᴇɴꜱ. <white>ꜱᴇᴇᴋ ꜱʜᴇʟᴛᴇʀ."
   blood-low: "\ 🩸 <reset><#8b0000><bold>ᴛʜɪʀꜱᴛ <reset><#6d6d6d>• <#c93434>ʏᴏᴜʀ ᴛʜɪʀꜱᴛ ɢʀᴏᴡꜱ ᴜɴʙᴇᴀʀᴀʙʟᴇ..."
   blood-critical: "\ 🩸 <reset><#8b0000><bold>ᴛʜɪʀꜱᴛ <reset><#6d6d6d>• <#c93434><bold>ʏᴏᴜ ᴍᴜꜱᴛ ꜰᴇᴇᴅ!"
+  hunger-start: "\ 🩸 <reset><#8b0000><bold>ꜱᴛᴀʀᴠɪɴɢ <reset><#6d6d6d>• <#c93434>ʏᴏᴜʀ ʙᴏᴅʏ ᴡᴇᴀᴋᴇɴꜱ ꜰʀᴏᴍ ʜᴜɴɢᴇʀ..."
+  hunger-end: "\ 🩸 <reset><#85bb65><bold>ꜱᴀᴛᴇᴅ <reset><#6d6d6d>• <#85bb65>ʏᴏᴜʀ ꜱᴛʀᴇɴɢᴛʜ ʀᴇᴛᴜʀɴꜱ."
   feeding: "\ 🩸 <reset><#c93434><bold>ꜰᴇᴇᴅɪɴɢ <reset><#6d6d6d>• <#c93434>ʏᴏᴜ ᴅʀɪɴᴋ ᴅᴇᴇᴘ..."
 
   # Blood action bar display

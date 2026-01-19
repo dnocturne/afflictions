@@ -1,6 +1,8 @@
 package com.dnocturne.afflictions.component.effect;
 
+import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
+import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.basalt.component.Tickable;
 import com.dnocturne.basalt.condition.Condition;
 import com.dnocturne.basalt.condition.PlayerConditions;
@@ -129,9 +131,16 @@ public class SunlightDamageComponent implements Tickable<Player, AfflictionInsta
 
     @Override
     public void onTick(@NotNull Player player, @NotNull AfflictionInstance instance) {
+        boolean wasBurning = Boolean.TRUE.equals(instance.getData("burning"));
+
         if (!exposureCondition.test(player)) {
             instance.setData("burning", false);
             return;
+        }
+
+        // Just started burning - send message
+        if (!wasBurning) {
+            sendMessage(player, MessageKey.VAMPIRISM_SUN_BURNING);
         }
 
         instance.setData("burning", true);
@@ -150,6 +159,16 @@ public class SunlightDamageComponent implements Tickable<Player, AfflictionInsta
         // Visual feedback - set player on fire briefly
         if (player.getFireTicks() < 20) {
             player.setFireTicks(40); // 2 seconds of fire effect
+        }
+    }
+
+    /**
+     * Send a message to the player.
+     */
+    private void sendMessage(@NotNull Player player, @NotNull String messageKey) {
+        Afflictions plugin = Afflictions.getInstance();
+        if (plugin != null) {
+            plugin.getLocalizationManager().send(player, messageKey);
         }
     }
 

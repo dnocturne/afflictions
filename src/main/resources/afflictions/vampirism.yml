@@ -93,6 +93,34 @@ blood:
   # Sun damage multiplier when blood is empty (1.0 = normal, 2.0 = double)
   empty-sun-multiplier: 2.0
 
+  # Blood hunger - debuffs applied when blood is critically low
+  hunger:
+    # Enable or disable blood hunger effects
+    enabled: true
+
+    # Blood percentage threshold to start applying debuffs (0-100)
+    # At this percentage and below, hunger effects start
+    threshold: 20
+
+    # How often to refresh the debuff effects (in affliction ticks)
+    tick-interval: 1
+
+    # Slowness effect when hungry
+    slowness:
+      enabled: true
+      # Base amplifier at threshold (0 = Slowness I, 1 = Slowness II, etc.)
+      base-amplifier: 0
+      # Additional amplifier as blood approaches 0
+      # Final amplifier = base + (1 - blood_percent/threshold) * max-scaling
+      # Example: At 10% blood with threshold 20, scaling 2: base + (1 - 0.5) * 2 = base + 1
+      max-scaling: 2
+
+    # Weakness effect when hungry
+    weakness:
+      enabled: true
+      base-amplifier: 0
+      max-scaling: 1
+
   # Action bar display settings
   action-bar:
     # Enable or disable the blood action bar display

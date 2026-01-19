@@ -1,6 +1,8 @@
 package com.dnocturne.afflictions.component.effect;
 
+import com.dnocturne.afflictions.Afflictions;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
+import com.dnocturne.afflictions.locale.MessageKey;
 import com.dnocturne.basalt.component.Tickable;
 import com.dnocturne.basalt.condition.Condition;
 import com.dnocturne.basalt.condition.PlayerConditions;
@@ -87,14 +89,46 @@ public class NightBonusComponent implements Tickable<Player, AfflictionInstance>
     public void onTick(@NotNull Player player, @NotNull AfflictionInstance instance) {
         boolean isNight = NIGHT_CONDITION.test(player);
         boolean wasNight = Boolean.TRUE.equals(instance.getData("night_bonuses_active"));
+        boolean isHungry = Boolean.TRUE.equals(instance.getData("blood_hunger_active"));
 
-        if (isNight) {
+        // Track if it's night (separate from bonuses active, since hunger can suppress bonuses)
+        boolean wasNightTime = Boolean.TRUE.equals(instance.getData("is_night_time"));
+
+        // Don't apply night bonuses if blood hunger debuffs are active
+        // Blood starvation overrides the benefits of nighttime
+        if (isNight && !isHungry) {
+            // Night just started (and not hungry) - send night message
+            if (!wasNightTime) {
+                sendMessage(player, MessageKey.VAMPIRISM_NIGHT_FALLS);
+            }
             applyNightBonuses(player, instance);
             instance.setData("night_bonuses_active", true);
         } else if (wasNight) {
-            // Day just arrived - remove effects
+            // Day arrived OR hunger kicked in - remove effects
             removeNightBonuses(player);
             instance.setData("night_bonuses_active", false);
+        }
+
+        // Track day/night transitions for messages (independent of hunger state)
+        if (isNight && !wasNightTime) {
+            instance.setData("is_night_time", true);
+            // Message already sent above if not hungry, send if hungry too
+            if (isHungry) {
+                sendMessage(player, MessageKey.VAMPIRISM_NIGHT_FALLS);
+            }
+        } else if (!isNight && wasNightTime) {
+            instance.setData("is_night_time", false);
+            sendMessage(player, MessageKey.VAMPIRISM_DAWN_APPROACHES);
+        }
+    }
+
+    /**
+     * Send a message to the player.
+     */
+    private void sendMessage(@NotNull Player player, @NotNull String messageKey) {
+        Afflictions plugin = Afflictions.getInstance();
+        if (plugin != null) {
+            plugin.getLocalizationManager().send(player, messageKey);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.dnocturne.afflictions.command.commands;
 
 import com.dnocturne.afflictions.Afflictions;
+import com.dnocturne.afflictions.command.subcommand.admin.BloodCommand;
 import com.dnocturne.afflictions.command.subcommand.admin.ClearCommand;
 import com.dnocturne.afflictions.command.subcommand.admin.GiveCommand;
 import com.dnocturne.afflictions.command.subcommand.admin.ReloadCommand;
@@ -28,7 +29,8 @@ public class AfflictionsCommand {
                 .register(GiveCommand::new)
                 .register(RemoveCommand::new)
                 .register(ClearCommand::new)
-                .register(ReloadCommand::new);
+                .register(ReloadCommand::new)
+                .register(BloodCommand::new);
     }
 
     /**
