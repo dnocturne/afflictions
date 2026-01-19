@@ -65,6 +65,25 @@ blood:
   # Blood gained per point of damage dealt to living entities
   gain-per-damage: 2.0
 
+  # Blood sources - which entities grant blood when damaged
+  sources:
+    # Enable or disable gaining blood from combat entirely
+    enabled: true
+
+    # Entity filtering mode: "whitelist" or "blacklist"
+    # whitelist = only entities in the list grant blood
+    # blacklist = all entities EXCEPT those in the list grant blood
+    mode: blacklist
+
+    # List of entity types (use Bukkit entity type names)
+    # Examples: ZOMBIE, SKELETON, VILLAGER, PLAYER, COW, PIG, etc.
+    # See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+    entities:
+      - ARMOR_STAND
+      - ITEM_FRAME
+      - GLOW_ITEM_FRAME
+      - PAINTING
+
   # Passive blood drain per affliction tick
   passive-drain: 0.01
 

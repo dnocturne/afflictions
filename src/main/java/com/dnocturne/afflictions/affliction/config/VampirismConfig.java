@@ -7,9 +7,14 @@ import dev.dejvokep.boostedyaml.YamlDocument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.entity.EntityType;
+
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -43,6 +48,11 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private double passiveDrain = 0.1;
     private double sunDrain = 0.5;
     private double emptySunMultiplier = 2.0;
+
+    // Blood source settings
+    private boolean bloodSourcesEnabled = true;
+    private boolean bloodSourcesWhitelist = false; // false = blacklist mode
+    private final Set<EntityType> bloodSourceEntities = new HashSet<>();
 
     // Blood action bar settings
     private boolean actionBarEnabled = true;
@@ -123,6 +133,22 @@ public class VampirismConfig extends AbstractAfflictionConfig {
         passiveDrain = config.getDouble("blood.passive-drain", passiveDrain);
         sunDrain = config.getDouble("blood.sun-drain", sunDrain);
         emptySunMultiplier = config.getDouble("blood.empty-sun-multiplier", emptySunMultiplier);
+
+        // Blood source settings
+        bloodSourcesEnabled = config.getBoolean("blood.sources.enabled", bloodSourcesEnabled);
+        String mode = config.getString("blood.sources.mode", "blacklist");
+        bloodSourcesWhitelist = "whitelist".equalsIgnoreCase(mode);
+
+        bloodSourceEntities.clear();
+        List<String> entityNames = config.getStringList("blood.sources.entities");
+        for (String entityName : entityNames) {
+            try {
+                EntityType type = EntityType.valueOf(entityName.toUpperCase());
+                bloodSourceEntities.add(type);
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Unknown entity type in blood.sources.entities: " + entityName);
+            }
+        }
 
         // Blood action bar settings
         actionBarEnabled = config.getBoolean("blood.action-bar.enabled", actionBarEnabled);
@@ -215,6 +241,32 @@ public class VampirismConfig extends AbstractAfflictionConfig {
 
     public double getEmptySunMultiplier() {
         return emptySunMultiplier;
+    }
+
+    // Blood source getters
+
+    public boolean isBloodSourcesEnabled() {
+        return bloodSourcesEnabled;
+    }
+
+    public boolean isBloodSourcesWhitelist() {
+        return bloodSourcesWhitelist;
+    }
+
+    /**
+     * Check if the given entity type can provide blood.
+     *
+     * @param entityType The entity type to check
+     * @return true if the entity can provide blood
+     */
+    public boolean canProvideBlood(EntityType entityType) {
+        if (!bloodSourcesEnabled) {
+            return false;
+        }
+
+        boolean inList = bloodSourceEntities.contains(entityType);
+        // Whitelist: must be in list. Blacklist: must NOT be in list.
+        return bloodSourcesWhitelist ? inList : !inList;
     }
 
     public boolean isActionBarEnabled() {

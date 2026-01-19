@@ -6,7 +6,6 @@ import com.dnocturne.afflictions.affliction.impl.Vampirism;
 import com.dnocturne.afflictions.api.affliction.AfflictionInstance;
 import com.dnocturne.afflictions.component.effect.BloodComponent;
 import com.dnocturne.afflictions.player.AfflictedPlayer;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,14 +40,19 @@ public class BloodGainListener implements Listener {
             return;
         }
 
-        // Check if victim is a valid living entity (not armor stand, etc.)
-        if (!(event.getEntity() instanceof LivingEntity) || event.getEntity() instanceof ArmorStand) {
+        // Check if victim is a valid living entity
+        if (!(event.getEntity() instanceof LivingEntity victim)) {
             return;
         }
 
         // Get vampirism config
         VampirismConfig config = plugin.getAfflictionConfig(VampirismConfig.class);
         if (config == null || !config.isBloodEnabled()) {
+            return;
+        }
+
+        // Check if this entity type can provide blood
+        if (!config.canProvideBlood(victim.getType())) {
             return;
         }
 
