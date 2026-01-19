@@ -64,6 +64,7 @@ blood:
 vampirism:
   infected: "\ 🦇 <reset><#8b0000><bold>ᴠᴀᴍᴘɪʀɪꜱᴍ <reset><#6d6d6d>• <white>ʏᴏᴜ ꜰᴇᴇʟ ʏᴏᴜʀ ʜᴇᴀʀᴛ ꜱʟᴏᴡ... <#c93434>ᴛʜᴇ ᴛʜɪʀꜱᴛ ʙᴇɢɪɴꜱ."
   sun-burning: "\ ☀ <reset><#ff5348><bold>ʙᴜʀɴɪɴɢ <reset><#6d6d6d>• <#c93434>ᴛʜᴇ ꜱᴜɴ ʙᴜʀɴꜱ ʏᴏᴜʀ ꜰʟᴇꜱʜ!"
+  sun-warning: "\ ☀ <reset><#ffaa00><bold>ᴡᴀʀɴɪɴɢ <reset><#6d6d6d>• <#ffaa00>ʏᴏᴜ ꜰᴇᴇʟ ʏᴏᴜʀ ꜱᴋɪɴ ᴘʀɪᴄᴋʟᴇ ɪɴ ᴛʜᴇ ꜱᴜɴʟɪɢʜᴛ..."
   night-falls: "\ 🌙 <reset><#6d6d6d><bold>ɴɪɢʜᴛ <reset><#6d6d6d>• <white>ᴅᴀʀᴋɴᴇꜱꜱ ᴇᴍʙʀᴀᴄᴇꜱ ʏᴏᴜ. <#c93434>ᴛʜᴇ ʜᴜɴᴛ ʙᴇɢɪɴꜱ."
   dawn-approaches: "\ ☀ <reset><#ffaa00><bold>ᴅᴀᴡɴ <reset><#6d6d6d>• <#ffaa00>ᴛʜᴇ ʜᴏʀɪᴢᴏɴ ʟɪɢʜᴛᴇɴꜱ. <white>ꜱᴇᴇᴋ ꜱʜᴇʟᴛᴇʀ."
   blood-low: "\ 🩸 <reset><#8b0000><bold>ᴛʜɪʀꜱᴛ <reset><#6d6d6d>• <#c93434>ʏᴏᴜʀ ᴛʜɪʀꜱᴛ ɢʀᴏᴡꜱ ᴜɴʙᴇᴀʀᴀʙʟᴇ..."

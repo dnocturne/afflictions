@@ -163,6 +163,26 @@ sun-damage:
   # 20 ticks = 1 second
   fire-ticks: 40
 
+  # Grace period - time before sun damage starts
+  # During this period, player gets a warning and particle effects
+  grace-period:
+    # Enable or disable grace period
+    enabled: true
+
+    # Base grace period duration in seconds (at level 1)
+    base-duration: 3
+
+    # Additional seconds of grace per vampire level
+    # Total grace = base-duration + (level - 1) * level-scaling
+    # Example: base 3 + level 5 with scaling 1 = 7 seconds grace
+    level-scaling: 1.0
+
+    # Show smoke particles during warning phase
+    particles: true
+
+    # Particle count per tick during warning
+    particle-count: 5
+
 # Night bonuses - buffs applied while it's nighttime
 night-bonuses:
   # Enable or disable night bonuses entirely

@@ -79,6 +79,13 @@ public class VampirismConfig extends AbstractAfflictionConfig {
     private double minimumDamage = 0.5;
     private int fireTicks = 40;
 
+    // Sun grace period settings
+    private boolean sunGracePeriodEnabled = true;
+    private double sunGraceBaseDuration = 3.0;
+    private double sunGraceLevelScaling = 1.0;
+    private boolean sunGraceParticles = true;
+    private int sunGraceParticleCount = 5;
+
     // Night bonus settings
     private boolean nightBonusEnabled = true;
     private int nightBonusTickInterval = 1;
@@ -199,6 +206,13 @@ public class VampirismConfig extends AbstractAfflictionConfig {
         helmetReduction = config.getDouble("sun-damage.helmet-reduction", helmetReduction);
         minimumDamage = config.getDouble("sun-damage.minimum-damage", minimumDamage);
         fireTicks = config.getInt("sun-damage.fire-ticks", fireTicks);
+
+        // Sun grace period settings
+        sunGracePeriodEnabled = config.getBoolean("sun-damage.grace-period.enabled", sunGracePeriodEnabled);
+        sunGraceBaseDuration = config.getDouble("sun-damage.grace-period.base-duration", sunGraceBaseDuration);
+        sunGraceLevelScaling = config.getDouble("sun-damage.grace-period.level-scaling", sunGraceLevelScaling);
+        sunGraceParticles = config.getBoolean("sun-damage.grace-period.particles", sunGraceParticles);
+        sunGraceParticleCount = config.getInt("sun-damage.grace-period.particle-count", sunGraceParticleCount);
 
         // Night bonus settings
         nightBonusEnabled = config.getBoolean("night-bonuses.enabled", nightBonusEnabled);
@@ -397,6 +411,38 @@ public class VampirismConfig extends AbstractAfflictionConfig {
 
     public int getFireTicks() {
         return fireTicks;
+    }
+
+    // Sun grace period getters
+
+    public boolean isSunGracePeriodEnabled() {
+        return sunGracePeriodEnabled;
+    }
+
+    public double getSunGraceBaseDuration() {
+        return sunGraceBaseDuration;
+    }
+
+    public double getSunGraceLevelScaling() {
+        return sunGraceLevelScaling;
+    }
+
+    public boolean isSunGraceParticles() {
+        return sunGraceParticles;
+    }
+
+    public int getSunGraceParticleCount() {
+        return sunGraceParticleCount;
+    }
+
+    /**
+     * Calculate the grace period duration for a specific vampire level.
+     *
+     * @param level The vampire level
+     * @return The grace period in seconds
+     */
+    public double calculateGracePeriod(int level) {
+        return sunGraceBaseDuration + ((level - 1) * sunGraceLevelScaling);
     }
 
     /**

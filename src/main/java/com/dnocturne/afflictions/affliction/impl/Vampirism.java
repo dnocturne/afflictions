@@ -115,6 +115,13 @@ public class Vampirism extends AbstractAffliction {
         private double nightJumpLevelScaling = 0.25;
         private boolean nightVisionEnabled = true;
 
+        // Sun grace period settings
+        private boolean sunGracePeriodEnabled = false;
+        private double sunGraceBaseDuration = 3.0;
+        private double sunGraceLevelScaling = 1.0;
+        private boolean sunGraceParticles = true;
+        private int sunGraceParticleCount = 5;
+
         public Builder() {
             super(ID);
             this.displayName = "Vampirism";
@@ -176,6 +183,13 @@ public class Vampirism extends AbstractAffliction {
             this.nightJumpBaseAmplifier = config.getNightJumpBaseAmplifier();
             this.nightJumpLevelScaling = config.getNightJumpLevelScaling();
             this.nightVisionEnabled = config.isNightVisionEnabled();
+
+            // Sun grace period settings
+            this.sunGracePeriodEnabled = config.isSunGracePeriodEnabled();
+            this.sunGraceBaseDuration = config.getSunGraceBaseDuration();
+            this.sunGraceLevelScaling = config.getSunGraceLevelScaling();
+            this.sunGraceParticles = config.isSunGraceParticles();
+            this.sunGraceParticleCount = config.getSunGraceParticleCount();
             return this;
         }
 
@@ -220,7 +234,7 @@ public class Vampirism extends AbstractAffliction {
                 ));
             }
 
-            // Add sunlight damage component with blood integration
+            // Add sunlight damage component with blood integration and grace period
             this.components.add(new SunlightDamageComponent(
                     "vampirism_sun_damage",
                     sunDamage,
@@ -229,7 +243,12 @@ public class Vampirism extends AbstractAffliction {
                     helmetReduction,
                     bloodEnabled,
                     sunDrain,
-                    emptySunMultiplier
+                    emptySunMultiplier,
+                    sunGracePeriodEnabled,
+                    sunGraceBaseDuration,
+                    sunGraceLevelScaling,
+                    sunGraceParticles,
+                    sunGraceParticleCount
             ));
 
             // Add night bonus component if enabled

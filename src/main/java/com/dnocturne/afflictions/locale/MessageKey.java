@@ -50,6 +50,7 @@ public final class MessageKey {
     // Vampirism
     public static final String VAMPIRISM_INFECTED = "vampirism.infected";
     public static final String VAMPIRISM_SUN_BURNING = "vampirism.sun-burning";
+    public static final String VAMPIRISM_SUN_WARNING = "vampirism.sun-warning";
     public static final String VAMPIRISM_NIGHT_FALLS = "vampirism.night-falls";
     public static final String VAMPIRISM_DAWN_APPROACHES = "vampirism.dawn-approaches";
     public static final String VAMPIRISM_BLOOD_LOW = "vampirism.blood-low";
